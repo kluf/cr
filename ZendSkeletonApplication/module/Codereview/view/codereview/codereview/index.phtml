@@ -1,0 +1,24 @@
+<h1>index codereview</h1>
+<?php
+
+    $this->headTitle($this->escapeHtml($title));
+    $table = new Zend_Text_Table();
+    $table->appendRow(array('Creation data', 'Changeset', 'JiRA ticket', 'Author\'s comments', 'Reviewer\'s comments', 'State', 'Author', 'Reviewer'));
+
+foreach ($codereviews as $codereview) {
+    $table->appendRow(array(
+        $codereview->creationdate,
+        $codereview->changeset,
+        $codereview->jiraticket,
+        $codereview->authorcomments,
+        $codereview->reviewercomments,
+        $codereview->stateid,
+        $codereview->authorid,
+        $codereview->reviewerid
+    ));
+        $table->appendRow($row);
+}
+        
+    echo $table;
+
+?>
