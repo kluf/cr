@@ -2,23 +2,30 @@
 <?php
 
     $this->headTitle($this->escapeHtml($title));
-    $table = new Zend_Text_Table();
-    $table->appendRow(array('Creation data', 'Changeset', 'JiRA ticket', 'Author\'s comments', 'Reviewer\'s comments', 'State', 'Author', 'Reviewer'));
-
-foreach ($codereviews as $codereview) {
-    $table->appendRow(array(
-        $codereview->creationdate,
-        $codereview->changeset,
-        $codereview->jiraticket,
-        $codereview->authorcomments,
-        $codereview->reviewercomments,
-        $codereview->stateid,
-        $codereview->authorid,
-        $codereview->reviewerid
-    ));
-        $table->appendRow($row);
-}
-        
-    echo $table;
-
 ?>
+<table class="table table-hover table-striped">
+    <tr class="success">
+        <th>Creating date</th>
+        <th>Changeset</th>
+        <th>JIRA ticket</th>
+        <th>Author's comments</th>
+        <th>Reviewer's comments</th>
+        <th>State</th>
+        <th>Author</th>
+        <th>Reviewer</th>
+    </tr>
+<?php
+foreach ($codereviews as $codereview) {
+    echo "
+    <td>{$codereview->creationdate}</td>
+        <td><a href=".$codereview->changeset.">{$codereview->changeset}</a></td>
+        <td><a href=".$codereview->jiraticket.">{$codereview->jiraticket}</a></td>
+       <td>{$codereview->authorcomments}</td>
+       <td>{$codereview->reviewercomments}</td>
+       <td>{$codereview->stateid}</td>
+       <td>{$codereview->authorid}</td>
+       <td>{$codereview->reviewerid}</td>    
+    ";
+}
+?>
+</table>
