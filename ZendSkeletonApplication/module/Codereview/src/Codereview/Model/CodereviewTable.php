@@ -37,7 +37,7 @@ namespace Codereview\Model;
             'changeset' => $codereview->changeset,
             'jiraticket' => $codereview->jiraticket,
             'authorcomments' => $codereview->authorcomments,
-            'reviewercommentsnull' => $codereview->reviewercommentsnull,
+            'reviewercomments' => $codereview->reviewercomments,
             'stateid' => $codereview->stateid,
             'authorid' => $codereview->authorid,
             'reviewerid' => $codereview->reviewerid,

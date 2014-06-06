@@ -46,14 +46,14 @@ namespace Codereview\Form;
              'name' => 'reviewercomments',
              'type' => 'textarea',
              'options' => array(
-                 'label' => 'Author\'s comment',
+                 'label' => 'Reviewer\'s comment',
              ),
          ));
          $this->add(array(
              'name' => 'stateid',
              'type' => 'Text',
              'options' => array(
-                 'label' => 'Date of creating',
+                 'label' => 'Current state',
              ),
          ));
          $this->add(array(

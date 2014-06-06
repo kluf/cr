@@ -1,0 +1,31 @@
+<?php
+
+
+ $title = 'Edit new codereview';
+ $this->headTitle($title);
+ ?>
+ <h1><?php echo $this->escapeHtml($title); ?></h1>
+ <?php
+$form = $this->form;
+ $form->setAttribute('action', $this->url(
+     'codereview',
+     array(
+         'action' => 'edit',
+         'id'     => $this->id,
+     )
+ ));
+ $form->prepare();
+
+ echo $this->form()->openTag($form);
+ echo $this->formHidden($form->get('id'));
+ echo $this->formRow($form->get('creationdate'));
+ echo $this->formRow($form->get('changeset'));
+ echo $this->formRow($form->get('jiraticket'));
+ echo $this->formRow($form->get('authorcomments'));
+ echo $this->formRow($form->get('reviewercomments'));
+ echo $this->formRow($form->get('stateid'));
+ echo $this->formRow($form->get('authorid'));
+ echo $this->formRow($form->get('reviewerid'));
+ 
+ echo $this->formSubmit($form->get('submit'));
+ echo $this->form()->closeTag();

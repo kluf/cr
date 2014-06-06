@@ -13,10 +13,12 @@
         <th>State</th>
         <th>Author</th>
         <th>Reviewer</th>
+        <th>Moderation</th>
     </tr>
 <?php
 foreach ($codereviews as $codereview) {
     echo "
+    <tr>
     <td>{$codereview->creationdate}</td>
         <td><a href=".$codereview->changeset.">{$codereview->changeset}</a></td>
         <td><a href=".$codereview->jiraticket.">{$codereview->jiraticket}</a></td>
@@ -24,8 +26,11 @@ foreach ($codereviews as $codereview) {
        <td>{$codereview->reviewercomments}</td>
        <td>{$codereview->stateid}</td>
        <td>{$codereview->authorid}</td>
-       <td>{$codereview->reviewerid}</td>    
-    ";
+       <td>{$codereview->reviewerid}</td>
+       <td><a href=".$this->url('codereview', array('action'=>'edit', 'id' => $codereview->id)).">Edit</a>
+           <a href=".$this->url('codereview', array('action'=>'delete', 'id' => $codereview->id)).">Delete</a>
+       </td>
+    </tr>";
 }
 ?>
 </table>
