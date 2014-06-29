@@ -1,0 +1,26 @@
+<h1>Index of Schedule</h1>
+
+<table class="table table-hover table-striped">
+    <tr class="success">
+        <td>Reviewer</td>
+        <td>Start time</td>
+        <td>End time</td>
+        <td>Moderation</td>
+    </tr>
+<?php
+    foreach($schedule as $item) {
+        echo "
+        <tr>
+            <td>".$item->Reviewer."</td>
+            <td>".$item->DateTimeBegin."</td>
+            <td>".$item->DateTimeEnd."</td>";
+?>
+            <td>
+                <a href="<?php echo $this->url('schedule', array('action'=>'edit', 'id' => $item->id));?>">Edit</a>
+                <a href="<?php echo $this->url('schedule', array('action'=>'delete', 'id' => $item->id));?>">Remove</a>
+            </td>
+        </tr>
+<?php        
+    }
+?>
+</table>

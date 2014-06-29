@@ -1,0 +1,18 @@
+<h1>Add Schedule</h1>
+<?php
+
+ $title = 'Add new schedule';
+ $this->headTitle($title);
+ ?>
+ <h1><?php echo $this->escapeHtml($title); ?></h1>
+ <?php
+ $form->setAttribute('action', $this->url('schedule', array('action' => 'add')));
+ $form->prepare();
+
+ echo $this->form()->openTag($form);
+ echo $this->formHidden($form->get('id'));
+ echo $this->formRow($form->get('Reviewer'));
+ echo $this->formRow($form->get('DateTimeBegin'));
+ echo $this->formRow($form->get('DateTimeEnd'));
+ echo $this->formSubmit($form->get('submit'));
+ echo $this->form()->closeTag();

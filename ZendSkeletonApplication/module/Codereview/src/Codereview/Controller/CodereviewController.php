@@ -13,7 +13,7 @@
      public function indexAction()
      {
          return new ViewModel(array(
-             'codereviews' => $this->getCodereviewTable()->fetchAll(), 'title' => 'Codereview'
+             'codereviews' => $this->getCodereviewTable()->fetchAll(), 'title' => 'Schedule for reviewers'
          ));
      }
 
