@@ -1,0 +1,23 @@
+<h1>Delete State</h1>
+<?php
+$title = 'Delete state';
+$this->headTitle($title);
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+
+<p>Are you sure that you want to delete state named 
+    '<?php echo $this->escapeHtml($state->name); ?>
+</p>
+<?php
+$url = $this->url('state', array(
+    'action' => 'delete',
+    'id'     => $this->id,
+));
+?>
+<form action="<?php echo $url; ?>" method="post">
+<div>
+    <input type="hidden" name="id" value="<?php echo (int) $state->id; ?>" />
+    <input type="submit" name="del" value="Yes" />
+    <input type="submit" name="del" value="No" />
+</div>
+</form>

@@ -1,0 +1,22 @@
+<h1>Index of State</h1>
+
+<table class="table table-hover table-striped">
+    <tr class="success">
+        <td>Name</td>
+        <td>Moderation</td>
+    </tr>
+<?php
+    foreach($state as $item) {
+        echo "
+        <tr>
+            <td>".$item->name."</td>";
+?>
+            <td>
+                <a href="<?php echo $this->url('state', array('action'=>'edit', 'id' => $item->id));?>">Edit</a>
+                <a href="<?php echo $this->url('state', array('action'=>'delete', 'id' => $item->id));?>">Remove</a>
+            </td>
+        </tr>
+<?php        
+    }
+?>
+</table>
