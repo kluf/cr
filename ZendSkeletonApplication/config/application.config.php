@@ -6,7 +6,9 @@ return array(
         'Codereview',
         'Schedule',
         'Backup',
-        'State'
+        'State',
+        'Usergroups',
+        'Users'
     ),
 
     // These are various options for the listeners attached to the ModuleManager

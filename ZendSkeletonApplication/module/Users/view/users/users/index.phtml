@@ -1,0 +1,26 @@
+<h1>Index of State</h1>
+
+<table class="table table-hover table-striped">
+    <tr class="success">
+        <td>LDAP</td>
+        <td>Email</td>
+        <td>Group</td>
+        <td>Moderation</td>
+    </tr>
+<?php
+    foreach($users as $item) {
+        echo "
+        <tr>
+            <td>".$item->ldap."</td>
+            <td>".$item->email."</td>
+            <td>".$item->groupid."</td>";
+?>
+            <td>
+                <a href="<?php echo $this->url('users', array('action'=>'edit', 'id' => $item->id));?>">Edit</a>
+                <a href="<?php echo $this->url('users', array('action'=>'delete', 'id' => $item->id));?>">Remove</a>
+            </td>
+        </tr>
+<?php        
+    }
+?>
+</table>
