@@ -43,6 +43,13 @@ namespace Users\Form;
              ),
          ));
         $this->add(array(
+             'name' => 'name',
+             'type' => 'Text',
+             'options' => array(
+                 'label' => 'Group',
+             ),
+         ));
+        $this->add(array(
              'name' => 'submit',
              'type' => 'Submit',
              'attributes' => array(

@@ -13,8 +13,11 @@
     protected $usersTable;
      public function indexAction()
      {
-        return new ViewModel(array(
-            'users' => $this->getUsersTable()->fetchAll(),
+//        return new ViewModel(array(
+//            'users' => $this->getUsersTable()->fetchAll(),
+//        ));
+         return new ViewModel(array(
+            'users' => $this->getUsersTable()->fetchFromTwoTables(),
         ));
      }
 
@@ -62,6 +65,7 @@
          }
 
          $form  = new UsersForm();
+         var_dump($users);exit;
          $form->bind($users);
          $form->get('submit')->setAttribute('value', 'Edit');
 
@@ -90,7 +94,7 @@
         if (!$id) {
             return $this->redirect()->toRoute('users');
         }
-
+        
         $request = $this->getRequest();
         if ($request->isPost()) {
             $del = $request->getPost('del', 'No');
@@ -103,7 +107,6 @@
             // Redirect to list of userss
             return $this->redirect()->toRoute('users');
         }
-
         return array(
             'id'    => $id,
             'users' => $this->getUsersTable()->getUsers($id)

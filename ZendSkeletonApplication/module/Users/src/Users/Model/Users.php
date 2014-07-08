@@ -14,15 +14,17 @@ use Zend\InputFilter\InputFilterInterface;
     public $email;
     public $password;
     public $groupid;
+    public $name;
 
 
     public function exchangeArray($data)
     {
-        $this->id     = (!empty($data['id'])) ? $data['id'] : null;
+        $this->id = (!empty($data['id'])) ? $data['id'] : null;
         $this->ldap = (!empty($data['ldap'])) ? $data['ldap'] : null;
         $this->email = (!empty($data['email'])) ? $data['email'] : null;
         $this->password = (!empty($data['password'])) ? $data['password'] : null;
         $this->groupid = (!empty($data['groupid'])) ? $data['groupid'] : null;
+        $this->name = (!empty($data['name'])) ? $data['name'] : null;
     }
     
     public function setInputFilter(InputFilterInterface $inputFilter)
@@ -73,6 +75,11 @@ use Zend\InputFilter\InputFilterInterface;
                 'filters'  => array(
                     array('name' => 'Int'),
                 ),
+            ));
+            
+            $inputFilter->add(array(
+                'name'     => 'name',
+                'required' => false
             ));
 
             $this->inputFilter = $inputFilter;

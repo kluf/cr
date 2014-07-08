@@ -18,6 +18,17 @@ class UsersTable
         $resultSet = $this->tableGateway->select();
         return $resultSet;
     }
+    
+    public function fetchFromTwoTables() 
+    {
+        $select = new \Zend\Db\Sql\Select; 
+        $select->from('users');
+        $select->columns(array('id','ldap','email','groupid','id'=>'idd','name'));
+        $select->join('usergroups', "usergroups.id  = users.groupid", array('id', 'name'), 'left'); 
+        $resultSet = $this->tableGateway->selectWith($select);
+        var_dump($resultSet);exit;
+        return $resultSet;
+    }
 
     public function getUsers($id)
     {

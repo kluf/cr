@@ -8,12 +8,14 @@
         <td>Moderation</td>
     </tr>
 <?php
+    
     foreach($users as $item) {
+        var_dump($users);exit;
         echo "
         <tr>
-            <td>".$item->ldap."</td>
+            <td>".$item->ldap.' = '.$item->id."</td>
             <td>".$item->email."</td>
-            <td>".$item->groupid."</td>";
+            <td>".$item->name.$item->groupid."</td>";
 ?>
             <td>
                 <a href="<?php echo $this->url('users', array('action'=>'edit', 'id' => $item->id));?>">Edit</a>
