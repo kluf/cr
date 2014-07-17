@@ -14,7 +14,7 @@
      public function indexAction()
      {
         return new ViewModel(array(
-            'schedule' => $this->getScheduleTable()->fetchAll(),
+            'schedule' => $this->getScheduleTable()->fetchScheduleWithUsers(),
         ));
      }
 

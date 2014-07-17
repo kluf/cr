@@ -2,7 +2,8 @@
 
 namespace Codereview\Model;
 
- use Zend\Db\TableGateway\TableGateway;
+use Zend\Db\TableGateway\TableGateway;
+use Zend\Db\Sql\Select;
 
  class CodereviewTable
  {
@@ -18,7 +19,21 @@ namespace Codereview\Model;
          $resultSet = $this->tableGateway->select();
          return $resultSet;
      }
-
+     
+    public function fetchFromCodereviewUsersState() 
+    {
+        $select = new Select();
+        $select->from('codereview')
+                ->columns(array('id','creationdate','changeset','jiraticket', 'authorcomments', 'reviewercomments', 'stateid', 'authorid', 'reviewerid'))
+                ->join('users',
+                        'codereview.authorid = users.id and codereview.reviewerid = users.id',array('id','ldap','ldap'))
+                ->join('state',
+                        'codereview.stateid = state.id',array('id','name'));
+//                ->join('users',
+//                        'codereview.reviewerid = users.id',array('test' => 'id','Authorsldap' => 'ldap'));
+        $resultSet = $this->tableGateway->selectWith($select);
+        return $resultSet;
+    }
      public function getCodereview($id)
      {
          $id  = (int) $id;

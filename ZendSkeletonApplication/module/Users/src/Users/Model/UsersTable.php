@@ -3,6 +3,7 @@
 namespace Users\Model;
 
 use Zend\Db\TableGateway\TableGateway;
+use Zend\Db\Sql\Select;
 
 class UsersTable
 {
@@ -21,12 +22,12 @@ class UsersTable
     
     public function fetchFromTwoTables() 
     {
-        $select = new \Zend\Db\Sql\Select; 
-        $select->from('users');
-        $select->columns(array('id','ldap','email','groupid','id'=>'idd','name'));
-        $select->join('usergroups', "usergroups.id  = users.groupid", array('id', 'name'), 'left'); 
+        $select = new Select();
+        $select->from('users')
+                ->columns(array('id','ldap','email','groupid'))
+                ->join('usergroups',
+                        'users.groupid = usergroups.id',array('idd' => 'id','name'));
         $resultSet = $this->tableGateway->selectWith($select);
-        var_dump($resultSet);exit;
         return $resultSet;
     }
 

@@ -13,6 +13,7 @@ use Zend\InputFilter\InputFilterInterface;
     public $Reviewer;
     public $DateTimeBegin;
     public $DateTimeEnd;
+    public $ldap;
 
 
     public function exchangeArray($data)
@@ -21,6 +22,7 @@ use Zend\InputFilter\InputFilterInterface;
         $this->Reviewer = (!empty($data['Reviewer'])) ? $data['Reviewer'] : null;
         $this->DateTimeBegin  = (!empty($data['DateTimeBegin'])) ? $data['DateTimeBegin'] : null;
         $this->DateTimeEnd  = (!empty($data['DateTimeEnd'])) ? $data['DateTimeEnd'] : null;
+        $this->ldap  = (!empty($data['ldap'])) ? $data['ldap'] : null;
     }
     
     public function setInputFilter(InputFilterInterface $inputFilter)

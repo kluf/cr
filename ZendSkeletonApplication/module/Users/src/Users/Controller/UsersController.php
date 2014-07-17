@@ -11,15 +11,13 @@
  {
      
     protected $usersTable;
-     public function indexAction()
-     {
-//        return new ViewModel(array(
-//            'users' => $this->getUsersTable()->fetchAll(),
-//        ));
-         return new ViewModel(array(
-            'users' => $this->getUsersTable()->fetchFromTwoTables(),
-        ));
-     }
+    
+    public function indexAction()
+    {
+        return new ViewModel(array(
+           'users' => $this->getUsersTable()->fetchFromTwoTables(),
+       ));
+    }
 
     public function addAction()
     {
@@ -65,7 +63,6 @@
          }
 
          $form  = new UsersForm();
-         var_dump($users);exit;
          $form->bind($users);
          $form->get('submit')->setAttribute('value', 'Edit');
 

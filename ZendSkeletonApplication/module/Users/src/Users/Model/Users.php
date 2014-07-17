@@ -14,9 +14,7 @@ use Zend\InputFilter\InputFilterInterface;
     public $email;
     public $password;
     public $groupid;
-    public $name;
-
-
+    
     public function exchangeArray($data)
     {
         $this->id = (!empty($data['id'])) ? $data['id'] : null;
@@ -77,11 +75,6 @@ use Zend\InputFilter\InputFilterInterface;
                 ),
             ));
             
-            $inputFilter->add(array(
-                'name'     => 'name',
-                'required' => false
-            ));
-
             $this->inputFilter = $inputFilter;
         }
 

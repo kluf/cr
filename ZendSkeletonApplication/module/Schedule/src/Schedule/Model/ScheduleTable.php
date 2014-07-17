@@ -3,6 +3,7 @@
 namespace Schedule\Model;
 
 use Zend\Db\TableGateway\TableGateway;
+use Zend\Db\Sql\Select;
 
 class ScheduleTable
 {
@@ -18,7 +19,18 @@ class ScheduleTable
         $resultSet = $this->tableGateway->select();
         return $resultSet;
     }
-
+    
+    public function fetchScheduleWithUsers()
+    {   
+        $select = new Select();
+        $select->from('schedule')
+                ->columns(array('id', 'Reviewer', 'DateTimeBegin', 'DateTimeEnd'))
+                ->join('users',
+                        'schedule.reviewer = users.id', array('idd' => 'id', 'ldap'));
+        $resultSet = $this->tableGateway->selectWith($select);
+        return $resultSet;
+    }
+    
     public function getSchedule($id)
     {
         $id  = (int) $id;

@@ -18,6 +18,9 @@
      public $authorid;
      public $reviewerid;
      protected $inputFilter;
+     public $state;
+     public $author;
+     public $reviewer;
 
      public function exchangeArray($data)
      {
@@ -30,6 +33,9 @@
          $this->stateid = (!empty($data['stateid'])) ? $data['stateid'] : null;
          $this->authorid = (!empty($data['authorid'])) ? $data['authorid'] : null;
          $this->reviewerid = (!empty($data['reviewerid'])) ? $data['reviewerid'] : null;
+         $this->name = (!empty($data['name'])) ? $data['name'] : null;
+         $this->ldap = (!empty($data['ldap'])) ? $data['ldap'] : null;
+         $this->Authorsldap = (!empty($data['Authorsldap'])) ? $data['Authorsldap'] : null;
      }
      public function setInputFilter(InputFilterInterface $inputFilter)
      {
