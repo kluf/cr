@@ -24,13 +24,13 @@ use Zend\Db\Sql\Select;
     {
         $select = new Select();
         $select->from('codereview')
-                ->columns(array('id','creationdate','changeset','jiraticket', 'authorcomments', 'reviewercomments', 'stateid', 'authorid', 'reviewerid'))
-                ->join('users',
-                        'codereview.authorid = users.id and codereview.reviewerid = users.id',array('id','ldap','ldap'))
-                ->join('state',
-                        'codereview.stateid = state.id',array('id','name'));
-//                ->join('users',
-//                        'codereview.reviewerid = users.id',array('test' => 'id','Authorsldap' => 'ldap'));
+        ->columns(array('id','creationdate','changeset','jiraticket', 'authorcomments', 'reviewercomments', 'stateid', 'authorid', 'reviewerid'))
+        ->join('users',
+                'codereview.authorid = users.id', array('ldap'))
+        ->join('state',
+                'codereview.stateid = state.id',array('name'))
+        ->join(array('us' => 'users'),
+                'codereview.reviewerid = us.id',array('uldap' => 'ldap'));
         $resultSet = $this->tableGateway->selectWith($select);
         return $resultSet;
     }

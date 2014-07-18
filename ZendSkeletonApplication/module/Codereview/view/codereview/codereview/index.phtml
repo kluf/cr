@@ -26,7 +26,7 @@ foreach ($codereviews as $codereview) {
        <td>{$codereview->reviewercomments}</td>
        <td>{$codereview->name}</td>
        <td>{$codereview->ldap}</td>
-       <td>{$codereview->ldap}</td>
+       <td>{$codereview->uldap}</td>
        <td><a href=".$this->url('codereview', array('action'=>'edit', 'id' => $codereview->id)).">Edit</a>
            <a href=".$this->url('codereview', array('action'=>'delete', 'id' => $codereview->id)).">Delete</a>
        </td>

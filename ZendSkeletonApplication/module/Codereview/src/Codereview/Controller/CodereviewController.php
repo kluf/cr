@@ -14,6 +14,7 @@
      {
          return new ViewModel(array(
              'codereviews' => $this->getCodereviewTable()->fetchFromCodereviewUsersState(), 'title' => 'Schedule for reviewers'
+//             'codereviews' => $this->getCodereviewTable()->fetchAll(), 'title' => 'Schedule for reviewers'
          ));
      }
 
