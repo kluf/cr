@@ -34,6 +34,22 @@ use Zend\Db\Sql\Select;
         $resultSet = $this->tableGateway->selectWith($select);
         return $resultSet;
     }
+    
+    public function getCodereviewWithAuthorsReviewersAndStates($id) 
+    {
+        $select = new Select();
+        $select->from('codereview')
+        ->columns(array('id','creationdate','changeset','jiraticket', 'authorcomments', 'reviewercomments', 'stateid', 'authorid', 'reviewerid'))
+        ->join('users',
+                'codereview.authorid = users.id', array('ldap'))
+        ->join('state',
+                'codereview.stateid = state.id',array('name'))
+        ->join(array('us' => 'users'),
+                'codereview.reviewerid = us.id',array('uldap' => 'ldap'))
+        ->where('codereview.id = {$id}');
+        $resultSet = $this->tableGateway->selectWith($select);
+        return $resultSet;
+    }
      public function getCodereview($id)
      {
          $id  = (int) $id;

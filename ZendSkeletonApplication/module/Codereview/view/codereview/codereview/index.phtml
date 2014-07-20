@@ -1,8 +1,10 @@
 <h1>index codereview</h1>
+<p><span class="label label-success"><a href="<?php echo $this->url().'codereview/add'; ?>">Add changeset</a></span></p>
+<p><blockquote><?php echo $message; ?></blockquote></p>
 <?php
-
     $this->headTitle($this->escapeHtml($title));
 ?>
+
 <table class="table table-hover table-striped">
     <tr class="success">
         <th>Creating date</th>

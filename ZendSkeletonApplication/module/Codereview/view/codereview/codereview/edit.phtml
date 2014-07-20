@@ -1,5 +1,11 @@
 <?php
-
+function printFormGroup($row = 'null'){
+    echo '<div class="form-group">
+    <div class="col-sm-10">';
+    echo $row;
+    echo '</div>
+  </div>';
+}
 
  $title = 'Edit new codereview';
  $this->headTitle($title);
@@ -7,25 +13,33 @@
  <h1><?php echo $this->escapeHtml($title); ?></h1>
  <?php
 $form = $this->form;
- $form->setAttribute('action', $this->url(
-     'codereview',
-     array(
-         'action' => 'edit',
-         'id'     => $this->id,
-     )
- ));
+$form->setAttribute('action', $this->url(
+    'codereview',
+    array(
+        'action' => 'edit',
+        'id'     => $this->id,
+    )
+))
+->setAttribute('class','form-horizontal');
  $form->prepare();
-
- echo $this->form()->openTag($form);
- echo $this->formHidden($form->get('id'));
- echo $this->formRow($form->get('creationdate'));
- echo $this->formRow($form->get('changeset'));
- echo $this->formRow($form->get('jiraticket'));
- echo $this->formRow($form->get('authorcomments'));
- echo $this->formRow($form->get('reviewercomments'));
- echo $this->formRow($form->get('stateid'));
- echo $this->formRow($form->get('authorid'));
- echo $this->formRow($form->get('reviewerid'));
- 
- echo $this->formSubmit($form->get('submit'));
- echo $this->form()->closeTag();
+echo $this->form()->openTag($form);
+echo $this->formHidden($form->get('id'));
+printFormGroup($this->formRow($form->get('creationdate')
+        ->setAttribute('class', 'form-control')));
+printFormGroup($this->formRow($form->get('changeset')
+        ->setAttribute('class', 'form-control')));
+printFormGroup($this->formRow($form->get('jiraticket')
+        ->setAttribute('class', 'form-control')));
+printFormGroup($this->formRow($form->get('authorcomments')
+        ->setAttribute('class', 'form-control')));
+printFormGroup($this->formRow($form->get('reviewercomments')
+        ->setAttribute('class', 'form-control')));
+printFormGroup($this->formRow($form->get('stateid')
+        ->setAttribute('class', 'form-control')));
+printFormGroup($this->formRow($form->get('authorid')
+        ->setAttribute('class', 'form-control')));
+printFormGroup($this->formRow($form->get('reviewerid')
+        ->setAttribute('class', 'form-control')));
+echo $this->formSubmit($form->get('submit')
+        ->setAttribute('class', 'btn btn-warning'));
+echo $this->form()->closeTag();

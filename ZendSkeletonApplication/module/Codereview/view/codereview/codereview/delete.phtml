@@ -1,12 +1,12 @@
 <?php
 $title = 'Delete codereview';
- $this->headTitle($title);
+$this->headTitle($title);
  ?>
  <h1><?php echo $this->escapeHtml($title); ?></h1>
 
- <p>Are you sure that you want to delete
-     '<?php echo $this->escapeHtml($codereview->authorid); ?>' by
-     '<?php echo $this->escapeHtml($codereview->changeset); ?>'?
+ <p>Are you sure that you want to delete row from codereview with JIRA ticket: <span class="label label-info">
+    <?php echo $this->escapeHtml($codereview->jiraticket); ?></span> and changeset: <span class="label label-info">
+    <?php echo $this->escapeHtml($codereview->changeset); ?></span>?
  </p>
  <?php
  $url = $this->url('codereview', array(
@@ -17,7 +17,7 @@ $title = 'Delete codereview';
  <form action="<?php echo $url; ?>" method="post">
  <div>
      <input type="hidden" name="id" value="<?php echo (int) $codereview->id; ?>" />
-     <input type="submit" name="del" value="Yes" />
-     <input type="submit" name="del" value="No" />
+     <input type="submit" name="del" value="Yes" class="btn btn-danger"/>
+     <input type="submit" name="del" value="No" class="btn btn-primary"/>
  </div>
  </form>

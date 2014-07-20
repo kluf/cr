@@ -10,13 +10,19 @@
  class CodereviewController extends AbstractActionController
  {
     protected $codereviewTable;
-     public function indexAction()
-     {
-         return new ViewModel(array(
-             'codereviews' => $this->getCodereviewTable()->fetchFromCodereviewUsersState(), 'title' => 'Schedule for reviewers'
-//             'codereviews' => $this->getCodereviewTable()->fetchAll(), 'title' => 'Schedule for reviewers'
-         ));
-     }
+    public $daysInWeek = 6;
+    public $titleIndex = 'Codereview index page';
+    public $titleAdd = 'Add new row to codereview';
+    public $titleEdit = 'Edit row of codereview';
+    public $titleRemove = 'Remove row from codereview';
+    
+    public function indexAction()
+    {
+        $message = $this->dateCounter();
+        return new ViewModel(array(
+            'codereviews' => $this->getCodereviewTable()->fetchFromCodereviewUsersState(), 'title' => $this->titleIndex, 'message' => $message
+        ));
+    }
 
      public function addAction()
      {
@@ -116,6 +122,22 @@
              $this->codereviewTable = $sm->get('Codereview\Model\CodereviewTable');
          }
          return $this->codereviewTable;
+     }
+     
+     public function dateCounter() {
+        date_default_timezone_set('Europe/Helsinki');
+        $currentDate = date("N");
+        $currentDateTextual = date('l');
+        $daysLeftToWeekend;
+        if ($currentDate == 6 || $currentDate == 7) {
+            $daysLeftToWeekend = 0;
+            $daysLeftToWeekend = ' thus now is Weekend, so none';
+        }
+        elseif ($currentDate < $this->daysInWeek) {
+            $daysLeftToWeekend = $this->daysInWeek - $currentDate;
+        }
+        $message = "Today is ".$currentDateTextual." ".$daysLeftToWeekend." days left to weekend";
+        return $message;
      }
      
  }
