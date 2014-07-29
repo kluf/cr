@@ -19,7 +19,7 @@
      public $authorid;
      public $reviewerid;
      protected $inputFilter;
-     public $state;
+     public $state; 
      public $author;
      public $reviewer;
 
@@ -38,6 +38,7 @@
          $this->ldap = (!empty($data['ldap'])) ? $data['ldap'] : null;
          $this->Authorsldap = (!empty($data['Authorsldap'])) ? $data['Authorsldap'] : null;
          $this->uldap = (!empty($data['uldap'])) ? $data['uldap'] : null;
+         $this->states = (!empty($data['states'])) ? $data['states'] : null;
      }
      public function setInputFilter(InputFilterInterface $inputFilter)
      {
@@ -153,6 +154,11 @@
                  'filters'  => array(
                      array('name' => 'Int'),
                  ),
+             ));
+            
+             $inputFilter->add(array(
+                 'name'     => 'states',
+                 'required' => true,
              ));
              
              $inputFilter->add(array(

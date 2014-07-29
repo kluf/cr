@@ -35,6 +35,8 @@ printFormGroup($this->formRow($form->get('authorid')
         ->setAttribute('class', 'form-control')));
 printFormGroup($this->formRow($form->get('reviewerid')
         ->setAttribute('class', 'form-control')));
+printFormGroup($this->formRow($form->get('states')
+            ->setAttribute('class', 'form-control')));
 echo $this->formSubmit($form->get('submit')
         ->setAttribute('class', 'btn btn-success'));
 echo $this->form()->closeTag();

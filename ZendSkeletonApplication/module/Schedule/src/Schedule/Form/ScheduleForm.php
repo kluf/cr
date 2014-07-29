@@ -1,7 +1,8 @@
 <?php
 namespace Schedule\Form;
 
- use Zend\Form\Form;
+use Zend\Form\Form;
+use Zend\Stdlib\Hydrator\ClassMethods;
 
  class ScheduleForm extends Form
  {
@@ -9,7 +10,11 @@ namespace Schedule\Form;
      {
          // we want to ignore the name passed
          parent::__construct('schedule');
-
+         
+         $this->setAttribute('method', 'post');
+         $this->setInputFilter(new ScheduleFilter());
+         $this->setHydrator(new ClassMethods());
+         
          $this->add(array(
              'name' => 'id',
              'type' => 'Hidden',
@@ -22,14 +27,14 @@ namespace Schedule\Form;
              ),
          ));
          $this->add(array(
-             'name' => 'DateTimeBegin',
+             'name' => 'datetimebegin',
              'type' => 'Text',
              'options' => array(
                  'label' => 'Begin of schedule',
              ),
          ));
          $this->add(array(
-             'name' => 'DateTimeEnd',
+             'name' => 'datetimeend',
              'type' => 'Text',
              'options' => array(
                  'label' => 'End of schedule',

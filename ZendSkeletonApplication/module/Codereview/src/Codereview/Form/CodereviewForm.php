@@ -65,6 +65,15 @@ use Zend\Form\Form;
                 ),
             ));
             $this->add(array(
+                'name' => 'states',
+                'type' => 'Zend\Form\Element\Select',
+                'options' => array(
+                        'label' => 'States',
+                        'value_options' => array(),
+                        'empty_option' => 'Please select state'
+                ),
+            ));
+            $this->add(array(
                 'name' => 'reviewerid',
                 'type' => 'Text',
                 'options' => array(

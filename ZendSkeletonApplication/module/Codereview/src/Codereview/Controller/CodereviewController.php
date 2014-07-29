@@ -43,6 +43,7 @@
                  return $this->redirect()->toRoute('codereview');
              }
          }
+//         var_dump($form);exit;
          return array('form' => $form);
 
      }
@@ -55,20 +56,17 @@
                  'action' => 'add'
              ));
          }
-
-         // Get the Codereview with the specified id.  An exception is thrown
-         // if it cannot be found, in which case go to the index page.
          try {
-             $codereview = $this->getCodereviewTable()->getCodereview($id);
+             $codereview = $this->getCodereviewTable()->getCodereviewForEdit($id);
          }
          catch (\Exception $ex) {
              return $this->redirect()->toRoute('codereview', array(
                  'action' => 'index'
              ));
          }
-
          $form  = new CodereviewForm();
          $form->bind($codereview);
+//         var_dump($codereview);exit;
          $form->get('submit')->setAttribute('value', 'Edit');
 
          $request = $this->getRequest();
@@ -124,12 +122,17 @@
          return $this->codereviewTable;
      }
      
+     public function isDayInWeekend() {
+         $currentDate = date("N");
+         return (boolean)$currentDate === 6 || $currentDate === 7;
+     }
+     
      public function dateCounter() {
         date_default_timezone_set('Europe/Helsinki');
         $currentDate = date("N");
         $currentDateTextual = date('l');
         $daysLeftToWeekend;
-        if ($currentDate == 6 || $currentDate == 7) {
+        if ($this->isDayInWeekend()) {
             $daysLeftToWeekend = 0;
             $daysLeftToWeekend = ' thus now is Weekend, so none';
         }

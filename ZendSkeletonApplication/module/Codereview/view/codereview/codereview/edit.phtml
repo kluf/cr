@@ -24,6 +24,7 @@ $form->setAttribute('action', $this->url(
  $form->prepare();
 echo $this->form()->openTag($form);
 echo $this->formHidden($form->get('id'));
+echo $this->formRow($form->get('states'));exit;
 printFormGroup($this->formRow($form->get('creationdate')
         ->setAttribute('class', 'form-control')));
 printFormGroup($this->formRow($form->get('changeset')
@@ -40,6 +41,9 @@ printFormGroup($this->formRow($form->get('authorid')
         ->setAttribute('class', 'form-control')));
 printFormGroup($this->formRow($form->get('reviewerid')
         ->setAttribute('class', 'form-control')));
+printFormGroup($this->formRow($form->get('states')
+            ->setAttribute('class', 'form-control')));
 echo $this->formSubmit($form->get('submit')
         ->setAttribute('class', 'btn btn-warning'));
 echo $this->form()->closeTag();
+?>
