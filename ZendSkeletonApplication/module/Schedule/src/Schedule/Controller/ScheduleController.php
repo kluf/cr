@@ -49,6 +49,56 @@
         return array('form' => $form);
     }
 
+     public function editAction()
+    {
+        $id = (int)$this->params('id');
+        if (!$id) {
+            return $this->redirect()->toRoute('schedule', array('action'=>'add'));
+        }
+        $schedule = $this->getScheduleMapper()->getSchedule($id);
+
+        $form = new ScheduleForm();
+        $form->bind($schedule);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $form->setData($request->getPost());
+            if ($form->isValid()) {
+                $this->getScheduleMapper()->saveSchedule($schedule);
+
+                return $this->redirect()->toRoute('schedule');
+            }
+        }
+
+        return array(
+            'id' => $id,
+            'form' => $form,
+        );
+    }
+    
+    public function deleteAction()
+    {
+        $id = $this->params('id');
+        $schedule = $this->getScheduleMapper()->getSchedule($id);
+        if (!$schedule) {
+            return $this->redirect()->toRoute('schedule');
+        }
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            if ($request->getPost()->get('del') == 'Yes') {
+                $this->getScheduleMapper()->deleteSchedule($id);
+            }
+
+            return $this->redirect()->toRoute('schedule');
+        }
+
+        return array(
+            'id' => $id,
+            'schedule' => $schedule
+        );
+    }
+    
 //    public function addAction()
 //    {
 //       $form = new ScheduleForm();

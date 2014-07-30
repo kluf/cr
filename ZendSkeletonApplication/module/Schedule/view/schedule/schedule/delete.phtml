@@ -1,24 +1,23 @@
-<h1>Delete Schedule</h1>
 <?php
 $title = 'Delete schedule';
 $this->headTitle($title);
 ?>
 <h1><?php echo $this->escapeHtml($title); ?></h1>
 
-<p>Are you sure that you want to delete schedule of
-    '<?php echo $this->escapeHtml($schedule->Reviewer); ?>' start time of which is
-    '<?php echo $this->escapeHtml($schedule->DateTimeBegin)." and end time is ".$this->escapeHtml($schedule->DateTimeEnd); ?>'?
-</p>
+<p>Are you sure that you want to delete schedule of <span class="label label-warning">
+    '<?php echo $this->escapeHtml($schedule->reviewer); ?>'</span> start time of which is
+    <span class="label label-warning">'<?php echo $this->escapeHtml($schedule->datetimebegin)."</span> and end time is <span class='label label-warning'>".$this->escapeHtml($schedule->datetimeend); ?>'</span>?
 <?php
 $url = $this->url('schedule', array(
     'action' => 'delete',
     'id'     => $this->id,
 ));
 ?>
-<form action="<?php echo $url; ?>" method="post">
+<form action="<?php echo $url; ?>" method="post" class="form-inline">
 <div>
     <input type="hidden" name="id" value="<?php echo (int) $schedule->id; ?>" />
-    <input type="submit" name="del" value="Yes" />
-    <input type="submit" name="del" value="No" />
+    <input type="submit" name="del" value="Yes" class="btn btn-danger"/>
+    <input type="submit" name="del" value="No" class="btn btn-info"/>
 </div>
 </form>
+</p>

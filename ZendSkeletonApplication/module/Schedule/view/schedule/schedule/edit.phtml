@@ -1,6 +1,11 @@
-<h1>Edit Schedule</h1>
-
 <?php
+function printFormGroup($row = 'null'){
+    echo '<div class="form-group">
+    <div class="col-sm-10">';
+    echo $row;
+    echo '</div>
+  </div>';
+}
 
  $title = 'Editing of schedule';
  $this->headTitle($title);
@@ -8,21 +13,19 @@
  <h1><?php echo $this->escapeHtml($title); ?></h1>
  <?php
 
-$form = $this->form;
-$form->setAttribute('action', $this->url(
-     'schedule',
-     array(
-         'action' => 'edit',
-         'id'     => $this->id,
-     )
- ));
- 
+ $form->setAttribute('action', $this->url('schedule', array('action' => 'edit', 'id' => $id)))
+         ->setAttribute('class', 'form-horizontal');
  $form->prepare();
 
  echo $this->form()->openTag($form);
  echo $this->formHidden($form->get('id'));
- echo $this->formRow($form->get('Reviewer'));
- echo $this->formRow($form->get('DateTimeBegin'));
- echo $this->formRow($form->get('DateTimeEnd'));
- echo $this->formSubmit($form->get('submit'));
+// echo $this->formRow($form->get('users'));
+printFormGroup($this->formRow($form->get('reviewer')
+         ->setAttribute('class', 'form-control')));
+printFormGroup($this->formRow($form->get('datetimebegin')
+         ->setAttribute('class', 'form-control')));
+printFormGroup($this->formRow($form->get('datetimeend')
+         ->setAttribute('class', 'form-control')));
+printFormGroup($this->formSubmit($form->get('submit')
+         ->setAttribute('class', 'btn btn-success')));
  echo $this->form()->closeTag();

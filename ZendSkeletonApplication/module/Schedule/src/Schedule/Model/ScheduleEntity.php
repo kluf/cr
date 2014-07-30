@@ -4,7 +4,7 @@ namespace Schedule\Model;
 
 class ScheduleEntity {
     public $id;
-    public $Reviewer;
+    public $reviewer;
     public $datetimebegin;
     public $datetimeend;
 //    public $ldap;
@@ -13,7 +13,7 @@ class ScheduleEntity {
     }
 
     public function getReviewer() {
-        return $this->Reviewer;
+        return $this->reviewer;
     }
 
     public function getDatetimebegin() {
@@ -33,7 +33,7 @@ class ScheduleEntity {
     }
 
     public function setReviewer($Reviewer) {
-        $this->Reviewer = $Reviewer;
+        $this->reviewer = $Reviewer;
     }
 
     public function setDatetimebegin($datetimebegin) {

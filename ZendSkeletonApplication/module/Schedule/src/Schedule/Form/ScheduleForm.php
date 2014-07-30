@@ -20,12 +20,20 @@ use Zend\Stdlib\Hydrator\ClassMethods;
              'type' => 'Hidden',
          ));
          $this->add(array(
-             'name' => 'Reviewer',
+             'name' => 'reviewer',
              'type' => 'Text',
              'options' => array(
                  'label' => 'Reviewer',
              ),
          ));
+//        $this->add(array(
+//            'name' => 'users',
+//            'type' => 'Zend\Form\Element\Select',
+//            'options' => array(
+//                    'label' => 'States',
+//                    'empty_option' => 'Please select state'
+//            ),
+//        ));
          $this->add(array(
              'name' => 'datetimebegin',
              'type' => 'Text',
