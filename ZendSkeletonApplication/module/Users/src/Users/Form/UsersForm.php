@@ -1,14 +1,21 @@
 <?php
 namespace Users\Form;
 
- use Zend\Form\Form;
-
+use Zend\Form\Form;
+use Zend\Stdlib\Hydrator\ClassMethods;
+use Zend\Db\Adapter\AdapterInterface;
+use Zend\Db\Adapter\Adapter;
  class UsersForm extends Form
  {
-     public function __construct($name = null)
+     protected $adapter;
+     public function __construct($name = null, AdapterInterface $dbAdapter)
      {
          // we want to ignore the name passed
+         $this->adapter =$dbAdapter;
          parent::__construct('users');
+         $this->setAttribute('method', 'post');
+         $this->setInputFilter(new UsersFilter());
+         $this->setHydrator(new ClassMethods());
 
          $this->add(array(
              'name' => 'id',
@@ -50,6 +57,15 @@ namespace Users\Form;
              ),
          ));
         $this->add(array(
+            'name' => 'usergroup',
+            'type' => 'Zend\Form\Element\Select',
+            'options' => array(
+                    'label' => 'Group of user',
+                    'value_options' => $this->getOptionsForSelect(),
+                    'empty_option' => 'Please select group for user'
+            ),
+        ));
+        $this->add(array(
              'name' => 'submit',
              'type' => 'Submit',
              'attributes' => array(
@@ -59,4 +75,19 @@ namespace Users\Form;
          ));
          
      }
+     
+     public function getOptionsForSelect()
+    {
+        $dbAdapter = $this->adapter;
+        $sql       = 'SELECT id,name  FROM usergroups';
+        $statement = $dbAdapter->query($sql);
+        $result    = $statement->execute();
+
+        $selectData = array();
+
+        foreach ($result as $res) {
+            $selectData[$res['id']] = $res['name'];
+        }
+        return $selectData;
+    }
  }

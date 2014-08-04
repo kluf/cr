@@ -1,19 +1,33 @@
-<h1>Add State</h1>
 <?php
-
+function printFormGroup($row = 'null'){
+    echo '<div class="form-group">
+    <div class="col-sm-10">';
+    echo $row;
+    echo '</div>
+  </div>';
+}
  $title = 'Add new users';
  $this->headTitle($title);
  ?>
  <h1><?php echo $this->escapeHtml($title); ?></h1>
  <?php
- $form->setAttribute('action', $this->url('users', array('action' => 'add')));
+ $form->setAttribute('action', $this->url('users', array('action' => 'add')))
+         ->setAttribute('class', 'form-horizontal');
  $form->prepare();
 
  echo $this->form()->openTag($form);
- echo $this->formHidden($form->get('id'));
- echo $this->formRow($form->get('ldap'));
- echo $this->formRow($form->get('email'));
- echo $this->formRow($form->get('password'));
- echo $this->formRow($form->get('groupid'));
- echo $this->formSubmit($form->get('submit'));
+ printFormGroup($this->formHidden($form->get('id')
+         ->setAttribute('class', 'form-control')));
+ printFormGroup($this->formRow($form->get('ldap')
+         ->setAttribute('class', 'form-control')));
+  printFormGroup($this->formRow($form->get('usergroup')
+         ->setAttribute('class', 'form-control')));
+ printFormGroup($this->formRow($form->get('email')
+         ->setAttribute('class', 'form-control')));
+ printFormGroup($this->formRow($form->get('password')
+         ->setAttribute('class', 'form-control')));
+ printFormGroup($this->formRow($form->get('groupid')
+         ->setAttribute('class', 'form-control')));
+ printFormGroup($this->formSubmit($form->get('submit')
+         ->setAttribute('class', 'btn btn-success')));
  echo $this->form()->closeTag();

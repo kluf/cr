@@ -5,117 +5,91 @@
  use Zend\Mvc\Controller\AbstractActionController;
  use Zend\View\Model\ViewModel;
  use Usergroups\Model\Usergroups;
- use Usergroups\Form\UsergroupsForm;  
+ use Usergroups\Model\UsergroupsMapper;
+ use Usergroups\Model\UsergroupsEntity;
+ use Usergroups\Form\UsergroupsForm;
 
  class UsergroupsController extends AbstractActionController
  {
      
-    protected $usergroupsTable;
-     public function indexAction()
+    public function indexAction()
      {
-        return new ViewModel(array(
-            'usergroups' => $this->getUsergroupsTable()->fetchAll(),
-        ));
+         $mapper = $this->getUsergroupsMapper();
+         return new ViewModel(array('usergroups' => $mapper->fetchAll()));
      }
-
+     
+    public function getUsergroupsMapper()
+    {
+        $sm = $this->getServiceLocator();
+        return $sm->get('UsergroupsMapper');
+    }
+    
     public function addAction()
     {
-       $form = new UsergroupsForm();
-       $form->get('submit')->setValue('Add');
+        $form = new UsergroupsForm();
+        $usergroups = new UsergroupsEntity();
+        $form->bind($usergroups);
 
-       $request = $this->getRequest();
-       if ($request->isPost()) {
-          $usergroups = new Usergroups();
-          $form->setInputFilter($usergroups->getInputFilter());
-          $form->setData($request->getPost());
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $form->setData($request->getPost());
+            if ($form->isValid()) {
+                $this->getUsergroupsMapper()->saveUsergroups($usergroups);
 
-          if ($form->isValid()) {
-              $usergroups->exchangeArray($form->getData());
-              $this->getUsergroupsTable()->saveUsergroups($usergroups);
-
-              // Redirect to list of usergroupss
-              return $this->redirect()->toRoute('usergroups');
-          }
-       }
-       return array('form' => $form);
-
+                // Redirect to list of tasks
+                return $this->redirect()->toRoute('usergroups');
+            }
+        }
+        return array('form' => $form);
     }
 
-     public function editAction()
-     {
-         $id = (int) $this->params()->fromRoute('id', 0);
-         if (!$id) {
-             return $this->redirect()->toRoute('usergroups', array(
-                 'action' => 'add'
-             ));
-         }
-
-         // Get the Usergroups with the specified id.  An exception is thrown
-         // if it cannot be found, in which case go to the index page.
-         try {
-             $usergroups = $this->getUsergroupsTable()->getUsergroups($id);
-         }
-         catch (\Exception $ex) {
-             return $this->redirect()->toRoute('usergroups', array(
-                 'action' => 'index'
-             ));
-         }
-
-         $form  = new UsergroupsForm();
-         $form->bind($usergroups);
-         $form->get('submit')->setAttribute('value', 'Edit');
-
-         $request = $this->getRequest();    
-         if ($request->isPost()) {
-             $form->setInputFilter($usergroups->getInputFilter());
-             $form->setData($request->getPost());
-
-             if ($form->isValid()) {
-                 $this->getUsergroupsTable()->saveUsergroups($usergroups);
-
-                 // Redirect to list of usergroupss
-                 return $this->redirect()->toRoute('usergroups');
-             }
-         }
-
-         return array(
-             'id' => $id,
-             'form' => $form,
-         );
-     }
-
-     public function deleteAction()
-     {
-        $id = (int) $this->params()->fromRoute('id', 0);
+    public function editAction()
+    {
+        $id = (int)$this->params('id');
         if (!$id) {
+            return $this->redirect()->toRoute('usergroups', array('action'=>'add'));
+        }
+        $usergroups = $this->getUsergroupsMapper()->getUsergroups($id);
+
+        $form = new UsergroupsForm();
+        $form->bind($usergroups);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $form->setData($request->getPost());
+            if ($form->isValid()) {
+                $this->getUsergroupsMapper()->saveUsergroups($usergroups);
+
+                return $this->redirect()->toRoute('usergroups');
+            }
+        }
+
+        return array(
+            'id' => $id,
+            'form' => $form,
+        );
+    }
+    
+    public function deleteAction()
+    {
+        $id = $this->params('id');
+        $usergroups = $this->getUsergroupsMapper()->getUsergroups($id);
+        if (!$usergroups) {
             return $this->redirect()->toRoute('usergroups');
         }
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $del = $request->getPost('del', 'No');
-
-            if ($del == 'Yes') {
-                $id = (int) $request->getPost('id');
-                $this->getUsergroupsTable()->deleteUsergroups($id);
+            if ($request->getPost()->get('del') == 'Yes') {
+                $this->getUsergroupsMapper()->deleteUsergroups($id);
             }
 
-            // Redirect to list of usergroupss
             return $this->redirect()->toRoute('usergroups');
         }
 
         return array(
-            'id'    => $id,
-            'usergroups' => $this->getUsergroupsTable()->getUsergroups($id)
+            'id' => $id,
+            'usergroups' => $usergroups
         );
-     }
-     
-    public function getUsergroupsTable()
-    {
-        if (!$this->usergroupsTable) {
-            $sm = $this->getServiceLocator();
-            $this->usergroupsTable = $sm->get('Usergroups\Model\UsergroupsTable');
-        }
-        return $this->usergroupsTable;
     }
  }

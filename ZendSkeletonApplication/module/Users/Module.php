@@ -12,10 +12,7 @@ namespace Users;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Users\Model\Users;
-use Users\Model\UsersTable;
-use Zend\Db\ResultSet\ResultSet;
-use Zend\Db\TableGateway\TableGateway;
-
+use Users\Model\UsersMapper;
 
 class Module
 {
@@ -42,22 +39,16 @@ class Module
         );
     }
     public function getServiceConfig()
-     {
-         return array(
-             'factories' => array(
-                 'Users\Model\UsersTable' =>  function($sm) {
-                     $tableGateway = $sm->get('UsersTableGateway');
-                     $table = new UsersTable($tableGateway);
-                     return $table;
-                 },
-                 'UsersTableGateway' => function ($sm) {
-                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
-                     $resultSetPrototype = new ResultSet();
-                     $resultSetPrototype->setArrayObjectPrototype(new Users());
-                     return new TableGateway('users', $dbAdapter, null, $resultSetPrototype);
-                 },
-             ),
-         );
-     }
+    {
+        return array(
+            'factories' => array(
+                'UsersMapper' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $mapper = new UsersMapper($dbAdapter);
+                    return $mapper;
+                }
+            ),
+        );
+    }
 
 }

@@ -1,12 +1,12 @@
-<h1>Delete State</h1>
 <?php
 $title = 'Delete usergroups';
 $this->headTitle($title);
 ?>
-<h1><?php echo $this->escapeHtml($title); ?></h1>
+<h1 class="text-right" ><small><?php echo $this->escapeHtml($title); ?></small></h1>
 
-<p>Are you sure that you want to delete usergroups named 
-    '<?php echo $this->escapeHtml($usergroups->name); ?>
+<p>Are you sure that you want to delete usergroups named <span class="label label-warning">
+    <?php echo $this->escapeHtml($usergroups->name); ?>
+    </span>
 </p>
 <?php
 $url = $this->url('usergroups', array(
@@ -17,7 +17,7 @@ $url = $this->url('usergroups', array(
 <form action="<?php echo $url; ?>" method="post">
 <div>
     <input type="hidden" name="id" value="<?php echo (int) $usergroups->id; ?>" />
-    <input type="submit" name="del" value="Yes" />
-    <input type="submit" name="del" value="No" />
+    <input type="submit" name="del" value="Yes" class="btn btn-danger"/>
+    <input type="submit" name="del" value="No" class="btn btn-info"/>
 </div>
 </form>

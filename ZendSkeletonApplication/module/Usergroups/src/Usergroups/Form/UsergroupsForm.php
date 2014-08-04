@@ -1,7 +1,8 @@
 <?php
 namespace Usergroups\Form;
 
- use Zend\Form\Form;
+use Zend\Form\Form;
+use Zend\Stdlib\Hydrator\ClassMethods;
 
  class UsergroupsForm extends Form
  {
@@ -9,6 +10,9 @@ namespace Usergroups\Form;
      {
          // we want to ignore the name passed
          parent::__construct('usergroups');
+         $this->setAttribute('method', 'post');
+         $this->setInputFilter(new UsergroupsFilter());
+         $this->setHydrator(new ClassMethods());
 
          $this->add(array(
              'name' => 'id',
@@ -18,7 +22,7 @@ namespace Usergroups\Form;
              'name' => 'name',
              'type' => 'Text',
              'options' => array(
-                 'label' => 'Usergroups',
+                 'label' => 'Name',
              ),
          ));
           $this->add(array(

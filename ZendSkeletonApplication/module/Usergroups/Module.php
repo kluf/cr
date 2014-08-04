@@ -12,9 +12,7 @@ namespace Usergroups;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Usergroups\Model\Usergroups;
-use Usergroups\Model\UsergroupsTable;
-use Zend\Db\ResultSet\ResultSet;
-use Zend\Db\TableGateway\TableGateway;
+use Usergroups\Model\UsergroupsMapper;
 
 
 class Module
@@ -42,22 +40,16 @@ class Module
         );
     }
     public function getServiceConfig()
-     {
-         return array(
-             'factories' => array(
-                 'Usergroups\Model\UsergroupsTable' =>  function($sm) {
-                     $tableGateway = $sm->get('UsergroupsTableGateway');
-                     $table = new UsergroupsTable($tableGateway);
-                     return $table;
-                 },
-                 'UsergroupsTableGateway' => function ($sm) {
-                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
-                     $resultSetPrototype = new ResultSet();
-                     $resultSetPrototype->setArrayObjectPrototype(new Usergroups());
-                     return new TableGateway('usergroups', $dbAdapter, null, $resultSetPrototype);
-                 },
-             ),
-         );
-     }
+    {
+        return array(
+            'factories' => array(
+                'UsergroupsMapper' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $mapper = new UsergroupsMapper($dbAdapter);
+                    return $mapper;
+                }
+            ),
+        );
+    }
 
 }
