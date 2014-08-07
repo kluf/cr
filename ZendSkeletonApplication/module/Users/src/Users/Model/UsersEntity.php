@@ -9,7 +9,6 @@ class UsersEntity
     public $email;
     public $password;
     public $groupid;
-    public $ugroups;
     
     public function getId() {
         return $this->id;

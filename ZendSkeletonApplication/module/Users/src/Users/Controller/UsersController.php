@@ -46,13 +46,13 @@
 
     public function editAction()
     {
+        $dbAdapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
         $id = (int)$this->params('id');
         if (!$id) {
             return $this->redirect()->toRoute('users', array('action'=>'add'));
         }
         $users = $this->getUsersMapper()->getUsers($id);
-
-        $form = new UsersForm();
+        $form = new UsersForm(null, $dbAdapter, $users->groupid);
         $form->bind($users);
 
         $request = $this->getRequest();

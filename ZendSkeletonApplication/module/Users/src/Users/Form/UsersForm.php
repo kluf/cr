@@ -8,7 +8,7 @@ use Zend\Db\Adapter\Adapter;
  class UsersForm extends Form
  {
      protected $adapter;
-     public function __construct($name = null, AdapterInterface $dbAdapter)
+     public function __construct($name = null, AdapterInterface $dbAdapter, $selected = 0)
      {
          // we want to ignore the name passed
          $this->adapter =$dbAdapter;
@@ -43,13 +43,6 @@ use Zend\Db\Adapter\Adapter;
              ),
          ));
         $this->add(array(
-             'name' => 'groupid',
-             'type' => 'Text',
-             'options' => array(
-                 'label' => 'Group',
-             ),
-         ));
-        $this->add(array(
              'name' => 'name',
              'type' => 'Text',
              'options' => array(
@@ -57,11 +50,11 @@ use Zend\Db\Adapter\Adapter;
              ),
          ));
         $this->add(array(
-            'name' => 'usergroup',
+            'name' => 'groupid',
             'type' => 'Zend\Form\Element\Select',
             'options' => array(
                     'label' => 'Group of user',
-                    'value_options' => $this->getOptionsForSelect(),
+                    'value_options' => $this->getOptionsForSelect($selected),
                     'empty_option' => 'Please select group for user'
             ),
         ));
@@ -76,7 +69,7 @@ use Zend\Db\Adapter\Adapter;
          
      }
      
-     public function getOptionsForSelect()
+     public function getOptionsForSelect($selectedOption = 0)
     {
         $dbAdapter = $this->adapter;
         $sql       = 'SELECT id,name  FROM usergroups';
@@ -87,6 +80,9 @@ use Zend\Db\Adapter\Adapter;
 
         foreach ($result as $res) {
             $selectData[$res['id']] = $res['name'];
+            if ($res['id'] == $selectedOption) {
+                $selectData[$res['id']] = array('value' => $res['id'], 'label' => $res['name'], 'selected' => true);
+            }
         }
         return $selectData;
     }

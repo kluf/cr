@@ -12,9 +12,7 @@ namespace State;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use State\Model\State;
-use State\Model\StateTable;
-use Zend\Db\ResultSet\ResultSet;
-use Zend\Db\TableGateway\TableGateway;
+use State\Model\StateMapper;
 
 
 class Module
@@ -45,18 +43,12 @@ class Module
      {
          return array(
              'factories' => array(
-                 'State\Model\StateTable' =>  function($sm) {
-                     $tableGateway = $sm->get('StateTableGateway');
-                     $table = new StateTable($tableGateway);
-                     return $table;
-                 },
-                 'StateTableGateway' => function ($sm) {
-                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
-                     $resultSetPrototype = new ResultSet();
-                     $resultSetPrototype->setArrayObjectPrototype(new State());
-                     return new TableGateway('state', $dbAdapter, null, $resultSetPrototype);
-                 },
-             ),
+                'StateMapper' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $mapper = new StateMapper($dbAdapter);
+                    return $mapper;
+                }
+            ),
          );
      }
 

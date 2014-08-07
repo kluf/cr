@@ -1,12 +1,11 @@
-<h1>Delete State</h1>
 <?php
 $title = 'Delete users';
 $this->headTitle($title);
 ?>
 <h1><?php echo $this->escapeHtml($title); ?></h1>
 
-<p>Are you sure that you want to delete user named 
-    '<?php echo $this->escapeHtml($users->ldap); ?>
+<p>Are you sure that you want to delete user named <span class="label label-warning">
+    <?php echo $this->escapeHtml($users->ldap); ?></span>
 </p>
 <?php
 $url = $this->url('users', array(
@@ -17,7 +16,7 @@ $url = $this->url('users', array(
 <form action="<?php echo $url; ?>" method="post">
 <div>
     <input type="hidden" name="id" value="<?php echo (int) $users->id; ?>" />
-    <input type="submit" name="del" value="Yes" />
-    <input type="submit" name="del" value="No" />
+    <input type="submit" name="del" value="Yes" class="btn btn-danger"/>
+    <input type="submit" name="del" value="No" class="btn btn-info"/>
 </div>
 </form>
