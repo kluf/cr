@@ -1,11 +1,16 @@
-<h1>Edit State</h1>
-
 <?php
+function printFormGroup($row = 'null'){
+    echo '<div class="form-group">
+    <div class="col-sm-10">';
+    echo $row;
+    echo '</div>
+  </div>';
+}
 
  $title = 'Editing of state';
  $this->headTitle($title);
  ?>
- <h1><?php echo $this->escapeHtml($title); ?></h1>
+<h1 class="text-right" ><small><?php echo $this->escapeHtml($title); ?></small></h1>
  <?php
 
 $form = $this->form;
@@ -15,12 +20,15 @@ $form->setAttribute('action', $this->url(
          'action' => 'edit',
          'id'     => $this->id,
      )
- ));
+ ))->setAttribute('class', 'form-horizontal');
  
  $form->prepare();
 
  echo $this->form()->openTag($form);
  echo $this->formHidden($form->get('id'));
- echo $this->formRow($form->get('name'));
- echo $this->formSubmit($form->get('submit'));
+ printFormGroup($this->formRow($form->get('name')
+         ->setAttribute('class', 'form-control')));
+ printFormGroup($this->formSubmit($form->get('submit')
+         ->setAttribute('class', 'form-control')
+         ->setAttribute('class', 'btn btn-warning')));
  echo $this->form()->closeTag();
