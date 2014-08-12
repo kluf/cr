@@ -1,13 +1,13 @@
 <?php
 
- namespace Schedule\Controller;
+namespace State\Controller;
 
- use Zend\Mvc\Controller\AbstractActionController;
- use Zend\View\Model\ViewModel;
- use Schedule\Model\Schedule;
- use Schedule\Model\ScheduleMapper;
- use Schedule\Model\ScheduleEntity;
- use Schedule\Form\ScheduleForm;
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
+use State\Model\State;
+use State\Model\StateMapper;
+use State\Model\StateEntity;
+use State\Form\StateForm;
 
  class ScheduleController extends AbstractActionController
  {

@@ -40,15 +40,15 @@ class Module
         );
     }
     public function getServiceConfig()
-    {
-        return array(
-            'factories' => array(
+     {
+         return array(
+             'factories' => array(
                 'ScheduleMapper' => function ($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $mapper = new ScheduleMapper($dbAdapter);
                     return $mapper;
                 }
             ),
-        );
-    }
+         );
+     }
 }
