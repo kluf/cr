@@ -14,7 +14,6 @@ use Zend\Mvc\MvcEvent;
 use Schedule\Model\Schedule;
 use Schedule\Model\ScheduleMapper;
 
-
 class Module
 {
     public function onBootstrap(MvcEvent $e)

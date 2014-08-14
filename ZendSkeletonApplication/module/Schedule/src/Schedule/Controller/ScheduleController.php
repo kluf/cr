@@ -1,13 +1,13 @@
 <?php
 
-namespace State\Controller;
+namespace Schedule\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use State\Model\State;
-use State\Model\StateMapper;
-use State\Model\StateEntity;
-use State\Form\StateForm;
+use Schedule\Model\Schedule;
+use Schedule\Model\ScheduleMapper;
+use Schedule\Model\ScheduleEntity;
+use Schedule\Form\ScheduleForm;
 
  class ScheduleController extends AbstractActionController
  {
@@ -26,7 +26,8 @@ use State\Form\StateForm;
     
     public function addAction()
     {
-        $form = new ScheduleForm();
+        $dbAdapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
+        $form = new ScheduleForm(null, $dbAdapter);
         $schedule = new ScheduleEntity();
         $form->bind($schedule);
 
@@ -45,13 +46,14 @@ use State\Form\StateForm;
 
     public function editAction()
     {
+        $dbAdapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
         $id = (int)$this->params('id');
         if (!$id) {
             return $this->redirect()->toRoute('schedule', array('action'=>'add'));
         }
         $schedule = $this->getScheduleMapper()->getSchedule($id);
 
-        $form = new ScheduleForm();
+        $form = new ScheduleForm(null, $dbAdapter, $schedule->reviewer);
         $form->bind($schedule);
 
         $request = $this->getRequest();

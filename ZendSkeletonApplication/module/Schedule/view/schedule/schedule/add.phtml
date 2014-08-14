@@ -16,7 +16,7 @@ function printFormGroup($row = 'null'){
 
  echo $this->form()->openTag($form);
  echo $this->formHidden($form->get('id'));
-printFormGroup($this->formRow($form->get('reviewer')
+printFormGroup($this->formRow($form->get('Reviewer')
          ->setAttribute('class', 'form-control')));
 printFormGroup($this->formRow($form->get('datetimebegin')
          ->setAttribute('class', 'form-control')));

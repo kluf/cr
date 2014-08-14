@@ -11,6 +11,7 @@ use Zend\Db\Adapter\Adapter;
      public function __construct($name = null, AdapterInterface $dbAdapter, $selectedReviewer = 0, $selectedtraineebackupid = 0,
              $selectedreplacementreviewerid = 0, $selectedoriginalreviewerid = 0, $selecteddesignreviewerid = 0, $selecteddesigntraineereviewerid = 0)
      {
+         $this->adapter =$dbAdapter;
          // we want to ignore the name passed
          parent::__construct('schedule');
          
@@ -110,7 +111,7 @@ use Zend\Db\Adapter\Adapter;
         $selectData = array();
 
         foreach ($result as $res) {
-            $selectData[$res['id']] = $res['name'];
+            $selectData[$res['id']] = $res[$fieldName];
             if ($res['id'] == $selectedOption) {
                 $selectData[$res['id']] = array('value' => $res['id'], 'label' => $res['name'], 'selected' => true);
             }

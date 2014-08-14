@@ -3,6 +3,11 @@
 <table class="table table-hover table-striped">
     <tr class="success">
         <td>Reviewer</td>
+        <td>Reviewer Trainee/Backup</td>
+        <td>Replacement</td>
+        <td>Original</td>
+        <td>Design reviewer</td>
+        <td>Design reviewer trainee</td>
         <td>Start time</td>
         <td>End time</td>
         <td>Moderation</td>
@@ -11,9 +16,14 @@
 foreach($schedule as $item) {
     echo "
     <tr>
-        <td>".$item['ldap']."</td>
-        <td>".$item['DateTimeBegin']."</td>
-        <td>".$item['DateTimeEnd']."</td>";
+        <td>".$item["reviewer_ldap"]."</td>
+        <td>".$item["traineebackupid_ldap"]."</td>
+        <td>".$item["replacementreviewerid_ldap"]."</td>
+        <td>".$item["originalreviewerid_ldap"]."</td>
+        <td>".$item["designreviewerid_ldap"]."</td>
+        <td>".$item["designtraineereviewerid_ldap"]."</td>
+        <td>".$item["datetimebegin"]."</td>
+        <td>".$item["datetimeend"]."</td>";
 ?>
         <td>
             <a href="<?php echo $this->url('schedule', array('action'=>'edit', 'id' => $item['id']));?>">Edit</a>
