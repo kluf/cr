@@ -74,10 +74,14 @@ class ScheduleMapper {
     public function fetchScheduleWithUsers()
     {
     $select = new Select();
-    $select->from('schedule')
+    $select->from(array('S' => 'schedule'))
                ->columns(array('id', 'reviewer', 'traineebackupid', 'replacementreviewerid', 'originalreviewerid', 'designreviewerid', 'designtraineereviewerid', 'datetimebegin', 'datetimeend'))
-               ->join('users', 'schedule.reviewer = users.id', array('uid' =>'id', 'reviewer_ldap' => 'ldap', 'traineebackupid_ldap' => 'ldap', 'replacementreviewerid_ldap' => 'ldap',
-                   'originalreviewerid_ldap' => 'ldap', 'designreviewerid_ldap' => 'ldap', 'designtraineereviewerid_ldap' => 'ldap', 'datetimebegin_ldap' => 'ldap'));
+               ->join(array('U' => 'users'), 'S.reviewer = U.id', array('uid' =>'id', 'reviewer_ldap' => 'ldap'))
+                ->join(array('U0' => 'users'), 'S.traineebackupid = U0.id', array('traineebackupid_ldap' => 'ldap'))
+                ->join(array('U1' => 'users'), 'S.replacementreviewerid = U1.id', array('replacementreviewerid_ldap' => 'ldap'))
+                ->join(array('U2' => 'users'), 'S.originalreviewerid = U2.id', array('originalreviewerid_ldap' => 'ldap'))
+                ->join(array('U3' => 'users'), 'S.designreviewerid = U3.id', array('designreviewerid_ldap' => 'ldap'))
+                ->join(array('U4' => 'users'), 'S.designtraineereviewerid = U4.id', array('designtraineereviewerid_ldap' => 'ldap'));
        $statement = $this->sql->prepareStatementForSqlObject($select);
        $results = $statement->execute();
        return $results;
