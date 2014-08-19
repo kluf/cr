@@ -52,8 +52,9 @@ use Schedule\Form\ScheduleForm;
             return $this->redirect()->toRoute('schedule', array('action'=>'add'));
         }
         $schedule = $this->getScheduleMapper()->getSchedule($id);
-
-        $form = new ScheduleForm(null, $dbAdapter, $schedule->reviewer);
+        $form = new ScheduleForm(null, $dbAdapter, $options = array("selectedReviewer" => $schedule->reviewer, "selectedtraineebackupid" => $schedule->traineebackupid,
+             "selectedreplacementreviewerid" => $schedule->replacementreviewerid, "selectedoriginalreviewerid" => $schedule->originalreviewerid,
+                "selecteddesignreviewerid" => $schedule->designreviewerid, "selecteddesigntraineereviewerid" => $schedule->designtraineereviewerid));
         $form->bind($schedule);
 
         $request = $this->getRequest();

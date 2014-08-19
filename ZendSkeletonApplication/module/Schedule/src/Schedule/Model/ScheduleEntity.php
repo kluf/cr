@@ -3,6 +3,7 @@
 namespace Schedule\Model;
 
 class ScheduleEntity {
+    public $id;
     public $reviewer;
     public $traineebackupid;
     public $replacementreviewerid;
@@ -11,6 +12,11 @@ class ScheduleEntity {
     public $designtraineereviewerid;
     public $datetimebegin;
     public $datetimeend;
+    
+    public function getId() {
+        return $this->id;
+    }
+    
     public function getReviewer() {
         return $this->reviewer;
     }
@@ -41,6 +47,10 @@ class ScheduleEntity {
 
     public function getDatetimeend() {
         return $this->datetimeend;
+    }
+    
+    public function setId($id) {
+        $this->id = $id;
     }
 
     public function setReviewer($reviewer) {

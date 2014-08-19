@@ -10,12 +10,27 @@ function printFormGroup($row = 'null'){
 
  $title = 'Add new schedule';
  $this->headTitle($title);
+ ?>
+<h1 class="text-right" ><small><?php echo $this->escapeHtml($title); ?></small></h1>
+<?php
  $form->setAttribute('action', $this->url('schedule', array('action' => 'add')))
          ->setAttribute('class', 'form-horizontal');
  $form->prepare();
 
  echo $this->form()->openTag($form);
  echo $this->formHidden($form->get('id'));
+printFormGroup($this->formRow($form->get('Reviewer')
+         ->setAttribute('class', 'form-control')));
+printFormGroup($this->formRow($form->get('traineebackupid')
+         ->setAttribute('class', 'form-control')));
+printFormGroup($this->formRow($form->get('replacementreviewerid')
+         ->setAttribute('class', 'form-control')));
+printFormGroup($this->formRow($form->get('originalreviewerid')
+         ->setAttribute('class', 'form-control')));
+printFormGroup($this->formRow($form->get('designreviewerid')
+         ->setAttribute('class', 'form-control')));
+printFormGroup($this->formRow($form->get('designtraineereviewerid')
+         ->setAttribute('class', 'form-control')));
 printFormGroup($this->formRow($form->get('Reviewer')
          ->setAttribute('class', 'form-control')));
 printFormGroup($this->formRow($form->get('datetimebegin')
