@@ -12,9 +12,7 @@ namespace Codereview;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Codereview\Model\Codereview;
-use Codereview\Model\CodereviewTable;
-use Zend\Db\ResultSet\ResultSet;
-use Zend\Db\TableGateway\TableGateway;
+use Codereview\Model\CodereviewMapper;
 
 
 class Module
@@ -42,22 +40,16 @@ class Module
         );
     }
     public function getServiceConfig()
-     {
-         return array(
-             'factories' => array(
-                 'Codereview\Model\CodereviewTable' =>  function($sm) {
-                     $tableGateway = $sm->get('CodereviewTableGateway');
-                     $table = new CodereviewTable($tableGateway);
-                     return $table;
-                 },
-                 'CodereviewTableGateway' => function ($sm) {
-                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
-                     $resultSetPrototype = new ResultSet();
-                     $resultSetPrototype->setArrayObjectPrototype(new Codereview());
-                     return new TableGateway('codereview', $dbAdapter, null, $resultSetPrototype);
-                 },
-             ),
-         );
-     }
+    {
+        return array(
+            'factories' => array(
+               'CodereviewMapper' => function ($sm) {
+                   $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                   $mapper = new CodereviewMapper($dbAdapter);
+                   return $mapper;
+               }
+           ),
+        );
+    }
 
 }

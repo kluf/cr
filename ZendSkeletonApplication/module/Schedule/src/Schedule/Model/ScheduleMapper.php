@@ -12,12 +12,12 @@
  */
 namespace Schedule\Model;
 
- use Zend\Db\Adapter\Adapter;
- use Schedule\Model\ScheduleEntity;
- use Zend\Stdlib\Hydrator\ClassMethods;
- use Zend\Db\Sql\Sql;
- use Zend\Db\Sql\Select;
- use Zend\Db\ResultSet\HydratingResultSet;
+use Zend\Db\Adapter\Adapter;
+use Schedule\Model\ScheduleEntity;
+use Zend\Stdlib\Hydrator\ClassMethods;
+use Zend\Db\Sql\Sql;
+use Zend\Db\Sql\Select;
+use Zend\Db\ResultSet\HydratingResultSet;
 
 class ScheduleMapper {
 
@@ -35,11 +35,8 @@ class ScheduleMapper {
     public function fetchAll()
     {
         $select = $this->sql->select();
-//         $select->order(array('completed ASC', 'created ASC'));
-
         $schedule = $this->sql->prepareSchedulementForSqlObject($select);
         $results = $schedule->execute();
-
         $entityPrototype = new ScheduleEntity();
         $hydrator = new ClassMethods();
         $resultset = new HydratingResultSet($hydrator, $entityPrototype);
@@ -89,7 +86,6 @@ class ScheduleMapper {
    
     public function getSchedule($id)
    {
-//       echo $id;exit;
        $select = $this->sql->select();
        $select->where(array('id' => $id));
 
@@ -98,7 +94,6 @@ class ScheduleMapper {
        if (!$result) {
            return null;
        }
-
        $hydrator = new ClassMethods();
        $schedule = new ScheduleEntity();
        $hydrator->hydrate($result, $schedule);
@@ -110,10 +105,7 @@ class ScheduleMapper {
    {
        $delete = $this->sql->delete();
        $delete->where(array('id' => $id));
-
        $schedule = $this->sql->prepareStatementForSqlObject($delete);
        return $schedule->execute();
    }
 }
-
-?>

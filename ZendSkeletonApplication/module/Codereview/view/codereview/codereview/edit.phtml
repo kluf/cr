@@ -10,7 +10,7 @@ function printFormGroup($row = 'null'){
  $title = 'Edit new codereview';
  $this->headTitle($title);
  ?>
- <h1><?php echo $this->escapeHtml($title); ?></h1>
+<h1 class="text-right" ><small><?php echo $this->escapeHtml($title); ?></small></h1>
  <?php
 $form = $this->form;
 $form->setAttribute('action', $this->url(
@@ -24,7 +24,6 @@ $form->setAttribute('action', $this->url(
  $form->prepare();
 echo $this->form()->openTag($form);
 echo $this->formHidden($form->get('id'));
-echo $this->formRow($form->get('states'));exit;
 printFormGroup($this->formRow($form->get('creationdate')
         ->setAttribute('class', 'form-control')));
 printFormGroup($this->formRow($form->get('changeset')
@@ -41,8 +40,6 @@ printFormGroup($this->formRow($form->get('authorid')
         ->setAttribute('class', 'form-control')));
 printFormGroup($this->formRow($form->get('reviewerid')
         ->setAttribute('class', 'form-control')));
-printFormGroup($this->formRow($form->get('states')
-            ->setAttribute('class', 'form-control')));
 echo $this->formSubmit($form->get('submit')
         ->setAttribute('class', 'btn btn-warning'));
 echo $this->form()->closeTag();

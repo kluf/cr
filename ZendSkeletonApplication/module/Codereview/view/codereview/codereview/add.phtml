@@ -9,7 +9,7 @@ function printFormGroup($row = 'null'){
  $title = 'Add new codereview';
  $this->headTitle($title);
  ?>
- <h1><?php echo $this->escapeHtml($title); ?></h1>
+<h1 class="text-right" ><small><?php echo $this->escapeHtml($title); ?></small></h1>
  <?php
 date_default_timezone_set('Europe/Helsinki');
 $currentDate = date("m-d-Y H:i:s");
@@ -19,8 +19,9 @@ $form->setAttribute('action', $this->url('codereview', array('action' => 'add'))
 echo $this->form()->openTag($form);
 echo $this->formHidden($form->get('id'));
 printFormGroup($this->formRow($form->get('creationdate')
-        ->setValue($currentDate)
-        ->setAttribute('class', 'form-control')));
+        ->setAttribute('class', 'form-control')
+        ->setAttribute('value', $currentDate)
+        ->setAttribute('readonly', 'readonly')));
 printFormGroup($this->formRow($form->get('changeset')
         ->setAttribute('class', 'form-control')));
 printFormGroup($this->formRow($form->get('jiraticket')
@@ -35,8 +36,6 @@ printFormGroup($this->formRow($form->get('authorid')
         ->setAttribute('class', 'form-control')));
 printFormGroup($this->formRow($form->get('reviewerid')
         ->setAttribute('class', 'form-control')));
-printFormGroup($this->formRow($form->get('states')
-            ->setAttribute('class', 'form-control')));
 echo $this->formSubmit($form->get('submit')
-        ->setAttribute('class', 'btn btn-success'));
+        ->setAttribute('class', 'btn btn-warning'));
 echo $this->form()->closeTag();

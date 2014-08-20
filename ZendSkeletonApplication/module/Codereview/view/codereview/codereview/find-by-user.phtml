@@ -1,0 +1,50 @@
+<?php $title = 'Find by ticket';?>
+<h1 class="text-right" ><small><?php echo $this->escapeHtml($title); ?></small></h1>
+<?php
+    $this->headTitle($this->escapeHtml($title));
+?>
+
+<form action="/codereview/findByUser" method="GET" class="form-horizontal">
+    <label for="userid">Select username</label>
+    <select name="userid" class="form-control" id="userid">
+        <?php 
+            foreach($users as $user) {
+                echo "<option value='{$user['id']}'>{$user['ldap']}</option>";
+            }
+        ?>
+    </select>
+    <button class="btn btn-success form-control">Find by username</button>
+</form>
+<table class="table table-hover table-striped">
+    <tr class="success">
+        <th>Creating date</th>
+        <th>Changeset</th>
+        <th>JIRA ticket</th>
+        <th>Author's comments</th>
+        <th>Reviewer's comments</th>
+        <th>State</th>
+        <th>Author</th>
+        <th>Reviewer</th>
+        <th>Moderation</th>
+    </tr>
+<?php
+if (isset($codereviews)) {
+    foreach ($codereviews as $codereview) {
+        echo "
+        <tr>
+        <td>{$codereview['creationdate']}</td>
+            <td><a href=".$codereview['changeset']." target='_blank'>{$codereview['changeset']}</a></td>
+            <td><a href=".$codereview['jiraticket']." target='_blank'>{$codereview['jiraticket']}</a></td>
+           <td>{$codereview['authorcomments']}</td>
+           <td>{$codereview['reviewercomments']}</td>
+           <td>{$codereview['state']}</td>
+           <td>{$codereview['reviewer']}</td>
+           <td>{$codereview['author']}</td>
+           <td><a href=".$this->url('codereview', array('action'=>'edit', 'id' => $codereview['id'])).">Edit</a>
+               <a href=".$this->url('codereview', array('action'=>'delete', 'id' => $codereview['id'])).">Delete</a>
+           </td>
+        </tr>";
+    }
+}
+?>
+</table>

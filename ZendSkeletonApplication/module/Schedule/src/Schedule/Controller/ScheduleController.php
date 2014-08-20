@@ -12,11 +12,11 @@ use Schedule\Form\ScheduleForm;
  class ScheduleController extends AbstractActionController
  {
      
-     public function indexAction()
-     {
-         $mapper = $this->getScheduleMapper();
-         return new ViewModel(array('schedule' => $mapper->fetchScheduleWithUsers()));
-     }
+    public function indexAction()
+    {
+        $mapper = $this->getScheduleMapper();
+        return new ViewModel(array('schedule' => $mapper->fetchScheduleWithUsers()));
+    }
      
     public function getScheduleMapper()
     {
