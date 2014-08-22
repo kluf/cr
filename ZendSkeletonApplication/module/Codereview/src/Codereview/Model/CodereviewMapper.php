@@ -101,6 +101,20 @@ use Zend\Db\ResultSet\HydratingResultSet;
     $results = $statement->execute();
     return $results;
     }
+    
+    public function getCodereviewByTicket($ticketNumber)
+    {
+    $select = new Select();
+    $select->from(array('C' => 'codereview'))
+               ->columns(array('id', 'creationdate', 'changeset', 'jiraticket', 'authorcomments', 'reviewercomments', 'stateid', 'authorid', 'reviewerid' ))
+               ->join(array('U' => 'users'), 'C.authorid = U.id', array('uid' =>'id', 'author' => 'ldap'))
+                ->join(array('U0' => 'users'), 'C.reviewerid = U0.id', array('rid' =>'id', 'reviewer' => 'ldap'))
+                ->join(array('S' => 'state'), 'C.stateid = S.id', array('state' => 'name'))
+                ->where('C.jiraticket LIKE "%'.$ticketNumber.'%"');
+    $statement = $this->sql->prepareStatementForSqlObject($select);
+    $results = $statement->execute();
+    return $results;
+    }
    
    public function deleteCodereview($id)
    {

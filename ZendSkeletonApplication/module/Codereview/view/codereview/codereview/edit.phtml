@@ -6,10 +6,10 @@ function printFormGroup($row = 'null'){
     echo '</div>
   </div>';
 }
+$title = 'Edit new codereview';
+$this->headTitle($title);
+?>
 
- $title = 'Edit new codereview';
- $this->headTitle($title);
- ?>
 <h1 class="text-right" ><small><?php echo $this->escapeHtml($title); ?></small></h1>
  <?php
 $form = $this->form;

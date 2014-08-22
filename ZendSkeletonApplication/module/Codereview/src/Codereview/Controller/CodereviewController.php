@@ -101,6 +101,21 @@ class CodereviewController extends AbstractActionController
         }
     }
     
+        public function findByTicketAction()
+    {
+        $request = $this->getRequest();
+//        var_dump($request->getQuery('userid'));
+        if ($request->isGet()) {
+            if ($request->getQuery('jiraticket')) {
+                $user = $request->getQuery('jiraticket');
+                $mapper = $this->getCodereviewMapper();
+                $codereviews = $mapper->getCodereviewByTicket($request->getQuery('jiraticket'));
+                return new ViewModel(array('codereviews' => $codereviews));
+            }
+//            return new ViewModel(array('users' => $selectData));
+        }
+    }
+    
     public function deleteAction()
     {
         $id = $this->params('id');
