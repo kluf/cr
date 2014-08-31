@@ -6,7 +6,7 @@ $this->headTitle($title);
 
 <p>Are you sure that you want to delete schedule of <span class="label label-warning">
     '<?php echo $this->escapeHtml($schedule->reviewer); ?>'</span> start time of which is
-    <span class="label label-warning">'<?php echo $this->escapeHtml($schedule->datetimebegin)."</span> and end time is <span class='label label-warning'>".$this->escapeHtml($schedule->datetimeend); ?>'</span>?
+    <span class="label label-warning">'<?php echo $this->escapeHtml($schedule->timereference)."</span> and end time is <span class='label label-warning'>".$this->escapeHtml($schedule->dateofschedule); ?>'</span>?
 <?php
 $url = $this->url('schedule', array(
     'action' => 'delete',

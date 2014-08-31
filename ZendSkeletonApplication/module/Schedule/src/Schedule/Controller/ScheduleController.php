@@ -9,6 +9,14 @@ use Schedule\Model\ScheduleMapper;
 use Schedule\Model\ScheduleEntity;
 use Schedule\Form\ScheduleForm;
 
+use Reviewerstime\Model\Reviewerstime;
+use Reviewerstime\Model\ReviewerstimeMapper;
+use Reviewerstime\Model\ReviewerstimeEntity;
+
+ use Users\Model\UsersMapper;
+ use Users\Model\UsersEntity;
+ use Users\Form\UsersForm;
+
  class ScheduleController extends AbstractActionController
  {
      
@@ -24,10 +32,31 @@ use Schedule\Form\ScheduleForm;
         return $sm->get('ScheduleMapper');
     }
     
+    public function getUsersMapper()
+    {
+        $sm = $this->getServiceLocator();
+        return $sm->get('UsersMapper');
+    }
+    
+    public function getReviewerstimeMapper()
+    {
+        $sm = $this->getServiceLocator();
+        return $sm->get('ReviewerstimeMapper');
+    }
+    
     public function addAction()
     {
-        $dbAdapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
-        $form = new ScheduleForm(null, $dbAdapter);
+        $UsersMapper = $this->getUsersMapper();
+        $timeReferenceMapper = $this->getReviewerstimeMapper();
+        $timeReference = $timeReferenceMapper->fetchReviewerstimeForSelect();
+        $reviewer = $UsersMapper->fetchUsersForSelect();
+        $reviewerTrainee = $UsersMapper->fetchUsersForSelect();
+        $replacement = $UsersMapper->fetchUsersForSelect();
+        $original = $UsersMapper->fetchUsersForSelect();
+        $designReviewer = $UsersMapper->fetchUsersForSelect();
+        $designReviewerTrainee = $UsersMapper->fetchUsersForSelect();
+        
+        $form = new ScheduleForm(null, $reviewer, $reviewerTrainee, $replacement, $original, $designReviewer, $designReviewerTrainee, $timeReference);
         $schedule = new ScheduleEntity();
         $form->bind($schedule);
 
@@ -46,15 +75,25 @@ use Schedule\Form\ScheduleForm;
 
     public function editAction()
     {
-        $dbAdapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
         $id = (int)$this->params('id');
         if (!$id) {
             return $this->redirect()->toRoute('schedule', array('action'=>'add'));
         }
+        
         $schedule = $this->getScheduleMapper()->getSchedule($id);
-        $form = new ScheduleForm(null, $dbAdapter, $options = array("selectedReviewer" => $schedule->reviewer, "selectedtraineebackupid" => $schedule->traineebackupid,
-             "selectedreplacementreviewerid" => $schedule->replacementreviewerid, "selectedoriginalreviewerid" => $schedule->originalreviewerid,
-                "selecteddesignreviewerid" => $schedule->designreviewerid, "selecteddesigntraineereviewerid" => $schedule->designtraineereviewerid));
+        $UsersMapper = $this->getUsersMapper();
+        $timeReferenceMapper = $this->getReviewerstimeMapper();
+        $timeReference = $timeReferenceMapper->fetchReviewerstimeForSelect();
+        $reviewer = $UsersMapper->fetchUsersForSelect($schedule->reviewer);
+        $reviewerTrainee = $UsersMapper->fetchUsersForSelect($schedule->traineebackupid);
+        $replacement = $UsersMapper->fetchUsersForSelect($schedule->replacementreviewerid);
+        $original = $UsersMapper->fetchUsersForSelect($schedule->originalreviewerid);
+        $designReviewer = $UsersMapper->fetchUsersForSelect($schedule->designreviewerid);
+        $designReviewerTrainee = $UsersMapper->fetchUsersForSelect($schedule->designtraineereviewerid);
+        
+        $form = new ScheduleForm(null, $reviewer, $reviewerTrainee, $replacement, $original, $designReviewer, $designReviewerTrainee, $timeReference);
+        
+        
         $form->bind($schedule);
 
         $request = $this->getRequest();

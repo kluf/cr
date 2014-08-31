@@ -1,43 +1,43 @@
 <?php
 
-namespace Schedule\Controller;
+namespace State\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Schedule\Model\Schedule;
-use Schedule\Model\ScheduleMapper;
-use Schedule\Model\ScheduleEntity;
-use Schedule\Form\ScheduleForm;
+use State\Model\State;
+use State\Model\StateMapper;
+use State\Model\StateEntity;
+use State\Form\StateForm;
 
- class ScheduleController extends AbstractActionController
+ class StateController extends AbstractActionController
  {
      
 public function indexAction()
      {
-         $mapper = $this->getScheduleMapper();
-         return new ViewModel(array('schedule' => $mapper->fetchScheduleWithUsers()));
+         $mapper = $this->getStateMapper();
+         return new ViewModel(array('state' => $mapper->fetchAll()));
      }
      
-    public function getScheduleMapper()
+    public function getStateMapper()
     {
         $sm = $this->getServiceLocator();
-        return $sm->get('ScheduleMapper');
+        return $sm->get('StateMapper');
     }
     
     public function addAction()
     {
-        $form = new ScheduleForm();
-        $schedule = new ScheduleEntity();
-        $form->bind($schedule);
+        $form = new StateForm();
+        $state = new StateEntity();
+        $form->bind($state);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $form->setData($request->getPost());
             if ($form->isValid()) {
-                $this->getScheduleMapper()->saveSchedule($schedule);
+                $this->getStateMapper()->saveState($state);
 
                 // Redirect to list of tasks
-                return $this->redirect()->toRoute('schedule');
+                return $this->redirect()->toRoute('state');
             }
         }
         return array('form' => $form);
@@ -47,20 +47,20 @@ public function indexAction()
     {
         $id = (int)$this->params('id');
         if (!$id) {
-            return $this->redirect()->toRoute('schedule', array('action'=>'add'));
+            return $this->redirect()->toRoute('state', array('action'=>'add'));
         }
-        $schedule = $this->getScheduleMapper()->getSchedule($id);
+        $state = $this->getStateMapper()->getState($id);
 
-        $form = new ScheduleForm();
-        $form->bind($schedule);
+        $form = new StateForm();
+        $form->bind($state);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $form->setData($request->getPost());
             if ($form->isValid()) {
-                $this->getScheduleMapper()->saveSchedule($schedule);
+                $this->getStateMapper()->saveState($state);
 
-                return $this->redirect()->toRoute('schedule');
+                return $this->redirect()->toRoute('state');
             }
         }
 
@@ -73,23 +73,23 @@ public function indexAction()
     public function deleteAction()
     {
         $id = $this->params('id');
-        $schedule = $this->getScheduleMapper()->getSchedule($id);
-        if (!$schedule) {
-            return $this->redirect()->toRoute('schedule');
+        $state = $this->getStateMapper()->getState($id);
+        if (!$state) {
+            return $this->redirect()->toRoute('state');
         }
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             if ($request->getPost()->get('del') == 'Yes') {
-                $this->getScheduleMapper()->deleteSchedule($id);
+                $this->getStateMapper()->deleteState($id);
             }
 
-            return $this->redirect()->toRoute('schedule');
+            return $this->redirect()->toRoute('state');
         }
 
         return array(
             'id' => $id,
-            'schedule' => $schedule
+            'state' => $state
         );
     }
  }

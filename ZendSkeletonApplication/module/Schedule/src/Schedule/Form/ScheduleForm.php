@@ -8,10 +8,8 @@ use Zend\Db\Adapter\Adapter;
 
  class ScheduleForm extends Form
  {
-     public function __construct($name = null, AdapterInterface $dbAdapter, $options = array("selectedReviewer" => 0, "selectedtraineebackupid" => 0,
-             "selectedreplacementreviewerid" => 0, "selectedoriginalreviewerid" => 0, "selecteddesignreviewerid" => 0, "selecteddesigntraineereviewerid" => 0))
+     public function __construct($name = null, $reviewer, $reviewerTrainee, $replacement, $original, $designReviewer, $designReviewerTrainee, $timeReference)
      {
-         $this->adapter =$dbAdapter;
          // we want to ignore the name passed
          parent::__construct('schedule');
          
@@ -27,8 +25,8 @@ use Zend\Db\Adapter\Adapter;
             'name' => 'Reviewer',
             'type' => 'Zend\Form\Element\Select',
             'options' => array(
-                    'label' => 'Reviewer',
-                    'value_options' => $this->getOptionsForSelect($options["selectedReviewer"], 'users', 'ldap'),
+                    'label' => 'Reviewer*: ',
+                    'value_options' => $reviewer,
                     'empty_option' => 'Please select reviewer'
             ),
         ));
@@ -37,8 +35,9 @@ use Zend\Db\Adapter\Adapter;
             'type' => 'Zend\Form\Element\Select',
             'options' => array(
                     'label' => 'Trainee backup',
-                    'value_options' => $this->getOptionsForSelect($options["selectedtraineebackupid"], 'users', 'ldap'),
-                    'empty_option' => 'Please select trainee'
+                    'value_options' => $reviewerTrainee,
+                    'empty_option' => 'Please select trainee',
+                    'disable_inarray_validator' => true,
             ),
         ));
         $this->add(array(
@@ -46,8 +45,9 @@ use Zend\Db\Adapter\Adapter;
             'type' => 'Zend\Form\Element\Select',
             'options' => array(
                     'label' => 'Replacement',
-                    'value_options' => $this->getOptionsForSelect($options["selectedreplacementreviewerid"], 'users', 'ldap'),
-                    'empty_option' => 'Please select who will replace the original'
+                    'value_options' => $replacement,
+                    'empty_option' => 'Please select who will replace the original',
+                    'disable_inarray_validator' => true,
             ),
         ));
         $this->add(array(
@@ -55,8 +55,9 @@ use Zend\Db\Adapter\Adapter;
             'type' => 'Zend\Form\Element\Select',
             'options' => array(
                     'label' => 'Original',
-                    'value_options' => $this->getOptionsForSelect($options["selectedoriginalreviewerid"], 'users', 'ldap'),
-                    'empty_option' => 'Please select original who is going to be replaced'
+                    'value_options' => $original,
+                    'empty_option' => 'Please select original who is going to be replaced',
+                    'disable_inarray_validator' => true,
             ),
         ));
         $this->add(array(
@@ -64,8 +65,8 @@ use Zend\Db\Adapter\Adapter;
             'type' => 'Zend\Form\Element\Select',
             'options' => array(
                     'label' => 'Design reviewer',
-                    'value_options' => $this->getOptionsForSelect($options["selecteddesignreviewerid"], 'users', 'ldap'),
-                    'empty_option' => 'Please select design reviewer'
+                    'value_options' => $designReviewer,
+                    'empty_option' => 'Please select design reviewer',
             ),
         ));
         $this->add(array(
@@ -73,22 +74,25 @@ use Zend\Db\Adapter\Adapter;
             'type' => 'Zend\Form\Element\Select',
             'options' => array(
                     'label' => 'Design reviewer trainee',
-                    'value_options' => $this->getOptionsForSelect($options["selecteddesigntraineereviewerid"], 'users', 'ldap'),
-                    'empty_option' => 'Please select Design trainee'
+                    'value_options' => $designReviewerTrainee,
+                    'empty_option' => 'Please select Design trainee',
+                    'disable_inarray_validator' => true,
             ),
         ));
          $this->add(array(
-             'name' => 'datetimebegin',
-             'type' => 'Text',
-             'options' => array(
-                 'label' => 'Begin of schedule',
-             ),
+             'name' => 'timereference',
+             'type' => 'Zend\Form\Element\Radio',
+            'options' => array(
+                    'label' => 'Time period *',
+                    'value_options' => $timeReference,
+                    'empty_option' => 'Please select Design trainee'
+            ),
          ));
-         $this->add(array(
-             'name' => 'datetimeend',
+        $this->add(array(
+             'name' => 'dateofschedule',
              'type' => 'Text',
              'options' => array(
-                 'label' => 'End of schedule',
+                 'label' => 'Date *',
              ),
          ));
          $this->add(array(
@@ -100,22 +104,4 @@ use Zend\Db\Adapter\Adapter;
              ),
          ));
      }
-     
-    public function getOptionsForSelect($selectedOption = 0, $tableName, $fieldName)
-    {
-        $dbAdapter = $this->adapter;
-        $sql       = "SELECT id,{$fieldName} FROM $tableName";
-        $statement = $dbAdapter->query($sql);
-        $result    = $statement->execute();
-
-        $selectData = array();
-
-        foreach ($result as $res) {
-            $selectData[$res['id']] = $res[$fieldName];
-            if ($res['id'] == $selectedOption) {
-                $selectData[$res['id']] = array('value' => $res['id'], 'label' => $res['ldap'], 'selected' => true);
-            }
-        }
-        return $selectData;
-    }
  }

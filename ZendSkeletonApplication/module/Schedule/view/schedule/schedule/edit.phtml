@@ -6,7 +6,6 @@ function printFormGroup($row = 'null'){
     echo '</div>
   </div>';
 }
-
  $title = 'Editing of schedule';
  $this->headTitle($title);
  ?>
@@ -32,9 +31,9 @@ printFormGroup($this->formRow($form->get('designreviewerid')
          ->setAttribute('class', 'form-control')));
 printFormGroup($this->formRow($form->get('designtraineereviewerid')
          ->setAttribute('class', 'form-control')));
-printFormGroup($this->formRow($form->get('datetimebegin')
+printFormGroup($this->formRow($form->get('dateofschedule')
          ->setAttribute('class', 'form-control')));
-printFormGroup($this->formRow($form->get('datetimeend')
+printFormGroup($this->formRow($form->get('timereference')
          ->setAttribute('class', 'form-control')));
 printFormGroup($this->formSubmit($form->get('submit')
          ->setAttribute('class', 'btn btn-success')));

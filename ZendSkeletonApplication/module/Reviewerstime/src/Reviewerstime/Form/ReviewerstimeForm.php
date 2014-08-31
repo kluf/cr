@@ -1,20 +1,20 @@
 <?php
-namespace Users\Form;
+namespace Reviewerstime\Form;
 
 use Zend\Form\Form;
 use Zend\Stdlib\Hydrator\ClassMethods;
 use Zend\Db\Adapter\AdapterInterface;
 use Zend\Db\Adapter\Adapter;
-class UsersForm extends Form
+class ReviewerstimeForm extends Form
 {
     protected $adapter;
     public function __construct($name = null, $userGroups)
     {
         // we want to ignore the name passed
 //        $this->adapter =$dbAdapter;
-        parent::__construct('users');
+        parent::__construct('reviewerstime');
         $this->setAttribute('method', 'post');
-        $this->setInputFilter(new UsersFilter());
+        $this->setInputFilter(new ReviewerstimeFilter());
         $this->setHydrator(new ClassMethods());
 
         $this->add(array(
@@ -37,7 +37,7 @@ class UsersForm extends Form
         ));
        $this->add(array(
             'name' => 'password',
-            'type' => 'Zend\Form\Element\Password',
+            'type' => 'Text',
             'options' => array(
                 'label' => 'Type a password',
             ),

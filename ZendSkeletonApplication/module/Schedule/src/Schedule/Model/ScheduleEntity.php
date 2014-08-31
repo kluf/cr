@@ -10,13 +10,12 @@ class ScheduleEntity {
     public $originalreviewerid;
     public $designreviewerid;
     public $designtraineereviewerid;
-    public $datetimebegin;
-    public $datetimeend;
-    
+    public $dateofschedule;
+    public $timereference;
     public function getId() {
         return $this->id;
     }
-    
+
     public function getReviewer() {
         return $this->reviewer;
     }
@@ -41,14 +40,14 @@ class ScheduleEntity {
         return $this->designtraineereviewerid;
     }
 
-    public function getDatetimebegin() {
-        return $this->datetimebegin;
+    public function getDateofschedule() {
+        return $this->dateofschedule;
     }
 
-    public function getDatetimeend() {
-        return $this->datetimeend;
+    public function getTimereference() {
+        return $this->timereference;
     }
-    
+
     public function setId($id) {
         $this->id = $id;
     }
@@ -77,13 +76,12 @@ class ScheduleEntity {
         $this->designtraineereviewerid = $designtraineereviewerid;
     }
 
-    public function setDatetimebegin($datetimebegin) {
-        $this->datetimebegin = $datetimebegin;
+    public function setDateofschedule($dateofschedule) {
+        $this->dateofschedule = $dateofschedule;
     }
 
-    public function setDatetimeend($datetimeend) {
-        $this->datetimeend = $datetimeend;
+    public function setTimereference($timereference) {
+        $this->timereference = $timereference;
     }
-
 
 }

@@ -72,12 +72,13 @@ class ScheduleMapper {
     {
     $select = new Select();
     $select->from(array('S' => 'schedule'))
-               ->columns(array('id', 'reviewer', 'traineebackupid', 'replacementreviewerid', 'originalreviewerid', 'designreviewerid', 'designtraineereviewerid', 'datetimebegin', 'datetimeend'))
+               ->columns(array('id', 'reviewer', 'traineebackupid', 'replacementreviewerid', 'originalreviewerid', 'designreviewerid', 'designtraineereviewerid', 'timereference', 'dateofschedule'))
                ->join(array('U' => 'users'), 'S.reviewer = U.id', array('uid' =>'id', 'reviewer_ldap' => 'ldap'))
                 ->join(array('U0' => 'users'), 'S.traineebackupid = U0.id', array('traineebackupid_ldap' => 'ldap'))
                 ->join(array('U1' => 'users'), 'S.replacementreviewerid = U1.id', array('replacementreviewerid_ldap' => 'ldap'))
                 ->join(array('U2' => 'users'), 'S.originalreviewerid = U2.id', array('originalreviewerid_ldap' => 'ldap'))
                 ->join(array('U3' => 'users'), 'S.designreviewerid = U3.id', array('designreviewerid_ldap' => 'ldap'))
+                ->join(array('RT' => 'reviewerstime'), 'S.timereference = RT.id', array('timeref' => 'timeperioud'))
                 ->join(array('U4' => 'users'), 'S.designtraineereviewerid = U4.id', array('designtraineereviewerid_ldap' => 'ldap'));
        $statement = $this->sql->prepareStatementForSqlObject($select);
        $results = $statement->execute();

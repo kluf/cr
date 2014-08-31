@@ -1,17 +1,17 @@
 <?php
 
-namespace Users\Model;
+namespace Reviewerstime\Model;
 
  use Zend\Db\Adapter\Adapter;
- use Users\Model\UsersEntity;
+ use Reviewerstime\Model\ReviewerstimeEntity;
  use Zend\Stdlib\Hydrator\ClassMethods;
  use Zend\Db\Sql\Sql;
  use Zend\Db\Sql\Select;
  use Zend\Db\ResultSet\HydratingResultSet;
 
-class UsersMapper
+class ReviewerstimeMapper
 {
-    protected $tableName = 'users';
+    protected $tableName = 'reviewerstime';
     protected $dbAdapter;
     protected $sql;
 
@@ -25,48 +25,48 @@ class UsersMapper
     public function fetchAll()
     {
     $select = new Select();
-    $select->from('users')
-               ->columns(array('id', 'ldap'));
+    $select->from('reviewerstime')
+               ->columns(array('id', 'timeperioud'));
        $statement = $this->sql->prepareStatementForSqlObject($select);
        $results = $statement->execute();
        return $results;
     }
     
-    public function fetchUsersForSelect($selectedOption = 0)
+    public function fetchReviewerstimeForSelect($checkedOption = 0)
     {
         $result = $this->fetchAll();
         $selectData = array();
         foreach ($result as $res) {
-            $selectData[$res['id']] = $res['ldap'];
-            if ($res['id'] == $selectedOption) {
-                $selectData[$res['id']] = array('value' => $res['id'], 'label' => $res['ldap'], 'selected' => true);
+            $selectData[$res['id']] = $res['timeperioud'];
+            if ($res['id'] == $checkedOption) {
+                $selectData[$res['id']] = array('value' => $res['id'], 'label' => $res['timeperioud'], 'checked' => true);
             }
         }
         return $selectData;
     }
 
-    public function fetchUsersWithGroups()
+    public function fetchReviewerstimeWithGroups()
     {
     $select = new Select();
-    $select->from('users')
+    $select->from('reviewerstime')
                ->columns(array('id', 'ldap', 'groupid', 'email'))
                ->join('usergroups',
-                       'users.groupid = usergroups.id', array('idd' => 'id', 'name'));
+                       'reviewerstime.groupid = usergroups.id', array('idd' => 'id', 'name'));
        $statement = $this->sql->prepareStatementForSqlObject($select);
        $results = $statement->execute();
        return $results;
     }
     
-   public function saveUsers(UsersEntity $users)
+   public function saveReviewerstime(ReviewerstimeEntity $reviewerstime)
    {
 
        $hydrator = new ClassMethods();
-       $data = $hydrator->extract($users);
-       if ($users->getId()) {
+       $data = $hydrator->extract($reviewerstime);
+       if ($reviewerstime->getId()) {
            // update action
            $action = $this->sql->update();
            $action->set($data);
-           $action->where(array('id' => $users->getId()));
+           $action->where(array('id' => $reviewerstime->getId()));
        } else {
            // insert action
            $action = $this->sql->insert();
@@ -76,14 +76,14 @@ class UsersMapper
        $statement = $this->sql->prepareStatementForSqlObject($action);
        $result = $statement->execute();
 
-       if (!$users->getId()) {
-           $users->setId($result->getGeneratedValue());
+       if (!$reviewerstime->getId()) {
+           $reviewerstime->setId($result->getGeneratedValue());
        }
        return $result;
 
    }
 
-    public function getUsers($id)
+    public function getReviewerstime($id)
    {
         $select = $this->sql->select();
         $select->where(array('id' => $id));
@@ -95,14 +95,14 @@ class UsersMapper
         }
 
         $hydrator = new ClassMethods();
-        $users = new UsersEntity();
-        $hydrator->hydrate($result, $users);
-        return $users;
+        $reviewerstime = new ReviewerstimeEntity();
+        $hydrator->hydrate($result, $reviewerstime);
+        return $reviewerstime;
 
               
    }
 
-   public function deleteUsers($id)
+   public function deleteReviewerstime($id)
    {
        $delete = $this->sql->delete();
        $delete->where(array('id' => $id));

@@ -8,10 +8,10 @@ use Zend\Db\Adapter\Adapter;
 
 class CodereviewForm extends Form
 {
-    public function __construct($name = null, AdapterInterface $dbAdapter, $options = array("reviewer" => 0, "author" => 0, "state" => 0))
+    public function __construct($name = null, $users, $states, $reviewers)
     {
-//        var_dump($options);exit;
-        $this->adapter =$dbAdapter;
+        
+//        $this->adapter =$dbAdapter;
         // we want to ignore the name passed
         parent::__construct('codereview');
 
@@ -63,7 +63,7 @@ class CodereviewForm extends Form
              'type' => 'Zend\Form\Element\Select',
              'options' => array(
                      'label' => 'State',
-                     'value_options' => $this->getOptionsForSelect($options["state"], 'state', 'name'),
+                     'value_options' => $states,
                      'empty_option' => 'Please select state'
              ),
         ));
@@ -71,8 +71,8 @@ class CodereviewForm extends Form
             'name' => 'authorid',
             'type' => 'Zend\Form\Element\Select',
              'options' => array(
-                     'label' => 'State',
-                     'value_options' => $this->getOptionsForSelect($options["author"], 'users', 'ldap'),
+                     'label' => 'User',
+                     'value_options' => $users,
                      'empty_option' => 'Please select user'
              ),
         ));
@@ -81,8 +81,8 @@ class CodereviewForm extends Form
             'name' => 'reviewerid',
             'type' => 'Zend\Form\Element\Select',
             'options' => array(
-                     'label' => 'State',
-                     'value_options' => $this->getOptionsForSelect($options["reviewer"], 'users', 'ldap'),
+                     'label' => 'Reviewer',
+                     'value_options' => $reviewers,
                      'empty_option' => 'Please select reviewer'
              ),
         ));
@@ -94,22 +94,6 @@ class CodereviewForm extends Form
                 'id' => 'submitbutton',
             ),
         ));
-    }
-    
-    public function getOptionsForSelect($selectedOption = 0, $tableName, $fieldName)
-    {
-        $dbAdapter = $this->adapter;
-        $sql       = "SELECT id,{$fieldName} FROM $tableName";
-        $statement = $dbAdapter->query($sql);
-        $result    = $statement->execute();
-        $selectData = array();
-        foreach ($result as $res) {
-            $selectData[$res['id']] = $res[$fieldName];
-            if ($res['id'] == $selectedOption) {
-                $selectData[$res['id']] = array('value' => $res['id'], 'label' => $res[$fieldName], 'selected' => true);
-            }
-        }
-        return $selectData;
     }
  }
 

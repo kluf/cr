@@ -24,17 +24,25 @@ class StateMapper
 
     public function fetchAll()
     {
-        $select = $this->sql->select();
-//         $select->order(array('completed ASC', 'created ASC'));
-
-        $statement = $this->sql->prepareStatementForSqlObject($select);
-        $results = $statement->execute();
-
-        $entityPrototype = new StateEntity();
-        $hydrator = new ClassMethods();
-        $resultset = new HydratingResultSet($hydrator, $entityPrototype);
-        $resultset->initialize($results);
-        return $resultset;
+    $select = new Select();
+    $select->from($this->tableName)
+               ->columns(array('id', 'name'));
+       $statement = $this->sql->prepareStatementForSqlObject($select);
+       $results = $statement->execute();
+       return $results;
+    }
+    
+    public function fetchStatesForSelect($selectedOption = 0)
+    {
+        $result = $this->fetchAll();
+        $selectData = array();
+        foreach ($result as $res) {
+            $selectData[$res['id']] = $res['name'];
+            if ($res['id'] == $selectedOption) {
+                $selectData[$res['id']] = array('value' => $res['id'], 'label' => $res['name'], 'selected' => true);
+            }
+        }
+        return $selectData;
     }
 
    public function saveState(StateEntity $state)
@@ -73,11 +81,9 @@ class StateMapper
        if (!$result) {
            return null;
        }
-
        $hydrator = new ClassMethods();
        $state = new StateEntity();
        $hydrator->hydrate($result, $state);
-
        return $state;
    }
 

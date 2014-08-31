@@ -21,19 +21,19 @@
 <?php
 foreach ($codereviews as $codereview) {
     echo "
-    <tr>
+<tr>
     <td>{$codereview['creationdate']}</td>
-        <td><a href=".$codereview['changeset']." target='_blank'>{$codereview['changeset']}</a></td>
-        <td><a href=".$codereview['jiraticket']." target='_blank'>{$codereview['jiraticket']}</a></td>
-       <td>{$codereview['authorcomments']}</td>
-       <td>{$codereview['reviewercomments']}</td>
-       <td>{$codereview['state']}</td>
-       <td>{$codereview['reviewer']}</td>
-       <td>{$codereview['author']}</td>
-       <td><a href=".$this->url('codereview', array('action'=>'edit', 'id' => $codereview['id'])).">Edit</a>
-           <a href=".$this->url('codereview', array('action'=>'delete', 'id' => $codereview['id'])).">Delete</a>
-       </td>
-    </tr>";
+    <td><a href=".$codereview['changeset']." target='_blank'>{$codereview['changeset']}</a></td>
+    <td><a href=".$codereview['jiraticket']." target='_blank'>{$codereview['jiraticket']}</a></td>
+    <td>{$codereview['authorcomments']}</td>
+    <td>{$codereview['reviewercomments']}</td>
+    <td>{$codereview['state']}</td>
+    <td>{$codereview['author']}</td>
+    <td>{$codereview['reviewer']}</td>
+    <td><a class='glyphicon glyphicon-pencil' href=".$this->url('codereview', array('action'=>'edit', 'id' => $codereview['id']))."></a>
+        <a class='glyphicon glyphicon-remove' href=".$this->url('codereview', array('action'=>'delete', 'id' => $codereview['id']))."></a>
+    </td>
+</tr>";
 }
 ?>
 </table>

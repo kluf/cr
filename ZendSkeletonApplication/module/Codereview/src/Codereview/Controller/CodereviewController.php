@@ -8,11 +8,18 @@ use Codereview\Model\Codereview;
 use Codereview\Model\CodereviewMapper;
 use Codereview\Model\CodereviewEntity;
 use Codereview\Form\CodereviewForm;
- 
+
+use Users\Model\Users;
+use Users\Model\UsersMapper;
+use Users\Model\UsersEntity;
+
+use State\Model\State;
+use State\Model\StateMapper;
+use State\Model\StateEntity;
+
 class CodereviewController extends AbstractActionController
 {
    protected $codereviewTable;
-   public $daysInWeek = 6;
    public $titleIndex = 'Codereview index page';
    public $titleAdd = 'Add new row to codereview';
    public $titleEdit = 'Edit row of codereview';
@@ -21,7 +28,7 @@ class CodereviewController extends AbstractActionController
    public function indexAction()
     {
         $mapper = $this->getCodereviewMapper();
-        return new ViewModel(array('codereviews' => $mapper->fetchCodereviewWithUsersAndStates(), 'message' => $this->dateCounter()));
+        return new ViewModel(array('codereviews' => $mapper->fetchCodereviewWithUsersAndStates(), 'message' => $mapper->dateCounter()));
     }
      
     public function getCodereviewMapper()
@@ -30,10 +37,27 @@ class CodereviewController extends AbstractActionController
         return $sm->get('CodereviewMapper');
     }
     
+    public function getUsersMapper()
+    {
+        $sm = $this->getServiceLocator();
+        return $sm->get('UsersMapper');
+    }
+    
+    public function getStatesMapper()
+    {
+        $sm = $this->getServiceLocator();
+        return $sm->get('StateMapper');
+    }
+    
     public function addAction()
     {
-        $dbAdapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
-        $form = new CodereviewForm(null, $dbAdapter);
+        $newState = 1;
+//        $dbAdapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
+        $usersMapper = $this->getUsersMapper();
+        $statesMapper = $this->getStatesMapper();
+        $users = $usersMapper->fetchUsersForSelect();
+        $states = $statesMapper->fetchStatesForSelect($newState);
+        $form = new CodereviewForm(null, $users, $states, $reviewers = $usersMapper->fetchUsersForSelect());
         $codereview = new CodereviewEntity();
         $form->bind($codereview);
 
@@ -52,14 +76,17 @@ class CodereviewController extends AbstractActionController
 
     public function editAction()
     {
-        $dbAdapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
         $id = (int)$this->params('id');
         if (!$id) {
             return $this->redirect()->toRoute('codereview', array('action'=>'add'));
         }
         $codereview = $this->getCodereviewMapper()->getCodereview($id);
-//        var_dump($codereview);exit;
-        $form = new CodereviewForm(null, $dbAdapter, $options = array('reviewer' => $codereview->reviewerid, 'author' => $codereview->authorid, 'state' => $codereview->stateid));
+        $usersMapper = $this->getUsersMapper();
+        $statesMapper = $this->getStatesMapper($codereview->stateid);
+        $states = $statesMapper->fetchStatesForSelect();
+        $users = $usersMapper->fetchUsersForSelect($codereview->authorid);
+        $reviewers = $usersMapper->fetchUsersForSelect($codereview->reviewerid);
+        $form = new CodereviewForm(null, $users, $states, $reviewers);
         $form->bind($codereview);
 
         $request = $this->getRequest();
@@ -81,23 +108,17 @@ class CodereviewController extends AbstractActionController
     public function findByUserAction()
     {
         $request = $this->getRequest();
-//        var_dump($request->getQuery('userid'));
         if ($request->isGet()) {
-            $dbAdapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
-            $sql       = "SELECT * FROM users";
-            $statement = $dbAdapter->query($sql);
-            $result    = $statement->execute();
-            $selectData = array();
-            foreach ($result as $res) {
-                $selectData[] = array('id' => $res['id'], 'ldap' => $res['ldap']);
-            }
+            $usersMapper = $this->getUsersMapper();
+            $users = $usersMapper->fetchUsersForSelect();
+//            var_dump($users);exit;
             if ($request->getQuery('userid')) {
                 $user = $request->getQuery('userid');
                 $mapper = $this->getCodereviewMapper();
                 $codereviews = $mapper->getCodereviewByUser((int)$user);
-                return new ViewModel(array('users' => $selectData, 'codereviews' => $codereviews));
+                return new ViewModel(array('users' => $users, 'codereviews' => $codereviews));
             }
-            return new ViewModel(array('users' => $selectData));
+            return new ViewModel(array('users' => $users));
         }
     }
     
@@ -138,28 +159,4 @@ class CodereviewController extends AbstractActionController
             'codereview' => $codereview
         );
     }
-
-    public function isDayInWeekend() {
-        $currentDate = date("N");
-        $saturday = 6;
-        $sunday = 7;
-        return (boolean)$currentDate === $saturday || $currentDate === $sunday;
-    }
-
-    public function dateCounter() {
-       date_default_timezone_set('Europe/Helsinki');
-       $currentDate = date("N");
-       $currentDateTextual = date('l');
-       $daysLeftToWeekend;
-       if ($this->isDayInWeekend()) {
-           $daysLeftToWeekend = 0;
-           $daysLeftToWeekend = ' thus now is Weekend, so none';
-       }
-       elseif ($currentDate < $this->daysInWeek) {
-           $daysLeftToWeekend = $this->daysInWeek - $currentDate;
-       }
-       $message = "Today is ".$currentDateTextual." ".$daysLeftToWeekend." days left to weekend";
-       return $message;
-    }
-
 }

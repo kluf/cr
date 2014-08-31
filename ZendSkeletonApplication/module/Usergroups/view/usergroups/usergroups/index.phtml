@@ -13,11 +13,11 @@ $this->headTitle($title);
     foreach($usergroups as $item) {
         echo "
         <tr>
-            <td>".$item->name."</td>";
+            <td>".$item['name']."</td>";
 ?>
             <td>
-                <a href="<?php echo $this->url('usergroups', array('action'=>'edit', 'id' => $item->id));?>">Edit</a>
-                <a href="<?php echo $this->url('usergroups', array('action'=>'delete', 'id' => $item->id));?>">Remove</a>
+                <a class='glyphicon glyphicon-pencil' href="<?php echo $this->url('usergroups', array('action'=>'edit', 'id' => $item['id']));?>"></a>
+                <a class='glyphicon glyphicon-remove' href="<?php echo $this->url('usergroups', array('action'=>'delete', 'id' => $item['id']));?>"></a>
             </td>
         </tr>
 <?php        

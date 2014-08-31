@@ -7,7 +7,8 @@ return array(
         'Schedule',
         'State',
         'Usergroups',
-        'Users'
+        'Users',
+        'Reviewerstime'
     ),
 
     // These are various options for the listeners attached to the ModuleManager

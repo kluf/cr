@@ -1,31 +1,31 @@
 <?php
 
- namespace Users\Controller;
+ namespace Reviewerstime\Controller;
 
  use Zend\Mvc\Controller\AbstractActionController;
  use Zend\View\Model\ViewModel;
- use Users\Model\Users;
- use Users\Model\UsersMapper;
- use Users\Model\UsersEntity;
- use Users\Form\UsersForm;
+ use Reviewerstime\Model\Reviewerstime;
+ use Reviewerstime\Model\ReviewerstimeMapper;
+ use Reviewerstime\Model\ReviewerstimeEntity;
+ use Reviewerstime\Form\ReviewerstimeForm;
 
 use Usergroups\Model\Usergroups;
 use Usergroups\Model\UsergroupsMapper;
 use Usergroups\Model\UsergroupsEntity;
  
- class UsersController extends AbstractActionController
+ class ReviewerstimeController extends AbstractActionController
  {
      
         public function indexAction()
      {
-         $mapper = $this->getUsersMapper();
-         return new ViewModel(array('users' => $mapper->fetchUsersWithGroups()));
+         $mapper = $this->getReviewerstimeMapper();
+         return new ViewModel(array('reviewerstime' => $mapper->fetchReviewerstimeWithGroups()));
      }
      
-    public function getUsersMapper()
+    public function getReviewerstimeMapper()
     {
         $sm = $this->getServiceLocator();
-        return $sm->get('UsersMapper');
+        return $sm->get('ReviewerstimeMapper');
     }
     
         public function getUserGroupsMapper()
@@ -39,18 +39,18 @@ use Usergroups\Model\UsergroupsEntity;
 //        $dbAdapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
         $UserGroupsMapper = $this->getUserGroupsMapper();
         $userGroups = $UserGroupsMapper->fetchUsergroupsForSelect();
-        $form = new UsersForm(null, $userGroups);
-        $users = new UsersEntity();
-        $form->bind($users);
+        $form = new ReviewerstimeForm(null, $userGroups);
+        $reviewerstime = new ReviewerstimeEntity();
+        $form->bind($reviewerstime);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $form->setData($request->getPost());
             if ($form->isValid()) {
-                $this->getUsersMapper()->saveUsers($users);
+                $this->getReviewerstimeMapper()->saveReviewerstime($reviewerstime);
 
                 // Redirect to list of tasks
-                return $this->redirect()->toRoute('users');
+                return $this->redirect()->toRoute('reviewerstime');
             }
         }
         return array('form' => $form);
@@ -61,21 +61,21 @@ use Usergroups\Model\UsergroupsEntity;
         $dbAdapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
         $id = (int)$this->params('id');
         if (!$id) {
-            return $this->redirect()->toRoute('users', array('action'=>'add'));
+            return $this->redirect()->toRoute('reviewerstime', array('action'=>'add'));
         }
-        $users = $this->getUsersMapper()->getUsers($id);
+        $reviewerstime = $this->getReviewerstimeMapper()->getReviewerstime($id);
         $UserGroupsMapper = $this->getUserGroupsMapper();
-        $userGroups = $UserGroupsMapper->fetchUsergroupsForSelect($users->groupid);
-        $form = new UsersForm(null, $userGroups);
-        $form->bind($users);
+        $userGroups = $UserGroupsMapper->fetchUsergroupsForSelect($reviewerstime->groupid);
+        $form = new ReviewerstimeForm(null, $userGroups);
+        $form->bind($reviewerstime);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $form->setData($request->getPost());
             if ($form->isValid()) {
-                $this->getUsersMapper()->saveUsers($users);
+                $this->getReviewerstimeMapper()->saveReviewerstime($reviewerstime);
 
-                return $this->redirect()->toRoute('users');
+                return $this->redirect()->toRoute('reviewerstime');
             }
         }
 
@@ -88,23 +88,23 @@ use Usergroups\Model\UsergroupsEntity;
     public function deleteAction()
     {
         $id = (int)$this->params('id');
-        $users = $this->getUsersMapper()->getUsers($id);
-        if (!$users) {
-            return $this->redirect()->toRoute('users');
+        $reviewerstime = $this->getReviewerstimeMapper()->getReviewerstime($id);
+        if (!$reviewerstime) {
+            return $this->redirect()->toRoute('reviewerstime');
         }
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             if ($request->getPost()->get('del') == 'Yes') {
-                $this->getUsersMapper()->deleteUsers($id);
+                $this->getReviewerstimeMapper()->deleteReviewerstime($id);
             }
 
-            return $this->redirect()->toRoute('users');
+            return $this->redirect()->toRoute('reviewerstime');
         }
 
         return array(
             'id' => $id,
-            'users' => $users
+            'reviewerstime' => $reviewerstime
         );
     }
  }

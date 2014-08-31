@@ -33,48 +33,43 @@ class ScheduleFilter extends InputFilter{
         ));
         $this->add(array(
         'name' => 'traineebackupid',
-        'required' => true,
         'filters' => array(
                 array('name' => 'Int'),
             ),
         ));
         $this->add(array(
             'name' => 'replacementreviewerid',
-            'required' => true,
             'filters' => array(
                 array('name' => 'Int'),
             ),
         ));
         $this->add(array(
             'name' => 'originalreviewerid',
-            'required' => true,
             'filters' => array(
                 array('name' => 'Int'),
             ),
         ));
         $this->add(array(
             'name' => 'designreviewerid',
-            'required' => true,
             'filters' => array(
                 array('name' => 'Int'),
             ),
         ));
         $this->add(array(
             'name' => 'designtraineereviewerid',
-            'required' => true,
             'filters' => array(
                 array('name' => 'Int'),
             ),
         ));
         $this->add(array(
-            'name' => 'datetimebegin',
+            'name' => 'timereference',
             'required' => true,
 //            'filters' => array(
 //                array('name' => 'Date'),
 //            ),
         ));
         $this->add(array(
-            'name' => 'datetimeend',
+            'name' => 'dateofschedule',
             'required' => true,
 //            'filters' => array(
 //                array('name' => 'Date'),

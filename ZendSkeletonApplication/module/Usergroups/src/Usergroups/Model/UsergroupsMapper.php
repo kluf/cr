@@ -33,19 +33,28 @@ class UsergroupsMapper {
 
     public function fetchAll()
     {
-        $select = $this->sql->select();
-//         $select->order(array('completed ASC', 'created ASC'));
-
-        $statement = $this->sql->prepareStatementForSqlObject($select);
-        $results = $statement->execute();
-
-        $entityPrototype = new UsergroupsEntity();
-        $hydrator = new ClassMethods();
-        $resultset = new HydratingResultSet($hydrator, $entityPrototype);
-        $resultset->initialize($results);
-        return $resultset;
+    $select = new Select();
+    $select->from('usergroups')
+               ->columns(array('id', 'name'));
+       $statement = $this->sql->prepareStatementForSqlObject($select);
+       $results = $statement->execute();
+       return $results;
     }
 
+    public function fetchUsergroupsForSelect($selectedOption = 0)
+    {
+        $result = $this->fetchAll();
+        $selectData = array();
+        foreach ($result as $res) {
+            $selectData[$res['id']] = $res['name'];
+            if ($res['id'] == $selectedOption) {
+                $selectData[$res['id']] = array('value' => $res['id'], 'label' => $res['name'], 'selected' => true);
+            }
+        }
+        return $selectData;
+    }
+
+    
    public function saveUsergroups(UsergroupsEntity $usergroups)
    {
 

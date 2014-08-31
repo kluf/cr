@@ -8,12 +8,12 @@
     <label for="userid">Select username</label>
     <select name="userid" class="form-control" id="userid">
         <?php 
-            foreach($users as $user) {
-                echo "<option value='{$user['id']}'>{$user['ldap']}</option>";
+            foreach($users as $key => $user) {
+                echo "<option value='{$key}'>{$user}</option>";
             }
         ?>
     </select>
-    <button class="btn btn-success form-control">Find by username</button>
+    <button class="btn btn-success form-control"><span class="glyphicon glyphicon-search"></span></button>
 </form>
 <table class="table table-hover table-striped">
     <tr class="success">
@@ -38,8 +38,8 @@ if (isset($codereviews)) {
            <td>{$codereview['authorcomments']}</td>
            <td>{$codereview['reviewercomments']}</td>
            <td>{$codereview['state']}</td>
-           <td>{$codereview['reviewer']}</td>
            <td>{$codereview['author']}</td>
+           <td>{$codereview['reviewer']}</td>
            <td><a href=".$this->url('codereview', array('action'=>'edit', 'id' => $codereview['id'])).">Edit</a>
                <a href=".$this->url('codereview', array('action'=>'delete', 'id' => $codereview['id'])).">Delete</a>
            </td>
