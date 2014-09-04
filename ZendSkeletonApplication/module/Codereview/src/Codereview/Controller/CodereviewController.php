@@ -17,6 +17,10 @@ use State\Model\State;
 use State\Model\StateMapper;
 use State\Model\StateEntity;
 
+use Schedule\Model\Schedule;
+use Schedule\Model\ScheduleMapper;
+use Schedule\Model\ScheduleEntity;
+
 class CodereviewController extends AbstractActionController
 {
    protected $codereviewTable;
@@ -28,7 +32,9 @@ class CodereviewController extends AbstractActionController
    public function indexAction()
     {
         $mapper = $this->getCodereviewMapper();
-        return new ViewModel(array('codereviews' => $mapper->fetchCodereviewWithUsersAndStates(), 'message' => $mapper->dateCounter()));
+        $sch = $this->getScheduleMapper();
+        return new ViewModel(array('codereviews' => $mapper->fetchCodereviewWithUsersAndStates(), 'message' => $mapper->dateCounter(),
+                'schedule' => $sch->fetchScheduleForCurrentDay()));
     }
      
     public function getCodereviewMapper()
@@ -49,10 +55,15 @@ class CodereviewController extends AbstractActionController
         return $sm->get('StateMapper');
     }
     
+    public function getScheduleMapper()
+    {
+        $sm = $this->getServiceLocator();
+        return $sm->get('ScheduleMapper');
+    }
+    
     public function addAction()
     {
         $newState = 1;
-//        $dbAdapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
         $usersMapper = $this->getUsersMapper();
         $statesMapper = $this->getStatesMapper();
         $users = $usersMapper->fetchUsersForSelect();

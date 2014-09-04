@@ -1,0 +1,21 @@
+<?php
+$title = 'Delete users';
+$this->headTitle($title);
+?>
+<h1 class="text-right" ><small><?php echo $this->escapeHtml($title); ?></small></h1>
+<p>Are you sure that you want to delete user named <span class="label label-warning">
+    <?php echo $this->escapeHtml($users->ldap); ?></span>
+</p>
+<?php
+$url = $this->url('users', array(
+    'action' => 'delete',
+    'id'     => $this->id,
+));
+?>
+<form action="<?php echo $url; ?>" method="post">
+<div>
+    <input type="hidden" name="id" value="<?php echo (int) $users->id; ?>" />
+    <input type="submit" name="del" value="Yes" class="btn btn-danger"/>
+    <input type="submit" name="del" value="No" class="btn btn-info"/>
+</div>
+</form>

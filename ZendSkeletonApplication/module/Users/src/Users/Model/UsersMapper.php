@@ -32,6 +32,28 @@ class UsersMapper
        return $results;
     }
     
+    public function fetchUsersForLoginAction($userLdap="", $pass="")
+    {
+    $select = new Select();
+    $select->from('users')
+               ->columns(array('id', 'ldap'))
+               ->where("ldap={$userLdap}");
+    $statement = $this->sql->prepareStatementForSqlObject($select);
+    $ldapExists = $statement->execute();
+    if (!$ldapExists && $pass != '') {
+        return false;
+    }
+    
+    $select = new Select();
+    $select->from('users')
+               ->columns(array('id', 'ldap', 'groupid', 'password'))
+               ->where("ldap={$userLdap} AND password={$pass}");
+//               ->where("password=$password}");
+    $statement = $this->sql->prepareStatementForSqlObject($select);
+    $results = $statement->execute();
+    return $results;
+    }
+    
     public function fetchUsersForSelect($selectedOption = 0)
     {
         $result = $this->fetchAll();

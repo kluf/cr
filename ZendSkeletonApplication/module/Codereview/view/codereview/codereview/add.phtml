@@ -12,7 +12,7 @@ function printFormGroup($row = 'null'){
 <h1 class="text-right" ><small><?php echo $this->escapeHtml($title); ?></small></h1>
  <?php
 date_default_timezone_set('Europe/Helsinki');
-$currentDate = date("m-d-Y H:i:s");
+$currentDate = date("Y-m-d H:i:s");
 $form->setAttribute('action', $this->url('codereview', array('action' => 'add')))
         ->setAttribute('class', 'form-horizontal');
  $form->prepare();

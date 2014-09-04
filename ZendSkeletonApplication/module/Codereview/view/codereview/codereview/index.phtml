@@ -19,6 +19,13 @@
         <th>Moderation</th>
     </tr>
 <?php
+foreach ($schedule as $key=>$value) {
+    if ($key == 'designreviewerid_ldap' && $value != ''){
+        echo "<div><span class='label label-success'>Design reviewer today is ".$value['reviewer_ldap']."</span></div>";
+    }
+    echo "<span class='label label-info'>Reviewer at ".$value['timeref']." is ".$value['reviewer_ldap']."</span>";
+};
+
 foreach ($codereviews as $codereview) {
     echo "
 <tr>
