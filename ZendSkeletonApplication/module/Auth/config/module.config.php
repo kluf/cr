@@ -26,7 +26,7 @@
              ),
          ),
      ),
-
+     
      'view_manager' => array(
          'template_path_stack' => array(
              'auth' => __DIR__ . '/../view',

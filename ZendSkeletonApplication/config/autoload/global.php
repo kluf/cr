@@ -12,10 +12,6 @@
  */
 
  return array(
-    'db' => array(
-        'driver' => 'Pdo_Sqlite',
-        'database' => 'C:\xampp\htdocs\CR\ZendSkeletonApplication\public\db\codeReview.db',
-     ),
      'service_manager' => array(
          'factories' => array(
              'Zend\Db\Adapter\Adapter'

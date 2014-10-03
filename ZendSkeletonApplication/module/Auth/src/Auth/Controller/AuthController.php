@@ -10,35 +10,26 @@
  *
  * @author vklyuf
  */
- namespace Auth\Controller;
+namespace Auth\Controller;
  
- use Zend\Mvc\Controller\AbstractActionController;
- use Zend\View\Model\ViewModel;
-use Auth\Model\Auth;
- use Auth\Model\AuthMapper;
- use Auth\Model\AuthEntity;
- use Users\Model\Users;
- use Users\Model\UsersMapper;
- use Users\Model\UsersEntity;
- use Auth\Form\AuthForm;
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
 
-use Zend\Session\Config\StandardConfig;
-use Zend\Session\SessionManager;
- 
+use Auth\Model\Auth;
+use Auth\Model\AuthMapper;
+use Auth\Model\AuthEntity;
+use Auth\Form\AuthForm;
+
+use Users\Model\Users;
+use Users\Model\UsersMapper;
+use Users\Model\UsersEntity;
+
 class AuthController extends AbstractActionController
 {
+  
     
     public function indexAction() {
-        $params = array('ldap' => 'test', 'groupid' => '2', 'email' => 'some@go.com');
-        $config = new StandardConfig();
-        $config->setOptions(array(
-            'remember_me_seconds' => 3600,
-            'name'                => array('ldap' => $params->ldap, 'groupid' => $params->groupid, 'email' => $params->email),
-            'use_cookies' => true,
-            'cookie_httponly' => true
-        ));
-        $manager = new SessionManager($config);
-        return new ViewModel(array('usersParams' => $parasms));
+        return new ViewModel();
     }
     
     public function loginAction()
@@ -47,12 +38,15 @@ class AuthController extends AbstractActionController
         $auth = new AuthEntity();
         $form->bind($auth);
         $request = $this->getRequest();
+        
         if ($request->isPost()) {
             $form->setData($request->getPost());
             if ($form->isValid()) {
                 $userMapper = $this->getUsersMapper();
-                $userExists = $userMapper->fetchUsersForLoginAction($request->getPost('ldap'), $request->getPost('password'));
+                $userExists = $userMapper->fetchUserForLoginAction($request->getPost('ldap'), $request->getPost('password'));
                 if ($userExists) {
+                    $auth = $this->getAuthMapper();
+                    $auth->setUsersSesstion($userExists);
                     return $this->redirect()->toRoute('auth', array('action'=>'index'));
                 } else {
                     $errorMessage = 'User or password don\'t match';
@@ -71,6 +65,12 @@ class AuthController extends AbstractActionController
     {
         $sm = $this->getServiceLocator();
         return $sm->get('UsersMapper');
+    }
+    
+    public function getAuthMapper()
+    {
+        $sm = $this->getServiceLocator();
+        return $sm->get('AuthMapper');
     }
     
     public function logoutAction()

@@ -24,34 +24,67 @@ class UsersMapper
 
     public function fetchAll()
     {
-    $select = new Select();
-    $select->from('users')
-               ->columns(array('id', 'ldap'));
-       $statement = $this->sql->prepareStatementForSqlObject($select);
-       $results = $statement->execute();
-       return $results;
+        $select = new Select();
+        $select->from('users')
+                   ->columns(array('id', 'ldap'));
+        $statement = $this->sql->prepareStatementForSqlObject($select);
+        $results = $statement->execute();
+        return $results;
+    }
+
+    public function ifUserExists($userLdap) {
+        $select = $this->sql->select();
+        $select->where(array('ldap' => $userLdap));
+        $statement = $this->sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
+        if (!$result) {
+            return null;
+        }
+        $hydrator = new ClassMethods();
+        $users = new UsersEntity();
+        $hydrator->hydrate($result, $users);
+        var_dump($users);exit;
+        return $users;
     }
     
-    public function fetchUsersForLoginAction($userLdap="", $pass="")
+    public function fetchUserForLoginAction($userLdap="", $pass="")
     {
-    $select = new Select();
-    $select->from('users')
-               ->columns(array('id', 'ldap'))
-               ->where("ldap={$userLdap}");
-    $statement = $this->sql->prepareStatementForSqlObject($select);
-    $ldapExists = $statement->execute();
-    if (!$ldapExists && $pass != '') {
+        if ($userLdap == '' && $pass == '') {
+            return false;
+        }
+        if (!$this->ifUserExists($userLdap)) {
+            return false;
+        }
+
+        $select = new Select();
+        $select->from('users')
+                   ->columns(array('id', 'ldap', 'groupid', 'password'))
+                   ->where("ldap={$userLdap} AND password={$pass}");
+    //               ->where("password=$password}");
+        $statement = $this->sql->prepareStatementForSqlObject($select);
+        $results = $statement->execute();
+        return $results;
+    }
+    
+    public function isUserAdmin($uid) {
+    if (!$uid) {
         return false;
     }
-    
     $select = new Select();
     $select->from('users')
-               ->columns(array('id', 'ldap', 'groupid', 'password'))
-               ->where("ldap={$userLdap} AND password={$pass}");
-//               ->where("password=$password}");
+                ->columns(array('id', 'ldap', 'groupid'))
+                ->where("id={$uid}");
     $statement = $this->sql->prepareStatementForSqlObject($select);
     $results = $statement->execute();
     return $results;
+    }
+    
+    public function isUserOwnerOfChangeset() {
+        //
+    }
+    
+    public function canUserEditChangeset() {
+        //
     }
     
     public function fetchUsersForSelect($selectedOption = 0)

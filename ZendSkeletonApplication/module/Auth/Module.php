@@ -14,6 +14,9 @@ use Zend\Mvc\MvcEvent;
 use Auth\Model\Auth;
 use Auth\Model\AuthMapper;
 
+//use Zend\Session\SessionManager;
+//use Zend\Session\Container;
+
 class Module
 {
     public function onBootstrap(MvcEvent $e)
@@ -22,7 +25,7 @@ class Module
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
     }
-
+    
     public function getConfig()
     {
         return include __DIR__ . '/config/module.config.php';
@@ -46,9 +49,9 @@ class Module
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $mapper = new AuthMapper($dbAdapter);
                     return $mapper;
-                }
+                },
             ),
         );
     }
-
+    
 }
