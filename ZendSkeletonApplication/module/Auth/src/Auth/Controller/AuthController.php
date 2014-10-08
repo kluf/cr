@@ -24,10 +24,12 @@ use Users\Model\Users;
 use Users\Model\UsersMapper;
 use Users\Model\UsersEntity;
 
+use Zend\Session\Storage\ArrayStorage;
+use Zend\Session\SessionManager;
+Use Zend\Session\Container;
+
 class AuthController extends AbstractActionController
 {
-  
-    
     public function indexAction() {
         return new ViewModel();
     }
@@ -47,6 +49,9 @@ class AuthController extends AbstractActionController
                 if ($userExists) {
                     $auth = $this->getAuthMapper();
                     $auth->setUsersSesstion($userExists);
+//                    $session = new Container('currentUser');
+//                    var_dump($session->getManager()->getStorage());exit;
+                    
                     return $this->redirect()->toRoute('auth', array('action'=>'index'));
                 } else {
                     $errorMessage = 'User or password don\'t match';

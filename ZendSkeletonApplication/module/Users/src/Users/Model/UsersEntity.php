@@ -29,7 +29,7 @@ class UsersEntity
     public function getGroupid() {
         return $this->groupid;
     }
-
+    
     public function setId($id) {
         $this->id = $id;
     }
@@ -49,6 +49,5 @@ class UsersEntity
     public function setGroupid($groupid) {
         $this->groupid = $groupid;
     }
-
-
+    
  }

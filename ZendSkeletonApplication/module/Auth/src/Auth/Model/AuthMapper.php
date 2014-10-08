@@ -18,12 +18,16 @@ class AuthMapper
 {
     public function setUsersSesstion($user) 
     {
-        foreach ($user as $item) {
-            var_dump($user);
-        }
-        exit;
-        $container = new Container('User');
-        $container->item = $userExists->ldap;
+//        var_dump($user);exit;
+        $container = new Container('currentUser');
+        $container->id = $user['id'];
+        $container->ldap = $user['ldap'];
+        $container->email = $user['email'];
+        $container->groupid = $user['groupid'];
+        $container->groupname = $user['groupname'];
+//        var_dump($_SESSION);exit;
+//        var_dump($container);exit;
+        
 //        $populateStorage = [];
 //        foreach($userExists as $key => $value) {
 //            $populateStorage[$key] = $value;
