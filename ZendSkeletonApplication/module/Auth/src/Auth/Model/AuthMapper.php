@@ -5,26 +5,27 @@ namespace Auth\Model;
 use Zend\Db\Adapter\Adapter;
 use Auth\Model\AuthEntity;
 
-//use Zend\Session\Config\StandardConfig;
-//use Zend\Session\SessionManager;
-//use Zend\Session\Container;
+use Zend\Session\Config\StandardConfig;
+use Zend\Session\SessionManager;
+use Zend\Session\Container;
+use Zend\Session;
 //
 //use Zend\Session\Storage\ArrayStorage;
-//use Zend\Session\SessionManager;
-
-use Zend\Session\Container;
 
 class AuthMapper
 {
-    public function setUsersSesstion($user) 
+    public function setUsersSession($user) 
     {
 //        var_dump($user);exit;
+        $manager = new SessionManager();
         $container = new Container('currentUser');
         $container->id = $user['id'];
         $container->ldap = $user['ldap'];
         $container->email = $user['email'];
         $container->groupid = $user['groupid'];
         $container->groupname = $user['groupname'];
+        Container::setDefaultManager($manager);
+        
 //        var_dump($_SESSION);exit;
 //        var_dump($container);exit;
         
@@ -54,4 +55,17 @@ class AuthMapper
 //        Container::setDefaultManager($manager);
 //        return $manager;
     }
+    
+    public function destroyCurrentSession()
+    {
+        $manager = new SessionManager();
+        $manager->destroy();
+    }
+    
+    public function getCurrentSession() {
+        
+//        $manager = new \Zend\Session\SessionManager();
+//        return $manager->getStorage();
+    }
+    
 }

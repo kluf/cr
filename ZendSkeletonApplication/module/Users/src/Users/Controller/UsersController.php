@@ -8,19 +8,21 @@
  use Users\Model\UsersMapper;
  use Users\Model\UsersEntity;
  use Users\Form\UsersForm;
+ use Users\Form\UsersLoginForm;
 
 use Usergroups\Model\Usergroups;
 use Usergroups\Model\UsergroupsMapper;
 use Usergroups\Model\UsergroupsEntity;
  
- class UsersController extends AbstractActionController
+
+class UsersController extends AbstractActionController
  {
      
-        public function indexAction()
-     {
-         $mapper = $this->getUsersMapper();
-         return new ViewModel(array('users' => $mapper->fetchUsersWithGroups()));
-     }
+    public function indexAction()
+    {
+        $mapper = $this->getUsersMapper();
+        return new ViewModel(array('users' => $mapper->fetchUsersWithGroups()));
+    }
      
     public function getUsersMapper()
     {
@@ -39,7 +41,7 @@ use Usergroups\Model\UsergroupsEntity;
 //        $dbAdapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
         $UserGroupsMapper = $this->getUserGroupsMapper();
         $userGroups = $UserGroupsMapper->fetchUsergroupsForSelect();
-        $form = new UsersForm(null, $userGroups);
+        $form = new UsersLoginForm(null, $userGroups);
         $users = new UsersEntity();
         $form->bind($users);
 
@@ -49,8 +51,10 @@ use Usergroups\Model\UsergroupsEntity;
             if ($form->isValid()) {
                 $this->getUsersMapper()->saveUsers($users);
 
-                // Redirect to list of tasks
-                return $this->redirect()->toRoute('users');
+                // Redirect to auth
+//                return $this->redirect()->toRoute('auth');
+                $form->customErrMessage = 'Probably username is already taken by someone else';
+                return array('form' => $form);
             }
         }
         return array('form' => $form);
@@ -58,7 +62,7 @@ use Usergroups\Model\UsergroupsEntity;
 
     public function editAction()
     {
-        $dbAdapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
+//        $dbAdapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
         $id = (int)$this->params('id');
         if (!$id) {
             return $this->redirect()->toRoute('users', array('action'=>'add'));
@@ -74,7 +78,6 @@ use Usergroups\Model\UsergroupsEntity;
             $form->setData($request->getPost());
             if ($form->isValid()) {
                 $this->getUsersMapper()->saveUsers($users);
-
                 return $this->redirect()->toRoute('users');
             }
         }

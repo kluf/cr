@@ -4,6 +4,22 @@
 <p><blockquote><?php echo $message; ?></blockquote></p>
 <?php
     $this->headTitle($this->escapeHtml($title));
+    function paintStates($state) {
+        switch ($state) {
+            case 'not ok':
+                return "<td><div class='alert alert-danger'>".$state."</div></td>";
+                break;
+            case 'looking':
+                return "<td><div class='alert alert-warning'>".$state."</div></td>";
+                break;
+            case 'good':
+                return "<td><div class='alert alert-success'>".$state."</div></td>";
+                break;
+            default:
+                return "<td><div class='alert alert-info'>".$state."</div></td>";
+                break;
+        }
+    }
 ?>
 
 <table class="table table-hover table-striped">
@@ -33,9 +49,9 @@ foreach ($codereviews as $codereview) {
     <td><a href=".$codereview['changeset']." target='_blank'>{$codereview['changeset']}</a></td>
     <td><a href=".$codereview['jiraticket']." target='_blank'>{$codereview['jiraticket']}</a></td>
     <td>{$codereview['authorcomments']}</td>
-    <td>{$codereview['reviewercomments']}</td>
-    <td>{$codereview['state']}</td>
-    <td>{$codereview['author']}</td>
+    <td>{$codereview['reviewercomments']}</td>";
+    echo paintStates($codereview['state']);
+echo "<td>{$codereview['author']}</td>
     <td>{$codereview['reviewer']}</td>
     <td><a class='glyphicon glyphicon-pencil' href=".$this->url('codereview', array('action'=>'edit', 'id' => $codereview['id']))."></a>
         <a class='glyphicon glyphicon-remove' href=".$this->url('codereview', array('action'=>'delete', 'id' => $codereview['id']))."></a>

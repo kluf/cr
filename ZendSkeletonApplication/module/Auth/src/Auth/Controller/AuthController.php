@@ -46,26 +46,29 @@ class AuthController extends AbstractActionController
             if ($form->isValid()) {
                 $userMapper = $this->getUsersMapper();
                 $userExists = $userMapper->fetchUserForLoginAction($request->getPost('ldap'), $request->getPost('password'));
+//                var_dump($form);exit;
                 if ($userExists) {
                     $auth = $this->getAuthMapper();
-                    $auth->setUsersSesstion($userExists);
+                    $auth->setUsersSession($userExists);
 //                    $session = new Container('currentUser');
 //                    var_dump($session->getManager()->getStorage());exit;
                     
                     return $this->redirect()->toRoute('auth', array('action'=>'index'));
                 } else {
-                    $errorMessage = 'User or password don\'t match';
-                    return $this->redirect()->toRoute('auth', array('action'=>'login'));
+//                    $errorMessage = 'User or password don\'t match';
+//                    return $this->redirect()->toRoute('auth', array('action'=>'login'));
+//                    var_dump($form);exit;
+                    $form->customErrMessage = 'Wrong username or password';
+                    return array('form' => $form);
                 }   
 //                return $this->redirect()->toRoute('users');
             } else {
-                $error = 'Wrong username or password';
-                return array('form' => $form, 'error' => $error);
+                return array('form' => $form);
             }
         }
         return array('form' => $form);
     }
- 
+    
     public function getUsersMapper()
     {
         $sm = $this->getServiceLocator();
@@ -80,8 +83,8 @@ class AuthController extends AbstractActionController
     
     public function logoutAction()
     {
-        $storage = new Zend_Auth_Storage_Session();
-        $storage->clear();
+        $authMapper = $this->getAuthMapper();
+        $destroySession = $authMapper->destroyCurrentSession();
         $this->_redirect('index/index');
      }
 }

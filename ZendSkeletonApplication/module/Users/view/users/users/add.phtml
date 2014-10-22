@@ -11,6 +11,11 @@ function printFormGroup($row = 'null'){
  ?>
  <h1><?php echo $this->escapeHtml($title); ?></h1>
  <?php
+ if (isset($form->customErrMessage) && $form->customErrMessage != '') { ?>
+    <div class="alert alert-warning" role="alert">
+        <?php echo $form->customErrMessage ?>
+    </div>
+<?php }
  $form->setAttribute('action', $this->url('users', array('action' => 'add')))
          ->setAttribute('class', 'form-horizontal');
  $form->prepare();
@@ -23,8 +28,6 @@ function printFormGroup($row = 'null'){
  printFormGroup($this->formRow($form->get('email')
          ->setAttribute('class', 'form-control')));
  printFormGroup($this->formRow($form->get('password')
-         ->setAttribute('class', 'form-control')));
- printFormGroup($this->formRow($form->get('groupid')
          ->setAttribute('class', 'form-control')));
  printFormGroup($this->formSubmit($form->get('submit')
          ->setAttribute('class', 'btn btn-success')));

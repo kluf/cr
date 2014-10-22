@@ -14,7 +14,11 @@ function printFormGroup($row = 'null'){
  $form->setAttribute('action', $this->url('auth', array('action' => 'login')))
          ->setAttribute('class', 'form-horizontal');
  $form->prepare();
-
+if (isset($form->customErrMessage) && $form->customErrMessage != '') { ?>
+    <div class="alert alert-danger" role="alert">
+        <?php echo $form->customErrMessage ?>
+    </div>
+<?php }
  echo $this->form()->openTag($form);
  printFormGroup($this->formRow($form->get('ldap')
          ->setAttribute('class', 'form-control')));

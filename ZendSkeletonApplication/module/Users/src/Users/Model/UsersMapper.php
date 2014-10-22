@@ -16,6 +16,7 @@ class UsersMapper
     protected $tableName = 'users';
     protected $dbAdapter;
     protected $sql;
+    private $defaultUsers = 3;
 
     public function __construct(Adapter $dbAdapter)
     {
@@ -39,7 +40,7 @@ class UsersMapper
         $select->where(array('ldap' => $userLdap));
         $statement = $this->sql->prepareStatementForSqlObject($select);
         $result = $statement->execute()->current();
-        if (!$result) {
+        if (!$result['ldap']) {
             return false;
         }
         return true;
@@ -58,16 +59,11 @@ class UsersMapper
                 ->where(array('ldap' => $userLdap));
         $statement = $this->sql->prepareStatementForSqlObject($select);
         $result = $statement->execute()->current();
-        if (!$result && !$bcrypt->verify($pass, $result['password'])) {
-            return null;
+        if (!$bcrypt->verify($pass, $result['password'])) {
+            return false;
         }
         $result['password'] = '';
-//        $hydrator = new ClassMethods();
-//        $users = new UsersEntity();
-//        $hydrator->hydrate($result, $users);
-//        var_dump($users);exit;
         return $result;
-//        $this->isUserOwnerOfChangeset(1,1);
     }
     
     public function isUserAdmin($uid)
@@ -156,8 +152,8 @@ class UsersMapper
         return $results;
     }
     
-   public function saveUsers(UsersEntity $users)
-   {
+    public function saveUsers(UsersEntity $users)
+    {
         $bcrypt = new Bcrypt();
         $hydrator = new ClassMethods();
         $data = $hydrator->extract($users);
@@ -169,19 +165,25 @@ class UsersMapper
             $action->where(array('id' => $users->getId()));
         } else {
             // insert action
-            $action = $this->sql->insert();
-            unset($data['id']);
-            $action->values($data);
+            // need to be checked whether or not user is already registered
+            if (!$this->ifUserExists($data['ldap'])) {
+                $data['groupid'] = $this->defaultUsers;
+                $action = $this->sql->insert();
+                unset($data['id']);
+                $action->values($data);
+            } else {
+                return false;
+//                return array('form' => $form);
+            }
         }
         $statement = $this->sql->prepareStatementForSqlObject($action);
         $result = $statement->execute();
-
         if (!$users->getId()) {
             $users->setId($result->getGeneratedValue());
         }
         return $result;
 
-   }
+    }
 
     public function getUsers($id)
    {
