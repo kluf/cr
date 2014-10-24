@@ -109,7 +109,6 @@ class CodereviewController extends AbstractActionController
                 return $this->redirect()->toRoute('codereview');
             }
         }
-
         return array(
             'id' => $id,
             'form' => $form,

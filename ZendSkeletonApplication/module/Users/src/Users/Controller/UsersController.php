@@ -8,6 +8,7 @@
  use Users\Model\UsersMapper;
  use Users\Model\UsersEntity;
  use Users\Form\UsersForm;
+ use Users\Form\UsersResetPassForm;
  use Users\Form\UsersLoginForm;
 
 use Usergroups\Model\Usergroups;
@@ -50,9 +51,7 @@ class UsersController extends AbstractActionController
             $form->setData($request->getPost());
             if ($form->isValid()) {
                 $this->getUsersMapper()->saveUsers($users);
-
                 // Redirect to auth
-//                return $this->redirect()->toRoute('auth');
                 $form->customErrMessage = 'Probably username is already taken by someone else';
                 return array('form' => $form);
             }
@@ -108,6 +107,27 @@ class UsersController extends AbstractActionController
         return array(
             'id' => $id,
             'users' => $users
+        );
+    }
+    
+    public function resetPasswordAction()
+    {
+        $usersNewPassword = '';
+        $request = $this->getRequest();
+        $users = $this->getUsersMapper()->fetchUsersForSelect();
+        $form = new UsersResetPassForm(null, $users);
+        if ($request->isPost() && $request->getPost('userid')) {
+            $id = $request->getPost('userid');
+            $userToUpdate = $this->getUsersMapper()->getUsers($id);
+            $form->setData($request->getPost());
+            if ($form->isValid()) {
+                $usersNewPassword = $this->getUsersMapper()->resetPasswordForUser($userToUpdate);
+//                return $this->redirect()->toRoute('users');
+            }
+        }
+        $form->temporaryPassword = $usersNewPassword;
+        return array(
+           'form' => $form,
         );
     }
  }

@@ -35,3 +35,11 @@ div.container a.brand {
     margin-left: 0;
     padding: 8px 20px 12px 40px;
 }
+.col-sm-10 ul li {
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+    color: #8a6d3b;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    padding: 15px;
+}

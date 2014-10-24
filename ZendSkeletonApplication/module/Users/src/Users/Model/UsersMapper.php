@@ -184,22 +184,50 @@ class UsersMapper
         return $result;
 
     }
-
-    public function getUsers($id)
-   {
-        $select = $this->sql->select();
-        $select->where(array('id' => $id));
-
-        $statement = $this->sql->prepareStatementForSqlObject($select);
-        $result = $statement->execute()->current();
-        if (!$result) {
-            return null;
+    public function resetPasswordForUser(UsersEntity $users)
+    {
+        $generatedPassword = '';
+        $passString = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        for ($lengthOfPass = 8, $i = 0; $i < $lengthOfPass; $i++) {
+            $randomSymbol = mt_rand(0, strlen($passString) - 1);
+            $generatedPassword .= $passString[$randomSymbol];
         }
+        
+        $bcrypt = new Bcrypt();
         $hydrator = new ClassMethods();
-        $users = new UsersEntity();
-        $hydrator->hydrate($result, $users);
-        return $users;
-   }
+        $data["password"] = $bcrypt->create($generatedPassword);
+        if ($users->getId()) {
+            // update action
+            $action = $this->sql->update();
+            $action->set($data);
+            $action->where(array('id' => $users->getId()));
+        } else {
+            // insert action
+            return false;
+        }
+        $statement = $this->sql->prepareStatementForSqlObject($action);
+        $result = $statement->execute();
+        if (!$users->getId()) {
+            $users->setId($result->getGeneratedValue());
+        }
+        return $generatedPassword;
+    }
+    
+    public function getUsers($id)
+    {
+         $select = $this->sql->select();
+         $select->where(array('id' => $id));
+
+         $statement = $this->sql->prepareStatementForSqlObject($select);
+         $result = $statement->execute()->current();
+         if (!$result) {
+             return null;
+         }
+         $hydrator = new ClassMethods();
+         $users = new UsersEntity();
+         $hydrator->hydrate($result, $users);
+         return $users;
+    }
 
    public function deleteUsers($id)
    {

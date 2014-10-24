@@ -48,8 +48,10 @@ foreach ($codereviews as $codereview) {
     <td>{$codereview['creationdate']}</td>
     <td><a href=".$codereview['changeset']." target='_blank'>{$codereview['changeset']}</a></td>
     <td><a href=".$codereview['jiraticket']." target='_blank'>{$codereview['jiraticket']}</a></td>
-    <td>{$codereview['authorcomments']}</td>
-    <td>{$codereview['reviewercomments']}</td>";
+    <td><button type='button' class='btn btn-default' data-container='body' data-toggle='popover' data-placement='top' 
+    data-content='{$codereview['authorcomments']}'>Read it</button></td>
+    <td><button type='button' class='btn btn-default' data-container='body' data-toggle='popover' data-placement='bottom' 
+    data-content='{$codereview['reviewercomments']}'>Read it</button></td>";
     echo paintStates($codereview['state']);
 echo "<td>{$codereview['author']}</td>
     <td>{$codereview['reviewer']}</td>

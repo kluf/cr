@@ -3,15 +3,12 @@ namespace Codereview\Form;
 
 use Zend\Form\Form;
 use Zend\Stdlib\Hydrator\ClassMethods;
-use Zend\Db\Adapter\AdapterInterface;
-use Zend\Db\Adapter\Adapter;
 
 class CodereviewForm extends Form
 {
     public function __construct($name = null, $users, $states, $reviewers)
     {
-        
-//        $this->adapter =$dbAdapter;
+
         // we want to ignore the name passed
         parent::__construct('codereview');
 
@@ -61,6 +58,7 @@ class CodereviewForm extends Form
         $this->add(array(
              'name' => 'stateid',
              'type' => 'Zend\Form\Element\Select',
+            'disabled' => 'true',
              'options' => array(
                      'label' => 'State',
                      'value_options' => $states,
