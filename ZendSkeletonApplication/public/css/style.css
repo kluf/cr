@@ -43,3 +43,8 @@ div.container a.brand {
     margin-bottom: 20px;
     padding: 15px;
 }
+
+.alert.smaller_states {
+    padding: 3px;
+    text-align: center;
+}

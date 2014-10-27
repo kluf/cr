@@ -1,50 +1,67 @@
 <?php $title = 'Find by user';?>
 <h1 class="text-right" ><small><?php echo $this->escapeHtml($title); ?></small></h1>
 <?php
-    $this->headTitle($this->escapeHtml($title));
-?>
 
-<form action="/codereview/findByUser" method="GET" class="form-horizontal">
-    <label for="userid">Select username</label>
-    <select name="userid" class="form-control" id="userid">
-        <?php 
-            foreach($users as $key => $user) {
-                echo "<option value='{$key}'>{$user}</option>";
-            }
-        ?>
-    </select>
-    <button class="btn btn-success form-control"><span class="glyphicon glyphicon-search"></span></button>
-</form>
-<table class="table table-hover table-striped">
-    <tr class="success">
-        <th>Creating date</th>
-        <th>Changeset</th>
-        <th>JIRA ticket</th>
-        <th>Author's comments</th>
-        <th>Reviewer's comments</th>
-        <th>State</th>
-        <th>Author</th>
-        <th>Reviewer</th>
-        <th>Moderation</th>
-    </tr>
+    function printFormGroup($row = 'null'){
+        echo '<div class="form-group"><div class="col-sm-10">'.$row.'</div></div>';
+    }
+
+    $this->headTitle($this->escapeHtml($title));?>
+    <div class="panel panel-info">
+        <div class="panel-heading">Search here</div>
+        <div class="panel-body"> 
+            <?php
+            $form->setAttribute('action', $this->url('codereview', array('action' => 'findByUser')))
+                    ->setAttribute('class', 'form-horizontal');
+            $form->prepare();
+            echo $this->form()->openTag($form);
+            printFormGroup($this->formRow($form->get('authorid')
+                    ->setAttribute('class', 'form-control')));
+            echo $this->formSubmit($form->get('submit')
+                    ->setAttribute('class', 'btn btn-danger'));
+            echo $this->form()->closeTag();
+            ?>
+        </div>
+    </div>
 <?php
-if (isset($codereviews)) {
-    foreach ($codereviews as $codereview) {
-        echo "
+if (isset($codereviews) && count($codereviews) != 0) { ?>
+<div class="panel panel-default">
+    <div class="panel-heading">Searching result(s)</div>
+    <div class="panel-body">
+    <table class="table table-hover table-striped">
+        <tr class="success">
+            <th>Creating date</th>
+            <th>Changeset</th>
+            <th>JIRA ticket</th>
+            <th>Author's comments</th>
+            <th>Reviewer's comments</th>
+            <th>State</th>
+            <th>Author</th>
+            <th>Reviewer</th>
+        </tr>
+    
+<?php foreach ($codereviews as $codereview) {
+    echo "
         <tr>
-        <td>{$codereview['creationdate']}</td>
+            <td>{$codereview['creationdate']}</td>
             <td><a href=".$codereview['changeset']." target='_blank'>{$codereview['changeset']}</a></td>
             <td><a href=".$codereview['jiraticket']." target='_blank'>{$codereview['jiraticket']}</a></td>
-           <td>{$codereview['authorcomments']}</td>
-           <td>{$codereview['reviewercomments']}</td>
-           <td>{$codereview['state']}</td>
-           <td>{$codereview['author']}</td>
-           <td>{$codereview['reviewer']}</td>
-           <td><a href=".$this->url('codereview', array('action'=>'edit', 'id' => $codereview['id'])).">Edit</a>
-               <a href=".$this->url('codereview', array('action'=>'delete', 'id' => $codereview['id'])).">Delete</a>
-           </td>
+            <td><button type='button' class='btn btn-default' data-container='body' data-toggle='popover' data-placement='top' 
+            data-content='{$codereview['authorcomments']}'>Read it</button></td>
+            <td><button type='button' class='btn btn-default' data-container='body' data-toggle='popover' data-placement='bottom' 
+            data-content='{$codereview['reviewercomments']}'>Read it</button></td>
+            <td class='state'>{$codereview['state']}</td>
+            <td>{$codereview['author']}</td>
+            <td>{$codereview['reviewer']}</td>
         </tr>";
-    }
-}
-?>
-</table>
+    } ?>
+        </table>
+    </div>
+</div>   
+
+<?php } else { ?>
+<div class="alert alert-warning alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  Oops...it seems like there is no data to display
+</div>
+<?php } ?>

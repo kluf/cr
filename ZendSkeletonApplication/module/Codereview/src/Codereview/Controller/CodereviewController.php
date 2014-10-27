@@ -4,10 +4,14 @@ namespace Codereview\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+
 use Codereview\Model\Codereview;
 use Codereview\Model\CodereviewMapper;
 use Codereview\Model\CodereviewEntity;
+
 use Codereview\Form\CodereviewForm;
+use Codereview\Form\CodereviewFindByTicketForm;
+use Codereview\Form\CodereviewFindByUserForm;
 
 use Users\Model\Users;
 use Users\Model\UsersMapper;
@@ -118,33 +122,37 @@ class CodereviewController extends AbstractActionController
     public function findByUserAction()
     {
         $request = $this->getRequest();
-        if ($request->isGet()) {
-            $usersMapper = $this->getUsersMapper();
-            $users = $usersMapper->fetchUsersForSelect();
-//            var_dump($users);exit;
-            if ($request->getQuery('userid')) {
-                $user = $request->getQuery('userid');
-                $mapper = $this->getCodereviewMapper();
-                $codereviews = $mapper->getCodereviewByUser((int)$user);
-                return new ViewModel(array('users' => $users, 'codereviews' => $codereviews));
+        $users = $this->getUsersMapper()->fetchUsersForSelect();
+        $form = new CodereviewFindByUserForm(null, $users);
+        if ($request->isPost() && $request->getPost('authorid')) {
+            $authorid = $request->getPost('authorid');
+            $form->setData($request->getPost());
+            if ($form->isValid()) {
+                $codereview = $this->getCodereviewMapper()->getCodereviewByUser((int)$authorid);
+                return new ViewModel(array('codereviews' => $codereview, 'form' => $form));
             }
-            return new ViewModel(array('users' => $users));
+            
         }
+        return array(
+           'form' => $form,
+        );
     }
     
-        public function findByTicketAction()
+    public function findByTicketAction()
     {
         $request = $this->getRequest();
-//        var_dump($request->getQuery('userid'));
-        if ($request->isGet()) {
-            if ($request->getQuery('jiraticket')) {
-                $user = $request->getQuery('jiraticket');
-                $mapper = $this->getCodereviewMapper();
-                $codereviews = $mapper->getCodereviewByTicket($request->getQuery('jiraticket'));
-                return new ViewModel(array('codereviews' => $codereviews));
+        $form = new CodereviewFindByTicketForm(null);
+        if ($request->isPost() && $request->getPost('jiraticket')) {
+            $jiraticket = $request->getPost('jiraticket');
+            $form->setData($request->getPost());
+            if ($form->isValid()) {
+                $codereview = $this->getCodereviewMapper()->getCodereviewByTicket($jiraticket);
+                return new ViewModel(array('codereviews' => $codereview, 'form' => $form));
             }
-//            return new ViewModel(array('users' => $selectData));
         }
+        return array(
+           'form' => $form,
+        );
     }
     
     public function deleteAction()

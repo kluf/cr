@@ -4,22 +4,6 @@
 <p><blockquote><?php echo $message; ?></blockquote></p>
 <?php
     $this->headTitle($this->escapeHtml($title));
-    function paintStates($state) {
-        switch ($state) {
-            case 'not ok':
-                return "<td><div class='alert alert-danger'>".$state."</div></td>";
-                break;
-            case 'looking':
-                return "<td><div class='alert alert-warning'>".$state."</div></td>";
-                break;
-            case 'good':
-                return "<td><div class='alert alert-success'>".$state."</div></td>";
-                break;
-            default:
-                return "<td><div class='alert alert-info'>".$state."</div></td>";
-                break;
-        }
-    }
 ?>
 
 <table class="table table-hover table-striped">
@@ -51,9 +35,9 @@ foreach ($codereviews as $codereview) {
     <td><button type='button' class='btn btn-default' data-container='body' data-toggle='popover' data-placement='top' 
     data-content='{$codereview['authorcomments']}'>Read it</button></td>
     <td><button type='button' class='btn btn-default' data-container='body' data-toggle='popover' data-placement='bottom' 
-    data-content='{$codereview['reviewercomments']}'>Read it</button></td>";
-    echo paintStates($codereview['state']);
-echo "<td>{$codereview['author']}</td>
+    data-content='{$codereview['reviewercomments']}'>Read it</button></td>
+    <td class='state'>{$codereview['state']}</td>
+    <td>{$codereview['author']}</td>
     <td>{$codereview['reviewer']}</td>
     <td><a class='glyphicon glyphicon-pencil' href=".$this->url('codereview', array('action'=>'edit', 'id' => $codereview['id']))."></a>
         <a class='glyphicon glyphicon-remove' href=".$this->url('codereview', array('action'=>'delete', 'id' => $codereview['id']))."></a>
