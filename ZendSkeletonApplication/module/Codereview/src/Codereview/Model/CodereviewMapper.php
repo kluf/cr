@@ -124,23 +124,23 @@ use Zend\Db\ResultSet\HydratingResultSet;
        return $codereview->execute();
    }
    
-    public function isDayInWeekend() {
-        $currentDate = date("N");
-        $saturday = 6;
-        $sunday = 7;
-        return (boolean)$currentDate == $saturday || $currentDate == $sunday;
+    public function isDayInWeekend($currentDate) {
+        $saturday = 0;
+        $sunday = 6;
+        return (boolean)$currentDate == $saturday && $currentDate == $sunday;
     }
 
     public function dateCounter() {
+       $daysInWeek = 5;
        date_default_timezone_set('Europe/Helsinki');
-       $currentDate = date("N");
+       $currentDate = date("w");
        $currentDateTextual = date('l');
        $daysLeftToWeekend;
-       if ($this->isDayInWeekend()) {
+       if ($this->isDayInWeekend($currentDate)) {
            $daysLeftToWeekend = ' thus now is Weekend, so none';
        }
-       elseif ($currentDate < $this->daysInWeek) {
-           $daysLeftToWeekend = $this->daysInWeek - $currentDate;
+       elseif ($currentDate < $daysInWeek) {
+           $daysLeftToWeekend = $daysInWeek - $currentDate;
        }
        $message = "Today is ".$currentDateTextual." ".$daysLeftToWeekend." days left to weekend";
        return $message;

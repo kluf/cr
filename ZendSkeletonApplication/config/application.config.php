@@ -8,8 +8,9 @@ return array(
         'State',
         'Usergroups',
         'Users',
+        'CRApi',
         'Reviewerstime',
-        'Auth'
+        'Auth',
     ),
 
     // These are various options for the listeners attached to the ModuleManager

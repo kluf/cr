@@ -4,6 +4,7 @@
 
  use Zend\Mvc\Controller\AbstractActionController;
  use Zend\View\Model\ViewModel;
+ use Zend\Json\Json;
  use Users\Model\Users;
  use Users\Model\UsersMapper;
  use Users\Model\UsersEntity;
@@ -39,7 +40,6 @@ class UsersController extends AbstractActionController
     
     public function addAction()
     {
-//        $dbAdapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
         $UserGroupsMapper = $this->getUserGroupsMapper();
         $userGroups = $UserGroupsMapper->fetchUsergroupsForSelect();
         $form = new UsersLoginForm(null, $userGroups);
@@ -61,7 +61,6 @@ class UsersController extends AbstractActionController
 
     public function editAction()
     {
-//        $dbAdapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
         $id = (int)$this->params('id');
         if (!$id) {
             return $this->redirect()->toRoute('users', array('action'=>'add'));
@@ -129,5 +128,14 @@ class UsersController extends AbstractActionController
         return array(
            'form' => $form,
         );
+    }
+    
+//    public function apiGetUsersForSelectAction() {
+//        $users = $this->getUsersMapper()->fetchUsersForSelect();
+//        echo \Zend\Json\Json::encode($users);exit;
+//    }
+    
+    public function apiGetReviewersForSelect() {
+        
     }
  }

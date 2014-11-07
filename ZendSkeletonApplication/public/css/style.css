@@ -1,3 +1,4 @@
+
 body {
     padding-top: 60px;
     padding-bottom: 40px;
@@ -47,4 +48,27 @@ div.container a.brand {
 .alert.smaller_states {
     padding: 3px;
     text-align: center;
+}
+
+.alert-questions {
+    background-color: #b784ff;
+    border-color: #8632fc;
+    color: #41009e;
+}
+
+.add-changesets-popup-active {
+    position: fixed;
+    top: 75px;
+    left: 5%;
+    width: 90%;
+}
+
+.add-changesets-popup-non-active {
+    display: none;
+}
+.col-md-12 .glyphicon-remove {
+    float: right;
+}
+.body-background {
+    background: url(../img/background.png) repeat;
 }
