@@ -21,6 +21,11 @@
         <th>Moderation</th>
     </tr></thead><tbody>
 <?php
+
+function commentIsPresent($comment = '') {
+    return $comment == '';
+}
+
 foreach ($schedule as $key=>$value) {
     if ($key == 'designreviewerid_ldap' && $value != ''){
         echo "<div><span class='label label-success'>Design reviewer today is ".$value['reviewer_ldap']."</span></div>";
@@ -34,10 +39,23 @@ foreach ($codereviews as $codereview) {
     <td>{$codereview['creationdate']}</td>
     <td><a href=".$codereview['changeset']." target='_blank'>{$codereview['changeset']}</a></td>
     <td><a href=".$codereview['jiraticket']." target='_blank'>{$codereview['jiraticket']}</a></td>
-    <td><button type='button' class='btn btn-default' data-container='body' data-toggle='popover' data-placement='top' 
-    data-content='{$codereview['authorcomments']}'>Read it</button></td>
-    <td><button type='button' class='btn btn-default' data-container='body' data-toggle='popover' data-placement='bottom' 
-    data-content='{$codereview['reviewercomments']}'>Read it</button></td>
+    <td>";
+    if (commentIsPresent($codereview['authorcomments'])) {
+        echo "<button type='button' class='btn btn-default' data-container='body' disabled='disabled' data-toggle='popover' data-placement='top' 
+    data-content='{$codereview['authorcomments']}'>Nothing to read</button></td>";
+    } else {
+        echo "<button type='button' class='btn btn-default btn-info' data-container='body' data-toggle='popover' data-placement='top' 
+    data-content='{$codereview['authorcomments']}'>Read me</button></td>";
+    }
+    echo "<td>";
+    if (commentIsPresent($codereview['reviewercomments'])) {
+        echo "<button type='button' class='btn btn-default' data-container='body' disabled='disabled' data-toggle='popover' data-placement='bottom' 
+    data-content='{$codereview['reviewercomments']}'>Nothing to read</button>";
+    } else {
+        echo "<button type='button' class='btn btn-default btn-info' data-container='body' data-toggle='popover' data-placement='bottom' 
+    data-content='{$codereview['reviewercomments']}'>Read me</button>";
+    };
+    echo "</td>
     <td class='state'>{$codereview['state']}</td>
     <td>{$codereview['author']}</td>
     <td>{$codereview['reviewer']}</td>

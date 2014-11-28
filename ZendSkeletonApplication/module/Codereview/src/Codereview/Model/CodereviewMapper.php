@@ -58,6 +58,32 @@ use Zend\Db\ResultSet\HydratingResultSet;
        return $result;
    }
    
+    public function saveCodereviewAPI($data)
+    {
+       $data = json_decode($data, true);
+//       echo $data['creationdate'];exit;
+//       var_dump($data);exit;
+       if (isset($data['id']) && $data['id'] != '') {
+           // update action
+           $action = $this->sql->update();
+           $action->set($data);
+           $action->where(array('id' => $data['id']));
+       } else {
+           // insert action
+           $action = $this->sql->insert();
+           unset($data['id']);
+           $action->values($data);
+       }
+       $statement = $this->sql->prepareStatementForSqlObject($action);
+       $result = $statement->execute();
+
+//       if (!$codereview->getId()) {
+//           $codereview->setId($result->getGeneratedValue());
+//       }
+//        var_dump($result);exit;
+        return $result->getGeneratedValue();
+   }
+   
     public function fetchCodereviewWithUsersAndStates()
     {
     $select = new Select();
@@ -88,6 +114,24 @@ use Zend\Db\ResultSet\HydratingResultSet;
        return $codereview;
    }
 
+    public function getCodereviewApi($id)
+   {
+       $select = $this->sql->select();
+       $select->where(array('id' => $id));
+
+       $codereview = $this->sql->prepareStatementForSqlObject($select);
+       $result = $codereview->execute()->current();
+       if (!$result) {
+           return null;
+       }
+       $hydrator = new ClassMethods();
+       $codereview = new CodereviewEntity();
+       $hydrator->hydrate($result, $codereview);
+
+       return $codereview;
+   }
+   
+   
     public function getCodereviewByUser($userid)
     {
     $select = new Select();
@@ -135,7 +179,7 @@ use Zend\Db\ResultSet\HydratingResultSet;
        date_default_timezone_set('Europe/Helsinki');
        $currentDate = date("w");
        $currentDateTextual = date('l');
-       $daysLeftToWeekend;
+       $daysLeftToWeekend = 0;
        if ($this->isDayInWeekend($currentDate)) {
            $daysLeftToWeekend = ' thus now is Weekend, so none';
        }
