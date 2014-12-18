@@ -10,7 +10,7 @@ class CodereviewFindByUserForm extends Form
     {
 
         // we want to ignore the name passed
-        parent::__construct('codereview');
+        parent::__construct('codereviewfindbyuser');
 
         $this->setAttribute('method', 'post');
         $this->setInputFilter(new CodereviewFindByUserFilter());
@@ -24,6 +24,33 @@ class CodereviewFindByUserForm extends Form
                      'value_options' => $users,
                      'empty_option' => 'Please select user'
              ),
+            'attributes' => array(
+                'class' => 'authorid form-control'
+            ),
+        ));
+        
+        $this->add(array(
+            'name' => 'startdate',
+            'type' => 'Text',
+            'required' => 'false',
+            'options' => array(
+                'label' => 'Start date',
+            ),
+            'attributes' => array(
+                'class' => 'startdate form-control'
+            ),
+        ));
+       
+        $this->add(array(
+            'name' => 'enddate',
+            'type' => 'Text',
+            'required' => 'false',
+            'options' => array(
+                'label' => 'End date',
+            ),
+            'attributes' => array(
+                'class' => 'enddate form-control'
+            ),
         ));
        
         $this->add(array(
@@ -32,6 +59,7 @@ class CodereviewFindByUserForm extends Form
             'attributes' => array(
                 'value' => 'Find',
                 'id' => 'submitbutton',
+                'class' => 'btn btn-info'
             ),
         ));
     }

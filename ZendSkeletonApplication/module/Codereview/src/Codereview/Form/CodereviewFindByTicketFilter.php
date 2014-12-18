@@ -37,6 +37,42 @@ class CodereviewFindByTicketFilter extends InputFilter{
                  ),
              ),
          ));
+         
+        $this->add(array(
+             'name'     => 'enddate',
+             'filters'  => array(
+                 array('name' => 'StripTags'),
+                 array('name' => 'StringTrim'),
+             ),
+             'validators' => array(
+                 array(
+                     'name'    => 'StringLength',
+                     'options' => array(
+                         'encoding' => 'UTF-8',
+                         'min'      => 10,
+                         'max'      => 10,
+                     ),
+                 ),
+             ),
+         ));
+        
+        $this->add(array(
+             'name'     => 'startdate',
+             'filters'  => array(
+                 array('name' => 'StripTags'),
+                 array('name' => 'StringTrim'),
+             ),
+             'validators' => array(
+                 array(
+                     'name'    => 'StringLength',
+                     'options' => array(
+                         'encoding' => 'UTF-8',
+                         'min'      => 10,
+                         'max'      => 10,
+                     ),
+                 ),
+             ),
+         ));
     }
 }
 

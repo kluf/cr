@@ -10,7 +10,8 @@ CR = (function() {
     
     var authors = [],
         reviewers = [],
-        states = [];
+        states = [],
+        changesetForEditing;
         
     $('.table .btn.btn-default').popover();
     
@@ -40,22 +41,21 @@ CR = (function() {
         }
     }
     
-    function PopUp(editForm) {
-        var editForm = editForm ? editForm : false;
-            if (typeof (this.instance) === 'object') {
-                return this.instance;
-            }
-            this.body = $('body > .container').append('<div class="fadingWrapperInvisible fadingWrapper"><div class="row"><div class="col-md-12"><div class="panel panel-default add-changesets-popup-active">\n\
-                        <div class="panel-heading">Add changeset(s)<button type="button" class="close"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button></div>\n\
-                        <div class="panel-body"><form class="form-inline" role="form" method="POST"></form><input type="text" id="numberOfCasesToAdd" placeholder="5"><button type="button" class="btn btn-success add-changeset-button" disabled="disabled">\n\
-                        <span class="glyphicon glyphicon-plus-sign"></span></button></div></div></div></div></div>');
-            this.instance = this;
+    function PopUp() {
+        if (typeof (this.instance) === 'object') {
+            return this.instance;
+        }
+        this.body = $('body > .container').append('<div class="fadingWrapperInvisible fadingWrapper"><div class="row"><div class="col-md-12"><div class="panel panel-default add-changesets-popup-active">\n\
+                    <div class="panel-heading">Add changeset(s)<button type="button" class="close"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button></div>\n\
+                    <div class="panel-body"><form class="form-inline" role="form" method="POST"></form><input type="text" id="numberOfCasesToAdd" placeholder="5"><button type="button" class="btn btn-success add-changeset-button" disabled="disabled">\n\
+                    <span class="glyphicon glyphicon-plus-sign"></span></button></div></div></div></div></div>');
+        this.instance = this;
     }
     
     function makePopUpActive() {
-        $('.fadingWrapperInvisible').addClass('fadingWrapper');
         $('.panel-default.add-changesets-popup-active').removeClass('add-changesets-popup-non-active');
     }
+    
     function getFormattedDate() {
         var currentDate = new Date(),
             month = convertOneDigitToTwoInTime(currentDate.getMonth() + 1),
@@ -99,52 +99,67 @@ CR = (function() {
         return markup;
     }
     
-    function addFieldsToFormForAddingChangesets(obj) {
-        var id = obj.id ? obj.id : '',
-            creationDate = obj.creationDate ? obj.creationDate : '',
-            changeSet = obj.changeSet ? obj.changeSet : '',
-            jiraticket = obj.jiraticket ? obj.jiraticket : '',
-            authorcomments = obj.authorcomments ? obj.authorcomments : '',
-            reviewercomments = obj.reviewercomments ? obj.reviewercomments : '';
-        var form;
-        var selectAuthors = createSelectWithData(authors, 'authorid', 'authorid');
-        var selectReviewers = createSelectWithData(reviewers, 'reviewerid', 'reviewerid');
-        var selectStates = createSelectWithData(states, 'stateid', 'stateid');
-        var formattedDate = obj.date ? obj.date : getFormattedDate();
+    function addFieldsToFormForAddingChangesets() {
+        var id = changesetForEditing ? changesetForEditing.id : '',
+            creationDate = changesetForEditing ? changesetForEditing.creationDate : '',
+            changeset = changesetForEditing ? changesetForEditing.changeset : '',
+            jiraticket = changesetForEditing ? changesetForEditing.jiraticket : '',
+            authorcomments = changesetForEditing ? changesetForEditing.authorcomments : '',
+            reviewercomments = changesetForEditing ? changesetForEditing.reviewercomments : '',
+            reviewerid = changesetForEditing ? changesetForEditing.reviewerid : '',
+            authorid = changesetForEditing ? changesetForEditing.authorid : '',
+            stateid = changesetForEditing ? changesetForEditing.stateid : '',
+            formattedDate = changesetForEditing ? changesetForEditing.creationdate : getFormattedDate();
+        var selectAuthors = createSelectWithData(authors, 'authorid', 'authorid', authorid);
+        var selectReviewers = createSelectWithData(reviewers, 'reviewerid', 'reviewerid', reviewerid);
+        var selectStates = createSelectWithData(states, 'stateid', 'stateid', stateid);
         var idInput = createInput({name: 'id', typeOfInput: 'hidden', value: id});
         var creationDateInput = createInput({name: 'creationdate', typeOfInput: 'text', value: formattedDate, disabled: 'disabled'});
-        var changesetInput = createInput({name: 'changeset', typeOfInput: 'text', value: changeSet});
+        var changesetInput = createInput({name: 'changeset', typeOfInput: 'text', value: changeset});
         var jiraticketInput = createInput({name: 'jiraticket', typeOfInput: 'text', value: jiraticket});
-        var authorcommentsInput = createInput({name: 'authorcomments', typeOfInput: 'textarea', value: id});
-        var reviewercommentsInput = createInput({name: 'reviewercomments', typeOfInput: 'textarea', value: id});
+        var authorcommentsInput = createInput({name: 'authorcomments', typeOfInput: 'textarea', value: authorcomments});
+        var reviewercommentsInput = createInput({name: 'reviewercomments', typeOfInput: 'textarea', value: reviewercomments});
         
-        $('.row .panel-body').find('.form-inline').append('<div class="clearfix">'
+        var rowForAdding = '<div class="clearfix">'
             + idInput + creationDateInput + changesetInput + jiraticketInput + authorcommentsInput 
-            + reviewercommentsInput + selectStates + selectReviewers + selectAuthors +
-            '<button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span></button>\n\
-            <button type="button" class="btn btn-danger removeChangeset"><span class="glyphicon glyphicon-minus"></span></button></div>');
+            + reviewercommentsInput + selectStates + selectReviewers + selectAuthors + '<button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span></button>\n\
+            <button type="button" class="btn btn-danger removeChangeset"><span class="glyphicon glyphicon-minus"></span></button></div>';
+        
+        var rowForEditing = '<div class="clearfix">'
+            + idInput + creationDateInput + changesetInput + jiraticketInput + authorcommentsInput 
+            + reviewercommentsInput + selectStates + selectReviewers + selectAuthors + '<button type="submit" class="btn btn-warning edit-changeset"><span class="glyphicon glyphicon-check"></span></button></div>';
+    
+            if (changesetForEditing && changesetForEditing.id != '') {
+                $('.row .panel-body').find('.form-inline').append(rowForEditing);
+            } else {
+                $('.row .panel-body').find('.form-inline').append(rowForAdding);
+            }
+        
     }
 
-    function createSelectWithData(items, id, name) {
+    function createSelectWithData(items, id, name, selected) {
+        var selected = selected || 0;
         $select = '<div class="form-group"><label class="sr-only" for="'+id+'">Select</label><select class="form-control" id="' + id + '" name="'+name+'">';
             items.forEach(function(item) {
-                $select += '<option value='+item.id+'>'+item.name+'</option>';
+                if (item.id == selected) {
+                    $select += '<option selected="selected" value='+item.id+'>'+item.name+'</option>';
+                } else {
+                    $select += '<option value='+item.id+'>'+item.name+'</option>';
+                }
             });
         $select += '</select></div>';
         return $select
     }
     
     function getDataForPopUp(resourceId, cb) {
-//        console.log(data);
         $.ajax({
-        type: "GET",
-        url: resourceId,
-//        data: data
+            type: "GET",
+            url: resourceId,
         })
         .done(function(data) {
-        if (cb) {
-            cb(data);
-        }
+            if (cb) {
+                cb(data);
+            }
         });
     }
     
@@ -167,8 +182,9 @@ CR = (function() {
                 }, '');
             }, '');
         }, '');
-        
     }
+
+    
     
     function sendDataFromPopUp(data, obj){
         $.ajax({
@@ -191,11 +207,34 @@ CR = (function() {
         });
     }
 
+    function sendDataFromPopUp1(data, obj){
+        $.ajax({
+        type: "PUT",
+        url: "/crapi/"+data.id,
+        data: {data: JSON.stringify(data)},
+        headers: {
+            "X_METHODOVERRIDE": "PUT"},
+        })
+        .done(function(data) {
+            if (data.result == 'error') {
+                $(obj).append('<div class="alert alert-dismissible alert-danger fade in" role="alert"><button class="close" data-dismiss="alert" type="button">x</button>Changeset wasn\'t added. Something horrible had happend...</div>');
+            } else {
+                $(obj).replaceWith('<div class="clearfix"><div class="alert alert-success" role="alert">Changeset with id ' + data.result + ' was added</div></div>')
+                    .animate({opacity: 0.25},1000, function(){$(this).remove();});
+            }
+        });
+    }
+
+    function sendDataFromPopUp(data, obj) {
+        var method = obj.method ? obj.method : 'POST',
+            url = method == 'POST' ? obj.url : obj.url + data.id;
+    }
+
     if ($('.table.table-hover.table-striped')) {
         renderStatesForCodereviews();
     }
     
-    $(document).on('click', '.add-changeset-button', function(event) {
+    function addFieldsToPopUp(event) {
         var quantityOfChangesets = parseInt($('#numberOfCasesToAdd').val(), 10);
         if (typeof(quantityOfChangesets) == 'number' && quantityOfChangesets > 1) {
             while (quantityOfChangesets--) {
@@ -205,9 +244,9 @@ CR = (function() {
             addFieldsToFormForAddingChangesets({});
         }
         event.preventDefault();
-    });
+    }
     
-    $('.pop-up-adding').bind('click', function(event) {
+    function addPopUp(event) {
         if (authors.length == 0) {
             var popup = new PopUp();
             getDataForAllSelects(madeAddButtonActive);
@@ -215,32 +254,32 @@ CR = (function() {
             makePopUpActive();
         }
         event.preventDefault();
-    });
+    }
+    
+    function removeRowFromPopUp() {
+        $(this).parent('.clearfix').remove();
+    }
     
     function madeAddButtonActive() {
         $('.add-changesets-popup-active .add-changeset-button').removeAttr('disabled');
     }
     
-    $(document).on('click', '.panel-heading .close', function(event) {
+    function reloadDocumentOnClosePopUp() {
         $('.panel-default.add-changesets-popup-active').addClass('add-changesets-popup-non-active');
         $('.fadingWrapperInvisible').removeClass('fadingWrapper');
         location.reload();
-    });
+    }
     
-    $(document).on('focusout', '.jiraticket-popup', function(event) {
+    function copyJiraTicketLinksAccrossTheForm() {
         var ticketValue = $('.jiraticket-popup').first().val();
         $('.jiraticket-popup').each(function(index, element) {
            if ($(element).val() == '') {
                $(element).val(ticketValue);
            }
         });
-    });
+    }
     
-    $(document).on('click', '.removeChangeset', function(event) {
-        $(this).parent('.clearfix').remove();
-    });
-    
-    $(document).on('click', '.add-changesets-popup-active .form-inline  .btn-success', function(event) {
+    function processFieldsBeforeAddChangeset(event) {
        var data = {};
        var isAllRequiredFieldsFilled = true;
        var formElementsArray = $(this).parent().find('input, select, textarea');
@@ -260,21 +299,84 @@ CR = (function() {
            alert('Please fill in all fields');
            event.preventDefault();
        }
-    });
+    }
     
-    $(document).on('blur', '.add-changesets-popup-active .form-inline input, \n\
-                            .add-changesets-popup-active .form-inline select, \n\
-                            .add-changesets-popup-active .form-inline textarea', function(event) {
+    function removeRequiredFieldMarkerWhenIsFilledIn() {
        if ($(this).val != '') {
            $(this).removeClass('requiredField');
        }
-    });
+    }
     
-    $('a.glyphicon-pencil').bind('click', function(event) {
+    function editChangeset(event) {
+        var popup = new PopUp();
         var data = $(this).attr('href').split('/');
         data = data[data.length-1];
-        getDataForPopUp('/crapi1/'+data, null);
+        getDataForPopUp('/crapi1/'+data, function(data) {
+            changesetForEditing = data.result;
+            getDataForAllSelects(addFieldsToFormForAddingChangesets);
+        });
+        $('.add-changesets-popup-active').find('#numberOfCasesToAdd, .add-changeset-button').remove();
+//        $('.add-changesets-popup-active form').attr('method', 'PUT');
         event.preventDefault();
+    }
+    
+    $(document).on('click', '.add-changeset-button', addFieldsToPopUp);
+    
+    $('.pop-up-adding').bind('click', addPopUp);
+    
+    $(document).on('click', '.panel-heading .close', reloadDocumentOnClosePopUp);
+    
+    $(document).on('focusout', '.jiraticket-popup', copyJiraTicketLinksAccrossTheForm);
+    
+    $(document).on('click', '.removeChangeset', removeRowFromPopUp);
+
+    $(document).on('click', '.add-changesets-popup-active .form-inline  .btn-success', processFieldsBeforeAddChangeset);
+    
+    $(document).on('blur', '.add-changesets-popup-active .form-inline input, \n\
+                            .add-changesets-popup-active .form-inline select, \n\
+                            .add-changesets-popup-active .form-inline textarea', removeRequiredFieldMarkerWhenIsFilledIn);
+    
+    $('a.glyphicon-pencil').bind('click', editChangeset);
+    
+    $( ".startdate" ).datepicker({
+        defaultDate: "-1w",
+        changeMonth: true,
+        numberOfMonths: 3,
+        dateFormat: "mm-dd-yy",
+        onClose: function( selectedDate ) {
+            $( ".enddate" ).datepicker( "option", "minDate", selectedDate );
+        }
+    });
+    $( ".enddate" ).datepicker({
+        changeMonth: true,
+        numberOfMonths: 3,
+        showButtonPanel: true,
+        dateFormat: "mm-dd-yy",
+        onClose: function( selectedDate ) {
+            $( ".startdate" ).datepicker( "option", "maxDate", selectedDate );
+        }
+    });
+    
+    $(document).on('click', '.edit-changeset', function(event) {
+        var data = {};
+        var isAllRequiredFieldsFilled = true;
+        var formElementsArray = $(this).parent().find('input, select, textarea');
+        formElementsArray.each(function(index, element) {
+            var elementName = $(element).attr('name');
+            if ($(element).val() === '' && elementName != 'authorcomments' && elementName != 'reviewercomments') {
+                 $(element).addClass('requiredField');
+                 isAllRequiredFieldsFilled = false;
+            } else {
+                 data[$(element).attr('name')] = $(element).val();
+            }
+        });
+        if (isAllRequiredFieldsFilled) {
+             sendDataFromPopUp1(data, $(this).parent('.clearfix'));
+             event.preventDefault();
+        } else {
+            alert('Please fill in all fields');
+            event.preventDefault();
+        }
     });
     
 })();

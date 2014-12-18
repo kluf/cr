@@ -8,23 +8,23 @@
 
     $this->headTitle($this->escapeHtml($title));?>
     <div class="panel panel-info">
-    <div class="panel-heading">Search here</div>
-    <div class="panel-body"> 
-    <?php
-    
-    $form->setAttribute('action', $this->url('codereview', array('action' => 'findByTicket')))
-            ->setAttribute('class', 'form-horizontal');
-    $form->prepare();
-    echo $this->form()->openTag($form);
+        <div class="panel-heading">Search here</div>
+            <div class="panel-body"> 
+                <?php
 
-    printFormGroup($this->formRow($form->get('jiraticket')
-            ->setAttribute('class', 'form-control')));
-    echo $this->formSubmit($form->get('submit')
-            ->setAttribute('class', 'btn btn-danger'));
-    echo $this->form()->closeTag();
-    
-    ?>
-    </div></div>
+                $form->setAttribute('action', $this->url('codereview', array('action' => 'findByTicket')))
+                        ->setAttribute('class', 'form-horizontal');
+                $form->prepare();
+                echo $this->form()->openTag($form);
+                printFormGroup($this->formRow($form->get('jiraticket')));
+                printFormGroup($this->formRow($form->get('startdate')));
+                printFormGroup($this->formRow($form->get('enddate')));
+                echo $this->formSubmit($form->get('submit'));
+                echo $this->form()->closeTag();
+
+                ?>
+            </div>
+    </div>
 <?php
 if (isset($codereviews) && count($codereviews) != 0) { ?>
 <div class="panel panel-default">

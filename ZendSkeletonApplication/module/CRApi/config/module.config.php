@@ -17,7 +17,7 @@ return array(
                 'options' => array(
                 'route'    => '/crapi[/:id]',
                     'constraints' => array(
-                        'id'     => '[a-zA-Z]+',
+                        'id'     => '[0-9a-zA-Z]+',
                     ),
                     'defaults' => array(
                         'controller' => 'CRApi\Controller\CR',

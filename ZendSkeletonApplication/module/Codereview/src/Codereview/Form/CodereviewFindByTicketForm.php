@@ -10,7 +10,7 @@ class CodereviewFindByTicketForm extends Form
     {
 
         // we want to ignore the name passed
-        parent::__construct('codereview');
+        parent::__construct('codereviewfindbyticket');
 
         $this->setAttribute('method', 'post');
         $this->setInputFilter(new CodereviewFindByTicketFilter());
@@ -22,14 +22,40 @@ class CodereviewFindByTicketForm extends Form
             'options' => array(
                 'label' => 'Type number of JIRA ticket to find',
             ),
+            'attributes' => array(
+                'class' => 'jiraticket form-control'
+            ),
+        ));
+        
+        $this->add(array(
+            'name' => 'startdate',
+            'type' => 'Text',
+            'options' => array(
+                'label' => 'Start date',
+            ),
+            'attributes' => array(
+                'class' => 'startdate form-control'
+            ),
         ));
        
+        $this->add(array(
+            'name' => 'enddate',
+            'type' => 'Text',
+            'options' => array(
+                'label' => 'End date',
+            ),
+            'attributes' => array(
+                'class' => 'enddate form-control'
+            ),
+        ));
+        
         $this->add(array(
             'name' => 'submit',
             'type' => 'Submit',
             'attributes' => array(
                 'value' => 'Find',
                 'id' => 'submitbutton',
+                'class' => 'btn btn-info'
             ),
         ));
     }

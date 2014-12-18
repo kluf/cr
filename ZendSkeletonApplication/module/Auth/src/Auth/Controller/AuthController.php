@@ -86,6 +86,7 @@ class AuthController extends AbstractActionController
         $authMapper = $this->getAuthMapper();
         $destroySession = $authMapper->destroyCurrentSession();
         $this->_redirect('index/index');
+        $this::refresh();
      }
 }
 
