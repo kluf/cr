@@ -78,17 +78,22 @@ CR = (function() {
     function createInput(obj) {
         var name = obj.name,
             typeOfInput = obj.typeOfInput,
-            value = obj.value ? obj.value : '',
+            value = obj.value ? obj.value : ' ',
             disabled = obj.disabled ? 'disabled' : '',
             markup = '<div class="form-group"><label class="sr-only" for="'+name+'">Creation date</label>';
         switch(typeOfInput) {
             case 'text': 
-                markup += '<input type="' + typeOfInput + '" class="form-control" id="' + name + '" name="' 
-                    + name + '" ' + '" value="' + value + '">';
+                if (disabled) {
+                    markup += '<input type="' + typeOfInput + '" class="form-control" id="' + name + '" name="' 
+                    + name + '"  value="' + value + '" disabled="disabled">';
+                } else {
+                    markup += '<input type="' + typeOfInput + '" class="form-control" id="' + name + '" name="' 
+                    + name + '"  value="' + value + '">';
+                }
                 break;
             case 'hidden': 
                 markup += '<input type="' + typeOfInput + '" class="form-control" id="' + name + '" name="' 
-                    + name + '" ' + ' value="' + value + '">';
+                    + name + '"  value="' + value + '">';
                 break;
             case 'textarea': 
                 markup += '<textarea class="form-control" id="'+name+'" name="'+name+'">'+value+'</textarea>';    
@@ -119,7 +124,6 @@ CR = (function() {
         var jiraticketInput = createInput({name: 'jiraticket', typeOfInput: 'text', value: jiraticket});
         var authorcommentsInput = createInput({name: 'authorcomments', typeOfInput: 'textarea', value: authorcomments});
         var reviewercommentsInput = createInput({name: 'reviewercomments', typeOfInput: 'textarea', value: reviewercomments});
-        
         var rowForAdding = '<div class="clearfix">'
             + idInput + creationDateInput + changesetInput + jiraticketInput + authorcommentsInput 
             + reviewercommentsInput + selectStates + selectReviewers + selectAuthors + '<button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span></button>\n\
@@ -134,7 +138,6 @@ CR = (function() {
             } else {
                 $('.row .panel-body').find('.form-inline').append(rowForAdding);
             }
-        
     }
 
     function createSelectWithData(items, id, name, selected) {
@@ -184,52 +187,24 @@ CR = (function() {
         }, '');
     }
 
-    
-    
-    function sendDataFromPopUp(data, obj){
-        $.ajax({
-        type: "POST",
-        url: "/crapi",
-        data: {data: data}
-        })
-        .done(function(data) {
-            if (data.result == 'error') {
-                $(obj).append('<div class="alert alert-dismissible alert-danger fade in" role="alert"><button class="close" data-dismiss="alert" type="button">x</button>Changeset wasn\'t added. Something horrible had happend...</div>');
-            } else {
-                $(obj).replaceWith('<div class="clearfix"><div class="alert alert-success" role="alert">Changeset with id ' + data.result + ' was added</div></div>');
-                    return function(){
-                     setTimeout(function(obj) {
-                         console.log($(obj));
-                         $(obj).remove();
-                     }, 1500);
-                }
-            }
-        });
-    }
-
-    function sendDataFromPopUp1(data, obj){
-        $.ajax({
-        type: "PUT",
-        url: "/crapi/"+data.id,
-        data: {data: JSON.stringify(data)},
-        headers: {
-            "X_METHODOVERRIDE": "PUT"},
-        })
-        .done(function(data) {
-            if (data.result == 'error') {
-                $(obj).append('<div class="alert alert-dismissible alert-danger fade in" role="alert"><button class="close" data-dismiss="alert" type="button">x</button>Changeset wasn\'t added. Something horrible had happend...</div>');
-            } else {
-                $(obj).replaceWith('<div class="clearfix"><div class="alert alert-success" role="alert">Changeset with id ' + data.result + ' was added</div></div>')
-                    .animate({opacity: 0.25},1000, function(){$(this).remove();});
-            }
-        });
-    }
-
-    function sendDataFromPopUp(data, obj) {
+    function sendDataFromPopUpMain(data, obj, objToRemove) {
         var method = obj.method ? obj.method : 'POST',
-            url = method == 'POST' ? obj.url : obj.url + data.id;
+            url = (method == 'POST') ? obj.url : obj.url + data.id;
+        $.ajax({
+            type: method,
+            url: url,
+            data: {data: JSON.stringify(data)}
+        })
+        .done(function(data) {
+            if (data.result == 'error') {
+                $(objToRemove).append('<div class="alert alert-dismissible alert-danger fade in" role="alert"><button class="close" data-dismiss="alert" type="button">x</button>Changeset wasn\'t added. Something horrible had happend...</div>');
+            } else {
+                $(objToRemove).replaceWith('<div class="clearfix"><div class="alert alert-success" role="alert">Changeset with id ' + data.result + ' was added</div></div>');
+                setTimeout(function() {$('.add-changesets-popup-active .clearfix').remove()},1000);
+            }
+        });
     }
-
+    
     if ($('.table.table-hover.table-striped')) {
         renderStatesForCodereviews();
     }
@@ -271,8 +246,8 @@ CR = (function() {
     }
     
     function copyJiraTicketLinksAccrossTheForm() {
-        var ticketValue = $('.jiraticket-popup').first().val();
-        $('.jiraticket-popup').each(function(index, element) {
+        var ticketValue = $('input[name="jiraticket"]').first().val();
+        $('input[name="jiraticket"]').each(function(index, element) {
            if ($(element).val() == '') {
                $(element).val(ticketValue);
            }
@@ -293,7 +268,7 @@ CR = (function() {
            }
        });
        if (isAllRequiredFieldsFilled) {
-            sendDataFromPopUp(JSON.stringify(data), $(this).parent('.clearfix'));
+            sendDataFromPopUpMain(data, {url: '/crapi', method: 'POST'}, $(this).parent('.clearfix'));
             event.preventDefault();
        } else {
            alert('Please fill in all fields');
@@ -316,27 +291,42 @@ CR = (function() {
             getDataForAllSelects(addFieldsToFormForAddingChangesets);
         });
         $('.add-changesets-popup-active').find('#numberOfCasesToAdd, .add-changeset-button').remove();
-//        $('.add-changesets-popup-active form').attr('method', 'PUT');
         event.preventDefault();
     }
     
+    function postEditChangeset(event) {
+        var data = {};
+        var isAllRequiredFieldsFilled = true;
+        var formElementsArray = $(this).parent().find('input, select, textarea');
+        formElementsArray.each(function(index, element) {
+            var elementName = $(element).attr('name');
+            if ($(element).val() === '' && elementName != 'authorcomments' && elementName != 'reviewercomments') {
+                 $(element).addClass('requiredField');
+                 isAllRequiredFieldsFilled = false;
+            } else {
+                 data[$(element).attr('name')] = $(element).val();
+            }
+        });
+        if (isAllRequiredFieldsFilled) {
+             sendDataFromPopUpMain(data, {url: '/crapi/', method: 'PUT'}, $(this).parent('.clearfix'));
+             event.preventDefault();
+        } else {
+            alert('Please fill in all fields');
+            event.preventDefault();
+        }
+    }
+    
     $(document).on('click', '.add-changeset-button', addFieldsToPopUp);
-    
     $('.pop-up-adding').bind('click', addPopUp);
-    
     $(document).on('click', '.panel-heading .close', reloadDocumentOnClosePopUp);
-    
-    $(document).on('focusout', '.jiraticket-popup', copyJiraTicketLinksAccrossTheForm);
-    
+    $(document).on('focusout', 'input[name="jiraticket"]', copyJiraTicketLinksAccrossTheForm);
     $(document).on('click', '.removeChangeset', removeRowFromPopUp);
-
     $(document).on('click', '.add-changesets-popup-active .form-inline  .btn-success', processFieldsBeforeAddChangeset);
-    
     $(document).on('blur', '.add-changesets-popup-active .form-inline input, \n\
                             .add-changesets-popup-active .form-inline select, \n\
                             .add-changesets-popup-active .form-inline textarea', removeRequiredFieldMarkerWhenIsFilledIn);
-    
     $('a.glyphicon-pencil').bind('click', editChangeset);
+    $(document).on('click', '.edit-changeset', postEditChangeset);
     
     $( ".startdate" ).datepicker({
         defaultDate: "-1w",
@@ -354,28 +344,6 @@ CR = (function() {
         dateFormat: "mm-dd-yy",
         onClose: function( selectedDate ) {
             $( ".startdate" ).datepicker( "option", "maxDate", selectedDate );
-        }
-    });
-    
-    $(document).on('click', '.edit-changeset', function(event) {
-        var data = {};
-        var isAllRequiredFieldsFilled = true;
-        var formElementsArray = $(this).parent().find('input, select, textarea');
-        formElementsArray.each(function(index, element) {
-            var elementName = $(element).attr('name');
-            if ($(element).val() === '' && elementName != 'authorcomments' && elementName != 'reviewercomments') {
-                 $(element).addClass('requiredField');
-                 isAllRequiredFieldsFilled = false;
-            } else {
-                 data[$(element).attr('name')] = $(element).val();
-            }
-        });
-        if (isAllRequiredFieldsFilled) {
-             sendDataFromPopUp1(data, $(this).parent('.clearfix'));
-             event.preventDefault();
-        } else {
-            alert('Please fill in all fields');
-            event.preventDefault();
         }
     });
     

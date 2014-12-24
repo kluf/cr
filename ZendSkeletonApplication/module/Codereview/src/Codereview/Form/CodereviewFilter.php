@@ -17,6 +17,7 @@ use Zend\InputFilter\InputFilter;
 
 class CodereviewFilter extends InputFilter{
     public function __construct(){
+        
         $this->add(array(
              'name'     => 'id',
              'required' => true,
@@ -24,6 +25,7 @@ class CodereviewFilter extends InputFilter{
                  array('name' => 'Int'),
              ),
          ));
+        
          $this->add(array(
              'name'     => 'creationdate',
              'required' => true,

@@ -38,8 +38,6 @@ class CodereviewFindByUserFilter extends InputFilter{
                      'name'    => 'StringLength',
                      'options' => array(
                          'encoding' => 'UTF-8',
-                         'min'      => 10,
-                         'max'      => 10,
                      ),
                  ),
              ),
@@ -56,8 +54,6 @@ class CodereviewFindByUserFilter extends InputFilter{
                      'name'    => 'StringLength',
                      'options' => array(
                          'encoding' => 'UTF-8',
-                         'min'      => 10,
-                         'max'      => 10,
                      ),
                  ),
              ),
