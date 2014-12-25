@@ -30,7 +30,7 @@ class UsersForm extends Form
         ));
        $this->add(array(
             'name' => 'email',
-            'type' => 'Text',
+            'type' => 'email',
             'options' => array(
                 'label' => 'Email',
             ),

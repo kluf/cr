@@ -24,6 +24,9 @@ class AuthForm extends Form
             'options' => array(
                 'label' => 'LDAP',
             ),
+            'attributes' => array(
+                'class' => 'form-control'
+            )
         ));
        $this->add(array(
             'name' => 'password',
@@ -31,6 +34,9 @@ class AuthForm extends Form
             'options' => array(
                 'label' => 'Type a password',
             ),
+            'attributes' => array(
+                'class' => 'form-control'
+            )
         ));
        $this->add(array(
             'name' => 'submit',
@@ -39,6 +45,9 @@ class AuthForm extends Form
                 'value' => 'Go',
                 'id' => 'submitbutton',
             ),
+            'attributes' => array(
+                'class' => 'form-control btn btn-success'
+            )
         ));
 
     }

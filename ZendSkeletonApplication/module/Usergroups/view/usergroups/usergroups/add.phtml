@@ -17,8 +17,6 @@ $form->prepare();
 
 echo $this->form()->openTag($form);
 echo $this->formHidden($form->get('id'));
-printFormGroup($this->formRow($form->get('name')
-        ->setAttribute('class', 'form-control')));
-printFormGroup($this->formSubmit($form->get('submit')
-        ->setAttribute('class', 'btn btn-success')));
+printFormGroup($this->formRow($form->get('name')));
+printFormGroup($this->formSubmit($form->get('submit')));
 echo $this->form()->closeTag();

@@ -30,14 +30,14 @@ class ReviewerstimeForm extends Form
         ));
        $this->add(array(
             'name' => 'email',
-            'type' => 'Text',
+            'type' => 'email',
             'options' => array(
                 'label' => 'Email',
             ),
         ));
        $this->add(array(
             'name' => 'password',
-            'type' => 'Text',
+            'type' => 'password',
             'options' => array(
                 'label' => 'Type a password',
             ),

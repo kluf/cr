@@ -24,6 +24,9 @@ use Zend\Stdlib\Hydrator\ClassMethods;
              'options' => array(
                  'label' => 'Name',
              ),
+            'attributes' => array(
+                'class' => 'form-control'
+            )
          ));
           $this->add(array(
              'name' => 'submit',
@@ -31,6 +34,7 @@ use Zend\Stdlib\Hydrator\ClassMethods;
              'attributes' => array(
                  'value' => 'Go',
                  'id' => 'submitbutton',
+                 'class' => 'btn btn-success',
              ),
          ));
          

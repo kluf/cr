@@ -21,7 +21,6 @@ class CodereviewFindByUserFilter extends InputFilter{
         
          $this->add(array(
              'name'     => 'authorid',
-             'required' => true,
              'filters'  => array(
                  array('name' => 'Int'),
              ),

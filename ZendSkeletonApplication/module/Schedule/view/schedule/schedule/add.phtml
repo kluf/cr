@@ -19,22 +19,13 @@ function printFormGroup($row = 'null'){
 
  echo $this->form()->openTag($form);
  echo $this->formHidden($form->get('id'));
-printFormGroup($this->formRow($form->get('Reviewer')
-         ->setAttribute('class', 'form-control')));
-printFormGroup($this->formRow($form->get('traineebackupid')
-         ->setAttribute('class', 'form-control')));
-printFormGroup($this->formRow($form->get('replacementreviewerid')
-         ->setAttribute('class', 'form-control')));
-printFormGroup($this->formRow($form->get('originalreviewerid')
-         ->setAttribute('class', 'form-control')));
-printFormGroup($this->formRow($form->get('designreviewerid')
-         ->setAttribute('class', 'form-control')));
-printFormGroup($this->formRow($form->get('designtraineereviewerid')
-         ->setAttribute('class', 'form-control')));
-printFormGroup($this->formRow($form->get('dateofschedule')
-         ->setAttribute('class', 'form-control')));
-printFormGroup($this->formRow($form->get('timereference')
-         ->setAttribute('class', 'form-control')));
-printFormGroup($this->formSubmit($form->get('submit')
-         ->setAttribute('class', 'btn btn-success')));
+printFormGroup($this->formRow($form->get('Reviewer')));
+printFormGroup($this->formRow($form->get('traineebackupid')));
+printFormGroup($this->formRow($form->get('replacementreviewerid')));
+printFormGroup($this->formRow($form->get('originalreviewerid')));
+printFormGroup($this->formRow($form->get('designreviewerid')));
+printFormGroup($this->formRow($form->get('designtraineereviewerid')));
+printFormGroup($this->formRow($form->get('dateofschedule')));
+printFormGroup($this->formRow($form->get('timereference')));
+printFormGroup($this->formSubmit($form->get('submit')));
  echo $this->form()->closeTag();

@@ -11,31 +11,21 @@ function printFormGroup($row = 'null'){
  ?>
 <h1 class="text-right" ><small><?php echo $this->escapeHtml($title); ?></small></h1>
  <?php
-date_default_timezone_set('Europe/Helsinki');
-$currentDate = date("Y-m-d H:i:s");
+        date_default_timezone_set('Europe/Helsinki');
+        $currentDate = date("m-d-Y H:i");
+ 
 $form->setAttribute('action', $this->url('codereview', array('action' => 'add')))
         ->setAttribute('class', 'form-horizontal');
  $form->prepare();
 echo $this->form()->openTag($form);
 echo $this->formHidden($form->get('id'));
 printFormGroup($this->formRow($form->get('creationdate')
-        ->setAttribute('class', 'form-control')
-        ->setAttribute('value', $currentDate)
-        ->setAttribute('readonly', 'readonly')));
-printFormGroup($this->formRow($form->get('changeset')
-        ->setAttribute('class', 'form-control')));
-printFormGroup($this->formRow($form->get('jiraticket')
-        ->setAttribute('class', 'form-control')));
-printFormGroup($this->formRow($form->get('authorcomments')
-        ->setAttribute('class', 'form-control')));
-printFormGroup($this->formRow($form->get('reviewercomments')
-        ->setAttribute('class', 'form-control')));
-printFormGroup($this->formRow($form->get('stateid')
-        ->setAttribute('class', 'form-control')));
-printFormGroup($this->formRow($form->get('authorid')
-        ->setAttribute('class', 'form-control')));
-printFormGroup($this->formRow($form->get('reviewerid')
-        ->setAttribute('class', 'form-control')));
-echo $this->formSubmit($form->get('submit')
-        ->setAttribute('class', 'btn btn-warning'));
+        ->setAttribute('value', $currentDate)));
+printFormGroup($this->formRow($form->get('changeset')));
+printFormGroup($this->formRow($form->get('jiraticket')));
+printFormGroup($this->formRow($form->get('authorcomments')));
+printFormGroup($this->formRow($form->get('reviewercomments')));
+printFormGroup($this->formRow($form->get('stateid')));
+printFormGroup($this->formRow($form->get('authorid')));
+printFormGroup($this->formRow($form->get('reviewerid')));
 echo $this->form()->closeTag();

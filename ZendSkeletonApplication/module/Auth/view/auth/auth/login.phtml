@@ -20,12 +20,9 @@ if (isset($form->customErrMessage) && $form->customErrMessage != '') { ?>
     </div>
 <?php }
  echo $this->form()->openTag($form);
- printFormGroup($this->formRow($form->get('ldap')
-         ->setAttribute('class', 'form-control')));
- printFormGroup($this->formRow($form->get('password')
-         ->setAttribute('class', 'form-control')));
- printFormGroup($this->formSubmit($form->get('submit')
-         ->setAttribute('class', 'btn btn-success')));
+ printFormGroup($this->formRow($form->get('ldap')));
+ printFormGroup($this->formRow($form->get('password')));
+ printFormGroup($this->formSubmit($form->get('submit')));
  echo $this->form()->closeTag();
  
  if (isset($errorMessage)) {

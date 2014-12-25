@@ -29,6 +29,9 @@ use Zend\Db\Adapter\Adapter;
                     'value_options' => $reviewer,
                     'empty_option' => 'Please select reviewer'
             ),
+            'attributes' => array(
+                'class' => 'form-control'
+            )
         ));
         $this->add(array(
             'name' => 'traineebackupid',
@@ -39,6 +42,9 @@ use Zend\Db\Adapter\Adapter;
                     'empty_option' => 'Please select trainee',
                     'disable_inarray_validator' => true,
             ),
+            'attributes' => array(
+                'class' => 'form-control'
+            )
         ));
         $this->add(array(
             'name' => 'replacementreviewerid',
@@ -49,6 +55,9 @@ use Zend\Db\Adapter\Adapter;
                     'empty_option' => 'Please select who will replace the original',
                     'disable_inarray_validator' => true,
             ),
+            'attributes' => array(
+                'class' => 'form-control'
+            )
         ));
         $this->add(array(
             'name' => 'originalreviewerid',
@@ -59,6 +68,9 @@ use Zend\Db\Adapter\Adapter;
                     'empty_option' => 'Please select original who is going to be replaced',
                     'disable_inarray_validator' => true,
             ),
+            'attributes' => array(
+                'class' => 'form-control'
+            )
         ));
         $this->add(array(
             'name' => 'designreviewerid',
@@ -68,6 +80,9 @@ use Zend\Db\Adapter\Adapter;
                     'value_options' => $designReviewer,
                     'empty_option' => 'Please select design reviewer',
             ),
+            'attributes' => array(
+                'class' => 'form-control'
+            )
         ));
         $this->add(array(
             'name' => 'designtraineereviewerid',
@@ -78,6 +93,9 @@ use Zend\Db\Adapter\Adapter;
                     'empty_option' => 'Please select Design trainee',
                     'disable_inarray_validator' => true,
             ),
+            'attributes' => array(
+                'class' => 'form-control'
+            )
         ));
          $this->add(array(
              'name' => 'timereference',
@@ -87,13 +105,19 @@ use Zend\Db\Adapter\Adapter;
                     'value_options' => $timeReference,
                     'empty_option' => 'Please select Design trainee'
             ),
+            'attributes' => array(
+                'class' => 'form-control'
+            )
          ));
         $this->add(array(
              'name' => 'dateofschedule',
-             'type' => 'Text',
+             'type' => 'date',
              'options' => array(
                  'label' => 'Date *',
              ),
+            'attributes' => array(
+                'class' => 'form-control'
+            )
          ));
          $this->add(array(
              'name' => 'submit',
@@ -101,6 +125,7 @@ use Zend\Db\Adapter\Adapter;
              'attributes' => array(
                  'value' => 'Go',
                  'id' => 'submitbutton',
+                 'class' => 'form-control btn btn-success',
              ),
          ));
      }

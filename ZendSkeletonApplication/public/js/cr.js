@@ -325,7 +325,7 @@ CR = (function() {
     $(document).on('blur', '.add-changesets-popup-active .form-inline input, \n\
                             .add-changesets-popup-active .form-inline select, \n\
                             .add-changesets-popup-active .form-inline textarea', removeRequiredFieldMarkerWhenIsFilledIn);
-    $('a.glyphicon-pencil').bind('click', editChangeset);
+    $('.codereview a.glyphicon-pencil').bind('click', editChangeset);
     $(document).on('click', '.edit-changeset', postEditChangeset);
     
     $( ".startdate" ).datepicker({

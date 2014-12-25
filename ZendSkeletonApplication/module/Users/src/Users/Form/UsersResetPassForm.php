@@ -23,6 +23,9 @@ class UsersResetPassForm extends Form
                     'value_options' => $users,
                     'empty_option' => 'Please select user'
             ),
+            'attributes' => array(
+                'class' => 'form-control'
+            )
         ));
         
         $this->add(array(
@@ -31,6 +34,7 @@ class UsersResetPassForm extends Form
              'attributes' => array(
                  'value' => 'Go',
                  'id' => 'submitbutton',
+                 'class' => 'btn btn-danger' 
              ),
          ));
      }

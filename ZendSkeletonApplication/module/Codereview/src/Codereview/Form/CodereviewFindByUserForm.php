@@ -14,12 +14,11 @@ class CodereviewFindByUserForm extends Form
 
         $this->setAttribute('method', 'post');
         $this->setInputFilter(new CodereviewFindByUserFilter());
-//        $this->setHydrator(new ClassMethods());
+        $this->setHydrator(new ClassMethods());
 
         $this->add(array(
             'name' => 'authorid',
             'type' => 'Zend\Form\Element\Select',
-            'required' => 'true',
             'options' => array(
                     'label' => 'User',
                     'value_options' => $users,
@@ -32,7 +31,7 @@ class CodereviewFindByUserForm extends Form
         
         $this->add(array(
             'name' => 'startdate',
-            'type' => 'Text',
+            'type' => 'date',
             'options' => array(
                 'label' => 'Start date',
             ),
@@ -43,7 +42,7 @@ class CodereviewFindByUserForm extends Form
        
         $this->add(array(
             'name' => 'enddate',
-            'type' => 'Text',
+            'type' => 'date',
             'options' => array(
                 'label' => 'End date',
             ),
@@ -61,6 +60,8 @@ class CodereviewFindByUserForm extends Form
                 'class' => 'btn btn-info'
             ),
         ));
+        $this->get('startdate')->setFormat('m-d-Y');
+        $this->get('enddate')->setFormat('m-d-Y');
     }
  }
 

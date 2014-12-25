@@ -18,7 +18,7 @@ class CodereviewFindByTicketForm extends Form
 
         $this->add(array(
             'name' => 'jiraticket',
-            'type' => 'Text',
+            'type' => 'text',
             'options' => array(
                 'label' => 'Type number of JIRA ticket to find',
             ),
@@ -29,7 +29,7 @@ class CodereviewFindByTicketForm extends Form
         
         $this->add(array(
             'name' => 'startdate',
-            'type' => 'Text',
+            'type' => 'date',
             'options' => array(
                 'label' => 'Start date',
             ),
@@ -40,7 +40,7 @@ class CodereviewFindByTicketForm extends Form
        
         $this->add(array(
             'name' => 'enddate',
-            'type' => 'Text',
+            'type' => 'date',
             'options' => array(
                 'label' => 'End date',
             ),
@@ -58,6 +58,8 @@ class CodereviewFindByTicketForm extends Form
                 'class' => 'btn btn-info'
             ),
         ));
+        $this->get('startdate')->setFormat('m-d-Y');
+        $this->get('enddate')->setFormat('m-d-Y');
     }
  }
 

@@ -24,23 +24,14 @@ $form->setAttribute('action', $this->url(
  $form->prepare();
 echo $this->form()->openTag($form);
 echo $this->formHidden($form->get('id'));
-printFormGroup($this->formRow($form->get('creationdate')
-        ->setAttribute('class', 'form-control')));
-printFormGroup($this->formRow($form->get('changeset')
-        ->setAttribute('class', 'form-control')));
-printFormGroup($this->formRow($form->get('jiraticket')
-        ->setAttribute('class', 'form-control')));
-printFormGroup($this->formRow($form->get('authorcomments')
-        ->setAttribute('class', 'form-control')));
-printFormGroup($this->formRow($form->get('reviewercomments')
-        ->setAttribute('class', 'form-control')));
-printFormGroup($this->formRow($form->get('stateid')
-        ->setAttribute('class', 'form-control')));
-printFormGroup($this->formRow($form->get('authorid')
-        ->setAttribute('class', 'form-control')));
-printFormGroup($this->formRow($form->get('reviewerid')
-        ->setAttribute('class', 'form-control')));
-echo $this->formSubmit($form->get('submit')
-        ->setAttribute('class', 'btn btn-warning'));
+printFormGroup($this->formRow($form->get('creationdate')));
+printFormGroup($this->formRow($form->get('changeset')));
+printFormGroup($this->formRow($form->get('jiraticket')));
+printFormGroup($this->formRow($form->get('authorcomments')));
+printFormGroup($this->formRow($form->get('reviewercomments')));
+printFormGroup($this->formRow($form->get('stateid')));
+printFormGroup($this->formRow($form->get('authorid')));
+printFormGroup($this->formRow($form->get('reviewerid')));
+echo $this->formSubmit($form->get('submit'));
 echo $this->form()->closeTag();
 ?>

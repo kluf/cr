@@ -126,9 +126,11 @@ class CodereviewController extends AbstractActionController
         $form = new CodereviewFindByUserForm(null, $users);
         if ($request->isPost() && $request->getPost('authorid')) {
             $authorid = $request->getPost('authorid');
+            $startdate = $request->getPost('startdate');
+            $enddate = $request->getPost('enddate');
             $form->setData($request->getPost());
             if ($form->isValid()) {
-                $codereview = $this->getCodereviewMapper()->getCodereviewByUser((int)$authorid);
+                $codereview = $this->getCodereviewMapper()->getCodereviewByUser((int)$authorid, $startdate, $enddate);
                 return new ViewModel(array('codereviews' => $codereview, 'form' => $form));
             }
             

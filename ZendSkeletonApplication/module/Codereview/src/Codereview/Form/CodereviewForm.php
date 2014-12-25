@@ -22,24 +22,34 @@ class CodereviewForm extends Form
         ));
         $this->add(array(
             'name' => 'creationdate',
-            'type' => 'Text',
+            'type' => 'datetime',
             'options' => array(
                 'label' => 'Date of creating',
             ),
+            'attributes' => array(
+                'readonly' => 'true',
+                'class' => 'form-control',
+            )
         ));
         $this->add(array(
             'name' => 'changeset',
-            'type' => 'Text',
+            'type' => 'url',
             'options' => array(
                 'label' => 'Changeset',
             ),
+            'attributes' => array(
+                'class' => 'form-control',
+            )
         ));
         $this->add(array(
             'name' => 'jiraticket',
-            'type' => 'Text',
+            'type' => 'url',
             'options' => array(
                 'label' => 'JIRA ticket',
             ),
+            'attributes' => array(
+                'class' => 'form-control',
+            )
         ));
         $this->add(array(
             'name' => 'authorcomments',
@@ -47,6 +57,9 @@ class CodereviewForm extends Form
             'options' => array(
                 'label' => 'Author\'s comment',
             ),
+            'attributes' => array(
+                'class' => 'form-control',
+            )
         ));
         $this->add(array(
             'name' => 'reviewercomments',
@@ -54,6 +67,9 @@ class CodereviewForm extends Form
             'options' => array(
                 'label' => 'Reviewer\'s comment',
             ),
+            'attributes' => array(
+                'class' => 'form-control',
+            )
         ));
         $this->add(array(
              'name' => 'stateid',
@@ -64,6 +80,9 @@ class CodereviewForm extends Form
                      'value_options' => $states,
                      'empty_option' => 'Please select state'
              ),
+            'attributes' => array(
+                'class' => 'form-control',
+            )
         ));
         $this->add(array(
             'name' => 'authorid',
@@ -73,6 +92,9 @@ class CodereviewForm extends Form
                      'value_options' => $users,
                      'empty_option' => 'Please select user'
              ),
+            'attributes' => array(
+                'class' => 'form-control',
+            )
         ));
         
         $this->add(array(
@@ -83,6 +105,9 @@ class CodereviewForm extends Form
                      'value_options' => $reviewers,
                      'empty_option' => 'Please select reviewer'
              ),
+            'attributes' => array(
+                'class' => 'form-control',
+            )
         ));
         $this->add(array(
             'name' => 'submit',
@@ -90,8 +115,10 @@ class CodereviewForm extends Form
             'attributes' => array(
                 'value' => 'Go',
                 'id' => 'submitbutton',
+                'class' => 'btn btn-warning'
             ),
         ));
+        $this->get('creationdate')->setFormat('m-d-Y H:i');
     }
  }
 
