@@ -260,7 +260,8 @@ CR = (function() {
        var formElementsArray = $(this).parent().find('input, select, textarea');
        formElementsArray.each(function(index, element) {
            var elementName = $(element).attr('name');
-           if ($(element).val() === '' && elementName != 'id' && elementName != 'authorcomments' && elementName != 'reviewercomments') {
+           if ($(element).val() == ' ' && elementName != 'authorcomments' && elementName != 'reviewercomments') {
+               console.log('fuck');
                 $(element).addClass('requiredField');
                 isAllRequiredFieldsFilled = false;
            } else {
@@ -300,7 +301,7 @@ CR = (function() {
         var formElementsArray = $(this).parent().find('input, select, textarea');
         formElementsArray.each(function(index, element) {
             var elementName = $(element).attr('name');
-            if ($(element).val() === '' && elementName != 'authorcomments' && elementName != 'reviewercomments') {
+            if ($(element).val() === '' && elementName != 'authorcomments' && elementName != 'reviewercomments' && elementName != 'id') {
                  $(element).addClass('requiredField');
                  isAllRequiredFieldsFilled = false;
             } else {
@@ -321,7 +322,7 @@ CR = (function() {
     $(document).on('click', '.panel-heading .close', reloadDocumentOnClosePopUp);
     $(document).on('focusout', 'input[name="jiraticket"]', copyJiraTicketLinksAccrossTheForm);
     $(document).on('click', '.removeChangeset', removeRowFromPopUp);
-    $(document).on('click', '.add-changesets-popup-active .form-inline  .btn-success', processFieldsBeforeAddChangeset);
+    $(document).on('click', '.add-changesets-popup-active .form-inline .btn-success', processFieldsBeforeAddChangeset);
     $(document).on('blur', '.add-changesets-popup-active .form-inline input, \n\
                             .add-changesets-popup-active .form-inline select, \n\
                             .add-changesets-popup-active .form-inline textarea', removeRequiredFieldMarkerWhenIsFilledIn);
