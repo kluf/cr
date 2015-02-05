@@ -13,24 +13,29 @@
              'codereview' => array(
                  'type'    => 'segment',
                  'options' => array(
-                     'route'    => '/codereview[/][:action][/:id]',
+                     'route'    => '/codereview[/][:action/][page/:page][/:id]',
                      'constraints' => array(
                          'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                         'page' => '[0-9]+',
                          'id'     => '[0-9]+',
                      ),
                      'defaults' => array(
                          'controller' => 'Codereview\Controller\Codereview',
                          'action'     => 'index',
+                         'page' => 1,
                      ),
                  ),
              ),
-         ),
-     ),
+            ),
+        ),
 
      'view_manager' => array(
          'template_path_stack' => array(
              'codereview' => __DIR__ . '/../view',
          ),
+         'template_map' => array( 
+            'paginator-slide' => __DIR__ . '/../view/codereview/codereview/slidePaginator.phtml',
+        ),
      ),
  );
 

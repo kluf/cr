@@ -47,7 +47,8 @@ CR = (function() {
         }
         this.body = $('body > .container').append('<div class="fadingWrapperInvisible fadingWrapper"><div class="row"><div class="col-md-12"><div class="panel panel-default add-changesets-popup-active">\n\
                     <div class="panel-heading">Add changeset(s)<button type="button" class="close"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button></div>\n\
-                    <div class="panel-body"><form class="form-inline" role="form" method="POST"></form><input type="text" id="numberOfCasesToAdd" placeholder="5"><button type="button" class="btn btn-success add-changeset-button" disabled="disabled">\n\
+                    <div class="panel-body"><div class="row"><div class="col-md-1">Time</div><div class="col-md-1">Jira ticket</div><div class="col-md-1">Changeset</div><div class="col-md-1">Author\'s comment</div>\n\
+                    <div class="col-md-2">Reviewer\'s comment</div></div><form class="form-inline" role="form" method="POST"></form><input type="text" id="numberOfCasesToAdd" placeholder="5"><button type="button" class="btn btn-success add-changeset-button" disabled="disabled">\n\
                     <span class="glyphicon glyphicon-plus-sign"></span></button></div></div></div></div></div>');
         this.instance = this;
     }
@@ -124,11 +125,10 @@ CR = (function() {
         var jiraticketInput = createInput({name: 'jiraticket', typeOfInput: 'text', value: jiraticket});
         var authorcommentsInput = createInput({name: 'authorcomments', typeOfInput: 'textarea', value: authorcomments});
         var reviewercommentsInput = createInput({name: 'reviewercomments', typeOfInput: 'textarea', value: reviewercomments});
-        var rowForAdding = '<div class="clearfix">'
+        var rowForAdding = '<div class="clearfix row">'
             + idInput + creationDateInput + changesetInput + jiraticketInput + authorcommentsInput 
             + reviewercommentsInput + selectStates + selectReviewers + selectAuthors + '<button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span></button>\n\
             <button type="button" class="btn btn-danger removeChangeset"><span class="glyphicon glyphicon-minus"></span></button></div>';
-        
         var rowForEditing = '<div class="clearfix">'
             + idInput + creationDateInput + changesetInput + jiraticketInput + authorcommentsInput 
             + reviewercommentsInput + selectStates + selectReviewers + selectAuthors + '<button type="submit" class="btn btn-warning edit-changeset"><span class="glyphicon glyphicon-check"></span></button></div>';

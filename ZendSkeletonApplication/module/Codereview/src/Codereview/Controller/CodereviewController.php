@@ -36,9 +36,21 @@ class CodereviewController extends AbstractActionController
    public function indexAction()
     {
         $mapper = $this->getCodereviewMapper();
+        $temp = $mapper->fetchCodereviewWithUsersAndStatesForPaginator();
+        $tem = [];
+        foreach ($temp as $key => $val) {
+            $tem[$key] = $val;
+        }
+//        var_dump($tem);exit;
+        $paginator = new \Zend\Paginator\Paginator(new \Zend\Paginator\Adapter\ArrayAdapter($tem));
+//        $paginator->setCurrentPageNumber($page);
+//        $paginator->setCurrentPageNumber($this->params()->fromRoute('page'));   
         $sch = $this->getScheduleMapper();
-        return new ViewModel(array('codereviews' => $mapper->fetchCodereviewWithUsersAndStates(), 'message' => $mapper->dateCounter(),
+        $vm =  new ViewModel(array(/*'codereviews' => $mapper->fetchCodereviewWithUsersAndStates(),*/ 'message' => $mapper->dateCounter(),
                 'schedule' => $sch->fetchScheduleForCurrentDay()));
+        $paginator->setCurrentPageNumber($this->params()->fromRoute('page'));
+        $vm->setVariable('paginator', $paginator);
+        return $vm;
     }
      
     public function getCodereviewMapper()

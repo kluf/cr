@@ -33,7 +33,9 @@ foreach ($schedule as $key=>$value) {
     echo "<span class='label label-info'>Reviewer at ".$value['timeref']." is ".$value['reviewer_ldap']."</span>";
 };
 
-foreach ($codereviews as $codereview) {
+if (count($this->paginator)):
+
+foreach ($this->paginator as $codereview) {
     echo "
 <tr>
     <td>{$codereview['creationdate']}</td>
@@ -66,3 +68,11 @@ foreach ($codereviews as $codereview) {
 }
 ?>
 <tbody></table>
+<nav>
+<?php 
+endif;
+echo $this->paginationControl($this->paginator,
+                                    'Sliding',
+                                    'paginator-slide', array('route' => 'application/paginator'));
+?>
+</nav>
