@@ -13,7 +13,7 @@
              'codereview' => array(
                  'type'    => 'segment',
                  'options' => array(
-                     'route'    => '/codereview[/][:action/][page/:page][/:id]',
+                     'route'    => '/codereview[/:action[/:id]][/:page]',
                      'constraints' => array(
                          'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                          'page' => '[0-9]+',

@@ -89,7 +89,6 @@ class CRController extends AbstractRestfulController
     
     public function create($data)
     {   // Action used for POST requests
-//        var_dump($data);exit;
         $result = $this->getCodereviewMapper()->saveCodereviewAPI($data['data']);
         if ($result > 0) {
             return new JsonModel(
@@ -104,7 +103,6 @@ class CRController extends AbstractRestfulController
 
     public function update($id, $data)
     {   // Action used for PUT requests
-//        var_dump($data);exit;
         $result = $this->getCodereviewMapper()->saveCodereviewAPI($data['data']);
         var_dump($result);exit;
         if ($result >= 0) {

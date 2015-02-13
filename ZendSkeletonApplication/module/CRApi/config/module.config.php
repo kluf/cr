@@ -15,7 +15,7 @@ return array(
             'cr' => array(
                 'type'    => 'segment',
                 'options' => array(
-                'route'    => '/crapi[/:id]',
+                'route'    => '/crapi/[:id]',
                     'constraints' => array(
                         'id'     => '[0-9a-zA-Z]+',
                     ),

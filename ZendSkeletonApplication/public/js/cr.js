@@ -45,11 +45,11 @@ CR = (function() {
         if (typeof (this.instance) === 'object') {
             return this.instance;
         }
-        this.body = $('body > .container').append('<div class="fadingWrapperInvisible fadingWrapper"><div class="row"><div class="col-md-12"><div class="panel panel-default add-changesets-popup-active">\n\
+        this.body = $('body > .container').append('<div class="fadingWrapperInvisible fadingWrapper"><div class="row"><div class="panel panel-default add-changesets-popup-active">\n\
                     <div class="panel-heading">Add changeset(s)<button type="button" class="close"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button></div>\n\
                     <div class="panel-body"><div class="row"><div class="col-md-1">Time</div><div class="col-md-1">Jira ticket</div><div class="col-md-1">Changeset</div><div class="col-md-1">Author\'s comment</div>\n\
-                    <div class="col-md-2">Reviewer\'s comment</div></div><form class="form-inline" role="form" method="POST"></form><input type="text" id="numberOfCasesToAdd" placeholder="5"><button type="button" class="btn btn-success add-changeset-button" disabled="disabled">\n\
-                    <span class="glyphicon glyphicon-plus-sign"></span></button></div></div></div></div></div>');
+                    <div class="col-md-2">Reviewer\'s comment</div><div class="col-md-1">Time</div><div class="col-md-1">Time</div><div class="col-md-1">Time</div></div><form class="form-inline" role="form" method="POST"></form><input type="text" id="numberOfCasesToAdd" placeholder="5"><button type="button" class="btn btn-success add-changeset-button" disabled="disabled">\n\
+                    <span class="glyphicon glyphicon-plus-sign"></span></button></div></div></div></div>');
         this.instance = this;
     }
     
@@ -79,8 +79,8 @@ CR = (function() {
     function createInput(obj) {
         var name = obj.name,
             typeOfInput = obj.typeOfInput,
-            value = obj.value ? obj.value : ' ',
-            disabled = obj.disabled ? 'disabled' : '',
+            value = obj.value ? obj.value : "",
+            disabled = obj.disabled ? 'disabled' : "",
             markup = '<div class="form-group"><label class="sr-only" for="'+name+'">Creation date</label>';
         switch(typeOfInput) {
             case 'text': 
@@ -254,28 +254,6 @@ CR = (function() {
         });
     }
     
-    function processFieldsBeforeAddChangeset(event) {
-       var data = {};
-       var isAllRequiredFieldsFilled = true;
-       var formElementsArray = $(this).parent().find('input, select, textarea');
-       formElementsArray.each(function(index, element) {
-           var elementName = $(element).attr('name');
-           if ($(element).val() == ' ' && elementName != 'authorcomments' && elementName != 'reviewercomments') {
-               console.log('fuck');
-                $(element).addClass('requiredField');
-                isAllRequiredFieldsFilled = false;
-           } else {
-                data[$(element).attr('name')] = $(element).val();
-           }
-       });
-       if (isAllRequiredFieldsFilled) {
-            sendDataFromPopUpMain(data, {url: '/crapi', method: 'POST'}, $(this).parent('.clearfix'));
-            event.preventDefault();
-       } else {
-           alert('Please fill in all fields');
-           event.preventDefault();
-       }
-    }
     
     function removeRequiredFieldMarkerWhenIsFilledIn() {
        if ($(this).val != '') {
@@ -294,22 +272,38 @@ CR = (function() {
         $('.add-changesets-popup-active').find('#numberOfCasesToAdd, .add-changeset-button').remove();
         event.preventDefault();
     }
-    
+   
     function postEditChangeset(event) {
+        var idIsMandatory = true;
+        var currentMethod = 'PUT';
+        if (event.target.className.indexOf('edit-changeset') == -1) {
+            currentMethod = 'POST';
+            idIsMandatory = false;
+        };
         var data = {};
         var isAllRequiredFieldsFilled = true;
         var formElementsArray = $(this).parent().find('input, select, textarea');
         formElementsArray.each(function(index, element) {
             var elementName = $(element).attr('name');
-            if ($(element).val() === '' && elementName != 'authorcomments' && elementName != 'reviewercomments' && elementName != 'id') {
-                 $(element).addClass('requiredField');
-                 isAllRequiredFieldsFilled = false;
+            if (idIsMandatory) {
+                if ($(element).val() == '' && elementName != 'authorcomments' && elementName != 'reviewercomments') {
+                    console.log('yes');
+                    $(element).addClass('requiredField');
+                     isAllRequiredFieldsFilled = false;
+                } else {
+                    data[$(element).attr('name')] = $(element).val();
+                }
             } else {
-                 data[$(element).attr('name')] = $(element).val();
+                 if ($(element).val() === '' && elementName != 'authorcomments' && elementName != 'reviewercomments' && elementName != 'id') {
+                     $(element).addClass('requiredField');
+                     isAllRequiredFieldsFilled = false;
+                 } else {
+                     data[$(element).attr('name')] = $(element).val();
+                 }
             }
         });
         if (isAllRequiredFieldsFilled) {
-             sendDataFromPopUpMain(data, {url: '/crapi/', method: 'PUT'}, $(this).parent('.clearfix'));
+             sendDataFromPopUpMain(data, {url: '/crapi/', method: currentMethod}, $(this).parent('.clearfix'));
              event.preventDefault();
         } else {
             alert('Please fill in all fields');
@@ -322,7 +316,7 @@ CR = (function() {
     $(document).on('click', '.panel-heading .close', reloadDocumentOnClosePopUp);
     $(document).on('focusout', 'input[name="jiraticket"]', copyJiraTicketLinksAccrossTheForm);
     $(document).on('click', '.removeChangeset', removeRowFromPopUp);
-    $(document).on('click', '.add-changesets-popup-active .form-inline .btn-success', processFieldsBeforeAddChangeset);
+    $(document).on('click', '.add-changesets-popup-active .form-inline .btn-success', postEditChangeset);
     $(document).on('blur', '.add-changesets-popup-active .form-inline input, \n\
                             .add-changesets-popup-active .form-inline select, \n\
                             .add-changesets-popup-active .form-inline textarea', removeRequiredFieldMarkerWhenIsFilledIn);
