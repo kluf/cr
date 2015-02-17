@@ -40,7 +40,6 @@ use Zend\Db\Adapter\Adapter;
                     'label' => 'Trainee backup',
                     'value_options' => $reviewerTrainee,
                     'empty_option' => 'Please select trainee',
-                    'disable_inarray_validator' => true,
             ),
             'attributes' => array(
                 'class' => 'form-control'
@@ -79,6 +78,7 @@ use Zend\Db\Adapter\Adapter;
                     'label' => 'Design reviewer',
                     'value_options' => $designReviewer,
                     'empty_option' => 'Please select design reviewer',
+                    'disable_inarray_validator' => true,
             ),
             'attributes' => array(
                 'class' => 'form-control'

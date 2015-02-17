@@ -14,7 +14,7 @@ class CodereviewFindByTicketForm extends Form
 
         $this->setAttribute('method', 'post');
         $this->setInputFilter(new CodereviewFindByTicketFilter());
-//        $this->setHydrator(new ClassMethods());
+        $this->setHydrator(new ClassMethods());
 
         $this->add(array(
             'name' => 'jiraticket',

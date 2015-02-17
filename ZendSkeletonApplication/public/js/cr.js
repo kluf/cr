@@ -13,8 +13,6 @@ CR = (function() {
         states = [],
         changesetForEditing;
         
-    $('.table .btn.btn-default').popover();
-    
     function renderStatesForCodereviews() {
         $('tr').find('.state').each(function() {
             paintStates($(this), $(this).text());
@@ -322,6 +320,7 @@ CR = (function() {
                             .add-changesets-popup-active .form-inline textarea', removeRequiredFieldMarkerWhenIsFilledIn);
     $('.codereview a.glyphicon-pencil').bind('click', editChangeset);
     $(document).on('click', '.edit-changeset', postEditChangeset);
+    $('.table .btn.btn-default').popover();
     
     $( ".startdate" ).datepicker({
         defaultDate: "-1w",

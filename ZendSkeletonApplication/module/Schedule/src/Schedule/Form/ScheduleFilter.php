@@ -30,12 +30,35 @@ class ScheduleFilter extends InputFilter{
             'filters' => array(
                  array('name' => 'Int'),
              ),
+             'validators' => array(
+                array(
+                    'name' => 'InArray',
+                    'options' => array(
+                    'haystack' => array(1,9999),
+                    'messages' => array(
+                        \Zend\Validator\InArray::NOT_IN_ARRAY => 'Please select reviewer !'
+                            ),
+                        ),
+                    ),
+            ), 
         ));
         $this->add(array(
         'name' => 'traineebackupid',
+        'required' => true,
         'filters' => array(
                 array('name' => 'Int'),
             ),
+        'validators' => array(
+                array(
+                    'name' => 'InArray',
+                    'options' => array(
+                    'haystack' => array(1,9999),
+                    'messages' => array(
+                        \Zend\Validator\InArray::NOT_IN_ARRAY => 'Please select backup reviewer !'
+                            ),
+                        ),
+                    ),
+            ), 
         ));
         $this->add(array(
             'name' => 'replacementreviewerid',

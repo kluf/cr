@@ -84,7 +84,7 @@ class CodereviewFilter extends InputFilter{
 
          $this->add(array(
              'name'     => 'authorcomments',
-             'required' => true,
+             'required' => false,
              'filters'  => array(
                  array('name' => 'StripTags'),
                  array('name' => 'StringTrim'),
@@ -103,7 +103,7 @@ class CodereviewFilter extends InputFilter{
 
          $this->add(array(
              'name'     => 'reviewercomments',
-             'required' => true,
+             'required' => false,
              'filters'  => array(
                  array('name' => 'StripTags'),
                  array('name' => 'StringTrim'),
@@ -116,6 +116,17 @@ class CodereviewFilter extends InputFilter{
              'filters'  => array(
                  array('name' => 'Int'),
              ),
+            'validators' => array(
+                array(
+                    'name' => 'InArray',
+                    'options' => array(
+                    'haystack' => array(1,9999),
+                    'messages' => array(
+                        \Zend\Validator\InArray::NOT_IN_ARRAY => 'Please select state !'
+                            ),
+                        ),
+                    ),
+            ), 
          ));
 
          $this->add(array(
@@ -124,6 +135,17 @@ class CodereviewFilter extends InputFilter{
              'filters'  => array(
                  array('name' => 'Int'),
              ),
+            'validators' => array(
+                array(
+                    'name' => 'InArray',
+                    'options' => array(
+                    'haystack' => array(1,9999),
+                    'messages' => array(
+                        \Zend\Validator\InArray::NOT_IN_ARRAY => 'Please select your ldap as author\'s !'
+                            ),
+                        ),
+                    ),
+            ), 
          ));
 
          $this->add(array(
@@ -132,6 +154,17 @@ class CodereviewFilter extends InputFilter{
              'filters'  => array(
                  array('name' => 'Int'),
              ),
+            'validators' => array(
+                array(
+                    'name' => 'InArray',
+                    'options' => array(
+                    'haystack' => array(1,9999),
+                    'messages' => array(
+                        \Zend\Validator\InArray::NOT_IN_ARRAY => 'Please select reviewer who will check your code !'
+                            ),
+                        ),
+                    ),
+            ), 
          ));
         $this->add(array(
              'name' => 'completed',

@@ -121,7 +121,6 @@ class CodereviewController extends AbstractActionController
             $form->setData($request->getPost());
             if ($form->isValid()) {
                 $this->getCodereviewMapper()->saveCodereview($codereview);
-
                 return $this->redirect()->toRoute('codereview');
             }
         }
@@ -149,15 +148,16 @@ class CodereviewController extends AbstractActionController
         }
         return array(
            'form' => $form,
+            'post' => $request->isPost(),
         );
     }
     
     public function findByTicketAction()
-    {
+    {   
         $request = $this->getRequest();
+        $jiraticket = $request->getPost('jiraticket');
         $form = new CodereviewFindByTicketForm(null);
         if ($request->isPost() && $request->getPost('jiraticket')) {
-            $jiraticket = $request->getPost('jiraticket');
             $form->setData($request->getPost());
             if ($form->isValid()) {
                 $codereview = $this->getCodereviewMapper()->getCodereviewByTicket($jiraticket);
@@ -165,7 +165,9 @@ class CodereviewController extends AbstractActionController
             }
         }
         return array(
-           'form' => $form,
+            'jiraticket' => $jiraticket,
+            'form' => $form,
+            'post' => $request->isPost()
         );
     }
     

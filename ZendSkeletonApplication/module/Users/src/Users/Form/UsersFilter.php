@@ -55,6 +55,17 @@ class UsersFilter extends InputFilter{
                 'filters'  => array(
                     array('name' => 'Int'),
                 ),
+                'validators' => array(
+                    array(
+                        'name' => 'InArray',
+                        'options' => array(
+                        'haystack' => array(1,9999),
+                        'messages' => array(
+                            \Zend\Validator\InArray::NOT_IN_ARRAY => 'Please choose group to which user belongs to !'
+                                ),
+                            ),
+                        ),
+                ), 
             ));
             
             $this->add(array(

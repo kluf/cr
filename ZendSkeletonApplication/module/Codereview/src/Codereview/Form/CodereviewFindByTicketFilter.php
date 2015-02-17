@@ -40,6 +40,7 @@ class CodereviewFindByTicketFilter extends InputFilter{
          
         $this->add(array(
              'name'     => 'enddate',
+             'required' => false,
              'filters'  => array(
                  array('name' => 'StripTags'),
                  array('name' => 'StringTrim'),
@@ -58,6 +59,7 @@ class CodereviewFindByTicketFilter extends InputFilter{
         
         $this->add(array(
              'name'     => 'startdate',
+             'required' => false,
              'filters'  => array(
                  array('name' => 'StripTags'),
                  array('name' => 'StringTrim'),

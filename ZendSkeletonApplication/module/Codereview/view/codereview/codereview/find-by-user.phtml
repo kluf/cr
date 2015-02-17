@@ -5,7 +5,9 @@
     function printFormGroup($row = 'null'){
         echo '<div class="form-group"><div class="col-sm-10">'.$row.'</div></div>';
     }
-
+    function commentIsPresent($comment = '') {
+        return $comment == '';
+    }
     $this->headTitle($this->escapeHtml($title));?>
     <div class="panel panel-info">
         <div class="panel-heading">Search here</div>
@@ -29,6 +31,7 @@ if (isset($codereviews) && count($codereviews) != 0) { ?>
     <div class="panel-heading">Searching result(s)</div>
     <div class="panel-body">
     <table class="table table-hover table-striped">
+        <thead>
         <tr class="success">
             <th>Creating date</th>
             <th>Changeset</th>
@@ -39,27 +42,41 @@ if (isset($codereviews) && count($codereviews) != 0) { ?>
             <th>Author</th>
             <th>Reviewer</th>
         </tr>
+        </thead>
     
 <?php foreach ($codereviews as $codereview) {
     echo "
         <tr>
-            <td>{$codereview['creationdate']}</td>
-            <td><a href=".$codereview['changeset']." target='_blank'>{$codereview['changeset']}</a></td>
-            <td><a href=".$codereview['jiraticket']." target='_blank'>{$codereview['jiraticket']}</a></td>
-            <td><button type='button' class='btn btn-default' data-container='body' data-toggle='popover' data-placement='top' 
-            data-content='{$codereview['authorcomments']}'>Read it</button></td>
-            <td><button type='button' class='btn btn-default' data-container='body' data-toggle='popover' data-placement='bottom' 
-            data-content='{$codereview['reviewercomments']}'>Read it</button></td>
-            <td class='state'>{$codereview['state']}</td>
-            <td>{$codereview['author']}</td>
-            <td>{$codereview['reviewer']}</td>
+        <td>{$codereview['creationdate']}</td>
+        <td><a href=".$codereview['changeset']." target='_blank'>{$codereview['changeset']}</a></td>
+        <td><a href=".$codereview['jiraticket']." target='_blank'>{$codereview['jiraticket']}</a></td>
+        <td>";
+        if (commentIsPresent($codereview['authorcomments'])) {
+            echo "<button type='button' class='btn btn-default' data-container='body' disabled='disabled' data-toggle='popover' data-placement='top' 
+        data-content='{$codereview['authorcomments']}'>Nothing to read</button></td>";
+        } else {
+            echo "<button type='button' class='btn btn-default btn-info' data-container='body' data-toggle='popover' data-placement='top' 
+        data-content='{$codereview['authorcomments']}'>Read me</button></td>";
+        }
+        echo "<td>";
+        if (commentIsPresent($codereview['reviewercomments'])) {
+            echo "<button type='button' class='btn btn-default' data-container='body' disabled='disabled' data-toggle='popover' data-placement='bottom' 
+        data-content='{$codereview['reviewercomments']}'>Nothing to read</button>";
+        } else {
+            echo "<button type='button' class='btn btn-default btn-info' data-container='body' data-toggle='popover' data-placement='bottom' 
+        data-content='{$codereview['reviewercomments']}'>Read me</button>";
+        };
+        echo "</td>
+    <td class='state'>{$codereview['state']}</td>
+    <td>{$codereview['author']}</td>
+    <td>{$codereview['reviewer']}</td>
         </tr>";
     } ?>
         </table>
     </div>
 </div>   
 
-<?php } else { ?>
+<?php } else if ($post) { ?>
 <div class="alert alert-warning alert-dismissible" role="alert">
   <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
   Oops...it seems like there is no data to display
