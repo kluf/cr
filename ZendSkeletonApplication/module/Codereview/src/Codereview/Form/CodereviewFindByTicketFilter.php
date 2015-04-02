@@ -31,7 +31,7 @@ class CodereviewFindByTicketFilter extends InputFilter{
                      'name'    => 'StringLength',
                      'options' => array(
                          'encoding' => 'UTF-8',
-                         'min'      => 1,
+                         'min'      => 0,
                          'max'      => 100,
                      ),
                  ),

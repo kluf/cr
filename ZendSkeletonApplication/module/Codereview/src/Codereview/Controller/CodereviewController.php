@@ -41,12 +41,10 @@ class CodereviewController extends AbstractActionController
         foreach ($temp as $key => $val) {
             $tem[$key] = $val;
         }
-//        var_dump($tem);exit;
         $paginator = new \Zend\Paginator\Paginator(new \Zend\Paginator\Adapter\ArrayAdapter($tem));
-//        $paginator->setCurrentPageNumber($page);
-//        $paginator->setCurrentPageNumber($this->params()->fromRoute('page'));   
+
         $sch = $this->getScheduleMapper();
-        $vm =  new ViewModel(array(/*'codereviews' => $mapper->fetchCodereviewWithUsersAndStates(),*/ 'message' => $mapper->dateCounter(),
+        $vm =  new ViewModel(array('message' => $mapper->dateCounter(),
                 'schedule' => $sch->fetchScheduleForCurrentDay()));
         $paginator->setCurrentPageNumber($this->params()->fromRoute('page'));
         $vm->setVariable('paginator', $paginator);
@@ -142,13 +140,13 @@ class CodereviewController extends AbstractActionController
             $form->setData($request->getPost());
             if ($form->isValid()) {
                 $codereview = $this->getCodereviewMapper()->getCodereviewByUser((int)$authorid, $startdate, $enddate);
-                return new ViewModel(array('codereviews' => $codereview, 'form' => $form));
+                return new ViewModel(array('codereviews' => $codereview, 'form' => $form, 'post' => $request->isPost()));
             }
             
         }
         return array(
            'form' => $form,
-            'post' => $request->isPost(),
+           'post' => $request->isPost(),
         );
     }
     
@@ -160,8 +158,8 @@ class CodereviewController extends AbstractActionController
         if ($request->isPost() && $request->getPost('jiraticket')) {
             $form->setData($request->getPost());
             if ($form->isValid()) {
-                $codereview = $this->getCodereviewMapper()->getCodereviewByTicket($jiraticket);
-                return new ViewModel(array('codereviews' => $codereview, 'form' => $form));
+                $codereview = $this->getCodereviewMapper()->getCodereviewByTicket($jiraticket, $startdate, $enddate);
+                return new ViewModel(array('codereviews' => $codereview, 'form' => $form, 'post' => $request->isPost()));
             }
         }
         return array(
@@ -192,5 +190,9 @@ class CodereviewController extends AbstractActionController
             'id' => $id,
             'codereview' => $codereview
         );
+    }
+    
+    public function getStatistic() {
+        
     }
 }

@@ -28,6 +28,7 @@ class CodereviewFindByUserFilter extends InputFilter{
          
          $this->add(array(
              'name'     => 'enddate',
+             'required' => false,
              'filters'  => array(
                  array('name' => 'StripTags'),
                  array('name' => 'StringTrim'),
@@ -38,12 +39,14 @@ class CodereviewFindByUserFilter extends InputFilter{
                      'options' => array(
                          'encoding' => 'UTF-8',
                      ),
+                     
                  ),
              ),
          ));
         
         $this->add(array(
              'name'     => 'startdate',
+            'required' => false,
              'filters'  => array(
                  array('name' => 'StripTags'),
                  array('name' => 'StringTrim'),
@@ -54,6 +57,7 @@ class CodereviewFindByUserFilter extends InputFilter{
                      'options' => array(
                          'encoding' => 'UTF-8',
                      ),
+                     
                  ),
              ),
          ));

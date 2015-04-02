@@ -65,7 +65,7 @@ class CRController extends AbstractRestfulController
                 break;
             case 'codereview':
                 if ((int)$data < 0) {
-                    $arr = $this->getCodereviewMapper()->getCodereview;
+                    $arr = $this->getCodereviewMapper()->getCodereview();
                 }
             default: $arr = array('err' => 'something goes wrong', 'data' => $data);
         }

@@ -11,7 +11,8 @@ CR = (function() {
     var authors = [],
         reviewers = [],
         states = [],
-        changesetForEditing;
+        changesetForEditing,
+        timeRef = [];
         
     function renderStatesForCodereviews() {
         $('tr').find('.state').each(function() {
@@ -40,15 +41,11 @@ CR = (function() {
     }
     
     function PopUp() {
-        if (typeof (this.instance) === 'object') {
-            return this.instance;
-        }
-        this.body = $('body > .container').append('<div class="fadingWrapperInvisible fadingWrapper"><div class="row"><div class="panel panel-default add-changesets-popup-active">\n\
+    $('body > .container .fadingWrapperInvisible').addClass('fadingWrapper').html('<div class="row"><div class="panel panel-default add-changesets-popup-active">\n\
                     <div class="panel-heading">Add changeset(s)<button type="button" class="close"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button></div>\n\
                     <div class="panel-body"><div class="row"><div class="col-md-1">Time</div><div class="col-md-1">Jira ticket</div><div class="col-md-1">Changeset</div><div class="col-md-1">Author\'s comment</div>\n\
                     <div class="col-md-2">Reviewer\'s comment</div><div class="col-md-1">Time</div><div class="col-md-1">Time</div><div class="col-md-1">Time</div></div><form class="form-inline" role="form" method="POST"></form><input type="text" id="numberOfCasesToAdd" placeholder="5"><button type="button" class="btn btn-success add-changeset-button" disabled="disabled">\n\
-                    <span class="glyphicon glyphicon-plus-sign"></span></button></div></div></div></div>');
-        this.instance = this;
+                    <span class="glyphicon glyphicon-plus-sign"></span></button></div></div></div>');
     }
     
     function makePopUpActive() {
@@ -114,9 +111,9 @@ CR = (function() {
             authorid = changesetForEditing ? changesetForEditing.authorid : '',
             stateid = changesetForEditing ? changesetForEditing.stateid : '',
             formattedDate = changesetForEditing ? changesetForEditing.creationdate : getFormattedDate();
-        var selectAuthors = createSelectWithData(authors, 'authorid', 'authorid', authorid);
-        var selectReviewers = createSelectWithData(reviewers, 'reviewerid', 'reviewerid', reviewerid);
-        var selectStates = createSelectWithData(states, 'stateid', 'stateid', stateid);
+        var selectAuthors = createSelectWithData(authors, 'authorid', 'authorid', authorid, 'Author');
+        var selectReviewers = createSelectWithData(reviewers, 'reviewerid', 'reviewerid', reviewerid, 'Reviewer');
+        var selectStates = createSelectWithData(states, 'stateid', 'stateid', stateid, 'State');
         var idInput = createInput({name: 'id', typeOfInput: 'hidden', value: id});
         var creationDateInput = createInput({name: 'creationdate', typeOfInput: 'text', value: formattedDate, disabled: 'disabled'});
         var changesetInput = createInput({name: 'changeset', typeOfInput: 'text', value: changeset});
@@ -138,9 +135,11 @@ CR = (function() {
             }
     }
 
-    function createSelectWithData(items, id, name, selected) {
-        var selected = selected || 0;
-        $select = '<div class="form-group"><label class="sr-only" for="'+id+'">Select</label><select class="form-control" id="' + id + '" name="'+name+'">';
+    function createSelectWithData(items, id, name, selected, label, className) {
+        var selected = selected || 0,
+            className = className ? className : 'col-sm-1';
+        
+        $select = '<div class="form-group ' + className + '"><label for="'+id+'">'+label+'</label><select class="form-control" id="' + id + '" name="'+name+'"><option value="">Select</option>';
             items.forEach(function(item) {
                 if (item.id == selected) {
                     $select += '<option selected="selected" value='+item.id+'>'+item.name+'</option>';
@@ -185,7 +184,7 @@ CR = (function() {
         }, '');
     }
 
-    function sendDataFromPopUpMain(data, obj, objToRemove) {
+    function sendDataFromPopUpMain(data, obj, objToRemove, cb) {
         var method = obj.method ? obj.method : 'POST',
             url = (method == 'POST') ? obj.url : obj.url + data.id;
         $.ajax({
@@ -199,6 +198,9 @@ CR = (function() {
             } else {
                 $(objToRemove).replaceWith('<div class="clearfix"><div class="alert alert-success" role="alert">Changeset with id ' + data.result + ' was added</div></div>');
                 setTimeout(function() {$('.add-changesets-popup-active .clearfix').remove()},1000);
+                if (typeof(cb) === 'function') {
+                    cb();
+                }
             }
         });
     }
@@ -309,6 +311,104 @@ CR = (function() {
         }
     }
     
+    function createRadioButton(value, name, className) {
+        return '<div class="' + className + '"><label for="timereference">Time</label>' + name + '<input type="radio" checked="checked" value="'+ value + '" name=' + value + '></div>';
+    }
+    
+    function addPopUpForAddingSchedule(event) {
+        event.preventDefault();
+        var popup = new PopUp();
+        $('.fadingWrapper .panel-body').html($('#addOneScheduleForADay').html());
+        getDataForPopUp('/crapi/authors', function(data) {
+            for(var i in data) {
+                authors.push({id: i, name: data[i]});
+            }
+            getDataForPopUp('/apiTimeRef', function(data) {
+                for(var i in data[0]) {
+                    timeRef.push({id: i, name: data[0][i]});
+                }
+                var reviewer = createSelectWithData(authors, 'Reviewer', 'Reviewer', 0, 'Reviewer');
+                var traineeBackup = createSelectWithData(authors, 'traineebackupid', 'traineebackupid', 0, 'Trainee/backup');
+                var replacement = createSelectWithData(authors, 'replacementreviewerid', 'replacementreviewerid', 0, 'Replacement');
+                var original = createSelectWithData(authors, 'originalreviewerid', 'originalreviewerid', 0, 'Original');
+                var designReviewer = createSelectWithData(authors, 'designreviewerid', 'designreviewerid', 0, 'Design');
+                var designReviewerTrainee = createSelectWithData(authors, 'designtraineereviewerid', 'designtraineereviewerid', 0, 'Design Trainee', 'col-sm-2');
+                var morning = createRadioButton(timeRef[0]['id'], timeRef[0]['name'], 'col-sm-2');
+                var noon = createRadioButton(timeRef[1]['id'], timeRef[1]['name'], 'col-sm-2');
+                var afternoon = createRadioButton(timeRef[2]['id'], timeRef[2]['name'], 'col-sm-2');
+                $('.fadingWrapper .panel-body .form-control.col-sm-1.btn.btn-success').before('<div class="row">' + morning + reviewer + traineeBackup + replacement + original + designReviewer + designReviewerTrainee + '</div>');
+                $('.fadingWrapper .panel-body .form-control.col-sm-1.btn.btn-success').before('<div class="row">' + noon + reviewer + traineeBackup + replacement + original + designReviewer + designReviewerTrainee + '</div>');
+                $('.fadingWrapper .panel-body .form-control.col-sm-1.btn.btn-success').before('<div class="row">' + afternoon + reviewer + traineeBackup + replacement + original + designReviewer + designReviewerTrainee + '</div>');
+            });
+        });
+    }
+    
+    function addSchedule(event) {
+        event.preventDefault();
+        var idIsMandatory = true;
+        var currentMethod = 'POST';
+        var data1 = {};
+        var data2 = {};
+        var data3 = {};
+        var isAllRequiredFieldsFilled = true;
+        var formElementsArray = $(this).parent().find('.row');
+        var dateElement = $(this).parent().find('.startdate');
+        if (dateElement.val() == '') {
+            $(dateElement).addClass('requiredField');
+            isAllRequiredFieldsFilled = false;
+        }
+        formElementsArray.each(function(index, elementmain) {
+            var outerIndex = index;
+            $(elementmain).find('input, select, textarea').each(function(index, element) {
+                var elementName = $(element).attr('name');
+                if ($(element).val() == '' && elementName != 'designreviewerid' && elementName != 'designtraineereviewerid') {
+                    $(element).addClass('requiredField');
+                     isAllRequiredFieldsFilled = false;
+                } else {
+                    switch(outerIndex) {
+                        case 0:
+                            if (elementName == '1') {
+                                data1['timereference'] = $(element).val();
+                            } else {
+                                data1[$(element).attr('name')] = $(element).val();
+                            }
+//                            console.log(data1);
+                            break;
+                        case 1:
+                            if (elementName == '2') {
+                                data2['timereference'] = $(element).val();
+                            } else {
+                                data2[$(element).attr('name')] = $(element).val();
+                            }
+//                            console.log(data2);
+                            break;
+                        case 2:
+                            if (elementName == '3') {
+                                data3['timereference'] = $(element).val();
+                            } else {
+                                data3[$(element).attr('name')] = $(element).val();
+                            }
+//                            console.log(data3);
+                            break;
+                    }
+                }
+            });
+        });
+        if (isAllRequiredFieldsFilled) {
+            sendDataFromPopUpMain(data1, {url: '/apiSchedule', method: currentMethod}, $(this).parent().find('.row'), function() {
+                sendDataFromPopUpMain(data2, {url: '/apiSchedule', method: currentMethod}, $(this).parent().find('.row'), function() {
+                    sendDataFromPopUpMain(data3, {url: '/apiSchedule', method: currentMethod}, $(this).parent().find('.row'), function() {
+                        console.log('Shedule should be added');
+                    });
+                });
+            });
+            event.preventDefault();
+        } else {
+            alert('Please fill in all fields');
+            event.preventDefault();
+        }
+    }
+    
     $(document).on('click', '.add-changeset-button', addFieldsToPopUp);
     $('.pop-up-adding').bind('click', addPopUp);
     $(document).on('click', '.panel-heading .close', reloadDocumentOnClosePopUp);
@@ -319,9 +419,10 @@ CR = (function() {
                             .add-changesets-popup-active .form-inline select, \n\
                             .add-changesets-popup-active .form-inline textarea', removeRequiredFieldMarkerWhenIsFilledIn);
     $('.codereview a.glyphicon-pencil').bind('click', editChangeset);
+    $('#addSchedule').bind('click', addPopUpForAddingSchedule);
     $(document).on('click', '.edit-changeset', postEditChangeset);
     $('.table .btn.btn-default').popover();
-    
+    $(document).on('click', '#postSchedule', addSchedule);
     $( ".startdate" ).datepicker({
         defaultDate: "-1w",
         changeMonth: true,
@@ -339,6 +440,9 @@ CR = (function() {
         onClose: function( selectedDate ) {
             $( ".startdate" ).datepicker( "option", "maxDate", selectedDate );
         }
+    });
+    $('body').on('focus',".startdate", function(){
+        $(this).datepicker();
     });
     
 })();

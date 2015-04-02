@@ -1,8 +1,9 @@
 <?php $title = 'Index of Schedule';?> 
 <h1 class="text-right" ><small><?php echo $this->escapeHtml($title); ?></small></h1>
-
-<p><span class="label label-success"><a href="<?php echo $this->url().'add'; ?>">Add schedule</a></span></p>
-<table class="table table-hover table-striped">
+<div class="fadingWrapperInvisible"></div>
+<p><span class="label label-success"><a id="addSchedule" href="<?php echo $this->url().'add'; ?>">Add schedule</a></span></p>
+<table class="table table-hover">
+    <thead>
     <tr class="success">
         <td>Reviewer</td>
         <td>Reviewer Trainee/Backup</td>
@@ -14,11 +15,23 @@
         <td>Time period</td>
         <td>Moderation</td>
     </tr>
+    </thead><tbody>
+<script type="html/template" id="addOneScheduleForADay">
+    <input class="form-control startdate" name="dateofschedule">
+    <button class="form-control col-sm-1 btn btn-success" type="button" id="postSchedule">Add Schedule</button>
+</script>
 <?php
+$classWarn = 'warning';
+$counter = 0;
 foreach($schedule as $item) {
-    echo "
-    <tr>
-        <td>".$item["reviewer_ldap"]."</td>
+    if ($counter >= 6)
+        $counter = 0;
+    if ($counter > 2) {
+        echo "<tr class='".$classWarn."'>";
+    } else {
+        echo "<tr>";
+    }
+        echo "<td>".$item["reviewer_ldap"]."</td>
         <td>".$item["traineebackupid_ldap"]."</td>
         <td>".$item["replacementreviewerid_ldap"]."</td>
         <td>".$item["originalreviewerid_ldap"]."</td>
@@ -26,13 +39,15 @@ foreach($schedule as $item) {
         <td>".$item["designtraineereviewerid_ldap"]."</td>
         <td>".$item["dateofschedule"]."</td>
         <td>".$item["timeref"]."</td>";
+        $counter ++;
 ?>
         <td>
             <a class='glyphicon glyphicon-pencil' href="<?php echo $this->url('schedule', array('action'=>'edit', 'id' => $item['id']));?>"></a>
             <a class='glyphicon glyphicon-remove' href="<?php echo $this->url('schedule', array('action'=>'delete', 'id' => $item['id']));?>"></a>
         </td>
     </tr>
-<?php        
-    }
+<?php
+}
 ?>
+</tbody>
 </table>

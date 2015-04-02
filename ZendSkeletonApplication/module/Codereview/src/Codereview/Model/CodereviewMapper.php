@@ -7,6 +7,7 @@ use Codereview\Model\CodereviewEntity;
 use Zend\Stdlib\Hydrator\ClassMethods;
 use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Select;
+use Zend\Db\Sql\Where;
 use Zend\Db\ResultSet\HydratingResultSet;
 
  class CodereviewMapper
@@ -104,7 +105,8 @@ use Zend\Db\ResultSet\HydratingResultSet;
                ->columns(array('id', 'creationdate', 'changeset', 'jiraticket', 'authorcomments', 'reviewercomments', 'stateid', 'authorid', 'reviewerid' ))
                ->join(array('U' => 'users'), 'C.authorid = U.id', array('uid' =>'id', 'author' => 'ldap'))
                 ->join(array('U0' => 'users'), 'C.reviewerid = U0.id', array('rid' =>'id', 'reviewer' => 'ldap'))
-                ->join(array('S' => 'state'), 'C.stateid = S.id', array('state' => 'name'));
+                ->join(array('S' => 'state'), 'C.stateid = S.id', array('state' => 'name'))
+                ->order('creationdate ASC');
        $statement = $this->sql->prepareStatementForSqlObject($select);
        $results = $statement->execute();
        return $results;
@@ -144,16 +146,34 @@ use Zend\Db\ResultSet\HydratingResultSet;
        return $codereview;
    }
    
+   public function chooseStartEndDate($select, $startdate, $enddate, $userid) {
+    $predicate = new Where();
+    if (isset($startdate) && isset($enddate)) {
+        $select->where($predicate->between('creationdate', $startdate, $enddate));
+    } else if (isset($startdate)) {
+        $select->where($predicate->greaterThanOrEqualTo('creationdate', $startdate));
+    } else if (isset($enddate)) {
+        $select->where($predicate->lessThanOrEqualTo('creationdate', $enddate));
+    }
+    return $select;
+   }
    
-    public function getCodereviewByUser($userid)
+    public function getCodereviewByUser($userid, $startdate, $enddate)
     {
     $select = new Select();
+    $predicate = new Where();
     $select->from(array('C' => 'codereview'))
                ->columns(array('id', 'creationdate', 'changeset', 'jiraticket', 'authorcomments', 'reviewercomments', 'stateid', 'authorid', 'reviewerid' ))
                ->join(array('U' => 'users'), 'C.authorid = U.id', array('uid' =>'id', 'author' => 'ldap'))
                 ->join(array('U0' => 'users'), 'C.reviewerid = U0.id', array('rid' =>'id', 'reviewer' => 'ldap'))
                 ->join(array('S' => 'state'), 'C.stateid = S.id', array('state' => 'name'))
-                ->where('C.authorid ='.(int)$userid);
+                ->where($predicate->equalTo('U.id', $userid));
+    $select = $this->chooseStartEndDate($select, $startdate, $enddate, $userid);
+//                ->where($predicate->between('creationdate', $startdate, $enddate))
+//                ->where($predicate->greaterThanOrEqualTo('creationdate', $startdate))
+//                ->where($predicate->lessThanOrEqualTo('creationdate', $enddate))
+                $select->order('creationdate ASC')
+                ->limit(250);
     $statement = $this->sql->prepareStatementForSqlObject($select);
     $results = $statement->execute();
     return $results;
@@ -167,7 +187,8 @@ use Zend\Db\ResultSet\HydratingResultSet;
                ->join(array('U' => 'users'), 'C.authorid = U.id', array('uid' =>'id', 'author' => 'ldap'))
                 ->join(array('U0' => 'users'), 'C.reviewerid = U0.id', array('rid' =>'id', 'reviewer' => 'ldap'))
                 ->join(array('S' => 'state'), 'C.stateid = S.id', array('state' => 'name'))
-                ->where('C.jiraticket LIKE "%'.$ticketNumber.'%"');
+                ->where('C.jiraticket LIKE "%'.$ticketNumber.'%"')
+                ->limit(250);
     $statement = $this->sql->prepareStatementForSqlObject($select);
     $results = $statement->execute();
     return $results;

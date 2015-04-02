@@ -68,6 +68,32 @@ class ScheduleMapper {
        return $result;
    }
    
+       public function saveScheduleAPI($data)
+    {
+       $data = json_decode($data, true);
+//       echo $data['creationdate'];exit;
+//       var_dump($data);exit;
+       if (isset($data['id']) && $data['id'] != '') {
+           // update action
+           $action = $this->sql->update();
+           $action->set($data);
+           $action->where(array('id' => $data['id']));
+       } else {
+           // insert action
+           $action = $this->sql->insert();
+           unset($data['id']);
+           $action->values($data);
+       }
+       $statement = $this->sql->prepareStatementForSqlObject($action);
+       $result = $statement->execute();
+
+//       if (!$codereview->getId()) {
+//           $codereview->setId($result->getGeneratedValue());
+//       }
+//        var_dump($result);exit;
+        return $result->getGeneratedValue();
+   }
+   
     public function fetchScheduleWithUsers()
     {
     $select = new Select();
