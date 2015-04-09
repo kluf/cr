@@ -8,7 +8,7 @@ use Zend\Db\Adapter\Adapter;
 
  class ScheduleForm extends Form
  {
-     public function __construct($name = null, $reviewer, $reviewerTrainee, $replacement, $original, $designReviewer, $designReviewerTrainee, $timeReference)
+     public function __construct($name = null, $reviewer, $traineebackupid, $replacement, $original, $designReviewer, $designReviewerTrainee, $timeReference)
      {
          // we want to ignore the name passed
          parent::__construct('schedule');
@@ -22,7 +22,7 @@ use Zend\Db\Adapter\Adapter;
              'type' => 'Hidden',
          ));
          $this->add(array(
-            'name' => 'Reviewer',
+            'name' => 'reviewer',
             'type' => 'Zend\Form\Element\Select',
             'options' => array(
                     'label' => 'Reviewer*: ',
@@ -38,7 +38,7 @@ use Zend\Db\Adapter\Adapter;
             'type' => 'Zend\Form\Element\Select',
             'options' => array(
                     'label' => 'Trainee backup',
-                    'value_options' => $reviewerTrainee,
+                    'value_options' => $traineebackupid,
                     'empty_option' => 'Please select trainee',
             ),
             'attributes' => array(

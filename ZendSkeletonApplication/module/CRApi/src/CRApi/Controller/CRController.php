@@ -55,21 +55,25 @@ class CRController extends AbstractRestfulController
     
     public function get($id)
     {   // Action used for GET requests with resource Id
-        $arr = [];
-        switch ($id) {
-            case 'authors': $arr = $this->getAuthors();
-                break;
-            case 'reviewers': $arr = $this->getReviewers();
-                break;
-            case 'states': $arr = $this->getStates();
-                break;
-            case 'codereview':
-                if ((int)$data < 0) {
-                    $arr = $this->getCodereviewMapper()->getCodereview();
-                }
-            default: $arr = array('err' => 'something goes wrong', 'data' => $data);
+//        $arr = [];
+//        switch ($id) {
+//            case 'authors': $arr = $this->getAuthors();
+//                break;
+//            case 'reviewers': $arr = $this->getReviewers();
+//                break;
+//            case 'states': $arr = $this->getStates();
+//                break;
+//            case 'codereview':
+//                if ((int)$data < 0) {
+//                    $arr = $this->getCodereviewMapper()->getCodereview();
+//                }
+//            default: $arr = array('err' => 'something goes wrong', 'data' => $data);
+//        }
+//        return new JsonModel($arr);
+        if ((int)$id > 0) {
+            $arr = $this->getCodereviewMapper()->getCodereviewApi($id);
         }
-        return new JsonModel($arr);
+        return new JsonModel(array('result' => $arr));
     }
 
     public function getAuthors()

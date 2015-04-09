@@ -23,6 +23,7 @@ use Reviewerstime\Model\ReviewerstimeEntity;
     public function indexAction()
     {
         $mapper = $this->getScheduleMapper();
+//        var_dump($mapper->fetchScheduleWithUsers());exit;
         return new ViewModel(array('schedule' => $mapper->fetchScheduleWithUsers()));
     }
      
@@ -50,13 +51,13 @@ use Reviewerstime\Model\ReviewerstimeEntity;
         $timeReferenceMapper = $this->getReviewerstimeMapper();
         $timeReference = $timeReferenceMapper->fetchReviewerstimeForSelect();
         $reviewer = $UsersMapper->fetchUsersForSelect();
-        $reviewerTrainee = $UsersMapper->fetchUsersForSelect();
+        $traineebackupid = $UsersMapper->fetchUsersForSelect();
         $replacement = $UsersMapper->fetchUsersForSelect();
         $original = $UsersMapper->fetchUsersForSelect();
         $designReviewer = $UsersMapper->fetchUsersForSelect();
         $designReviewerTrainee = $UsersMapper->fetchUsersForSelect();
         
-        $form = new ScheduleForm(null, $reviewer, $reviewerTrainee, $replacement, $original, $designReviewer, $designReviewerTrainee, $timeReference);
+        $form = new ScheduleForm(null, $reviewer, $traineebackupid, $replacement, $original, $designReviewer, $designReviewerTrainee, $timeReference);
         $schedule = new ScheduleEntity();
         $form->bind($schedule);
 
@@ -85,13 +86,13 @@ use Reviewerstime\Model\ReviewerstimeEntity;
         $timeReferenceMapper = $this->getReviewerstimeMapper();
         $timeReference = $timeReferenceMapper->fetchReviewerstimeForSelect();
         $reviewer = $UsersMapper->fetchUsersForSelect($schedule->reviewer);
-        $reviewerTrainee = $UsersMapper->fetchUsersForSelect($schedule->traineebackupid);
+        $traineebackupid = $UsersMapper->fetchUsersForSelect($schedule->traineebackupid);
         $replacement = $UsersMapper->fetchUsersForSelect($schedule->replacementreviewerid);
         $original = $UsersMapper->fetchUsersForSelect($schedule->originalreviewerid);
         $designReviewer = $UsersMapper->fetchUsersForSelect($schedule->designreviewerid);
         $designReviewerTrainee = $UsersMapper->fetchUsersForSelect($schedule->designtraineereviewerid);
         
-        $form = new ScheduleForm(null, $reviewer, $reviewerTrainee, $replacement, $original, $designReviewer, $designReviewerTrainee, $timeReference);
+        $form = new ScheduleForm(null, $reviewer, $traineebackupid, $replacement, $original, $designReviewer, $designReviewerTrainee, $timeReference);
         
         
         $form->bind($schedule);

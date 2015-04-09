@@ -43,8 +43,7 @@ CR = (function() {
     function PopUp() {
     $('body > .container .fadingWrapperInvisible').addClass('fadingWrapper').html('<div class="row"><div class="panel panel-default add-changesets-popup-active">\n\
                     <div class="panel-heading">Add changeset(s)<button type="button" class="close"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button></div>\n\
-                    <div class="panel-body"><div class="row"><div class="col-md-1">Time</div><div class="col-md-1">Jira ticket</div><div class="col-md-1">Changeset</div><div class="col-md-1">Author\'s comment</div>\n\
-                    <div class="col-md-2">Reviewer\'s comment</div><div class="col-md-1">Time</div><div class="col-md-1">Time</div><div class="col-md-1">Time</div></div><form class="form-inline" role="form" method="POST"></form><input type="text" id="numberOfCasesToAdd" placeholder="5"><button type="button" class="btn btn-success add-changeset-button" disabled="disabled">\n\
+                    <div class="panel-body"><div class="row"></div><form class="form-inline" role="form" method="POST"></form><input type="text" id="numberOfCasesToAdd" placeholder="5"><button type="button" class="btn btn-success add-changeset-button" disabled="disabled">\n\
                     <span class="glyphicon glyphicon-plus-sign"></span></button></div></div></div>');
     }
     
@@ -75,8 +74,12 @@ CR = (function() {
         var name = obj.name,
             typeOfInput = obj.typeOfInput,
             value = obj.value ? obj.value : "",
-            disabled = obj.disabled ? 'disabled' : "",
-            markup = '<div class="form-group"><label class="sr-only" for="'+name+'">Creation date</label>';
+            disabled = obj.disabled ? 'disabled' : "";
+            if (typeOfInput !== 'hidden') {
+                markup = '<div class="form-group col-sm-1"><label for="'+name+'">Creation date</label>';
+            } else {
+                markup = '<div class="form-group col-sm-1">';
+            }
         switch(typeOfInput) {
             case 'text': 
                 if (disabled) {
@@ -164,15 +167,16 @@ CR = (function() {
     }
     
     function getDataForAllSelects(cb) {
-        getDataForPopUp('/crapi/authors', function(data) {
+        getDataForPopUp('/apiAuthors', function(data) {
             for(var i in data) {
                 authors.push({id: i, name: data[i]});
             }
-            getDataForPopUp('/crapi/reviewers', function(data) {
+            getDataForPopUp('/apiAuthors', function(data) {
                 for(var i in data) {
                     reviewers.push({id: i, name: data[i]});
                 }
-                getDataForPopUp('/crapi/states', function(data) {
+                getDataForPopUp('/apiStates', function(data) {
+                    console.log(data);
                     for(var i in data) {
                         states.push({id: i, name: data[i]});
                     }
@@ -254,7 +258,6 @@ CR = (function() {
         });
     }
     
-    
     function removeRequiredFieldMarkerWhenIsFilledIn() {
        if ($(this).val != '') {
            $(this).removeClass('requiredField');
@@ -265,7 +268,7 @@ CR = (function() {
         var popup = new PopUp();
         var data = $(this).attr('href').split('/');
         data = data[data.length-1];
-        getDataForPopUp('/crapi1/'+data, function(data) {
+        getDataForPopUp('/crapi/'+data, function(data) {
             changesetForEditing = data.result;
             getDataForAllSelects(addFieldsToFormForAddingChangesets);
         });
@@ -319,7 +322,7 @@ CR = (function() {
         event.preventDefault();
         var popup = new PopUp();
         $('.fadingWrapper .panel-body').html($('#addOneScheduleForADay').html());
-        getDataForPopUp('/crapi/authors', function(data) {
+        getDataForPopUp('/apiAuthors', function(data) {
             for(var i in data) {
                 authors.push({id: i, name: data[i]});
             }
@@ -370,31 +373,34 @@ CR = (function() {
                             if (elementName == '1') {
                                 data1['timereference'] = $(element).val();
                             } else {
+                                
                                 data1[$(element).attr('name')] = $(element).val();
                             }
-//                            console.log(data1);
                             break;
                         case 1:
                             if (elementName == '2') {
                                 data2['timereference'] = $(element).val();
                             } else {
+                                
                                 data2[$(element).attr('name')] = $(element).val();
                             }
-//                            console.log(data2);
                             break;
                         case 2:
                             if (elementName == '3') {
                                 data3['timereference'] = $(element).val();
                             } else {
+                                
                                 data3[$(element).attr('name')] = $(element).val();
                             }
-//                            console.log(data3);
                             break;
                     }
                 }
             });
         });
         if (isAllRequiredFieldsFilled) {
+            data3['dateofschedule'] = $('.startdate ').val();
+            data2['dateofschedule'] = $('.startdate ').val();
+            data1['dateofschedule'] = $('.startdate ').val();
             sendDataFromPopUpMain(data1, {url: '/apiSchedule', method: currentMethod}, $(this).parent().find('.row'), function() {
                 sendDataFromPopUpMain(data2, {url: '/apiSchedule', method: currentMethod}, $(this).parent().find('.row'), function() {
                     sendDataFromPopUpMain(data3, {url: '/apiSchedule', method: currentMethod}, $(this).parent().find('.row'), function() {
@@ -442,7 +448,15 @@ CR = (function() {
         }
     });
     $('body').on('focus',".startdate", function(){
-        $(this).datepicker();
+        $(this).datepicker({
+        defaultDate: "-1w",
+        changeMonth: true,
+        numberOfMonths: 3,
+        dateFormat: "mm-dd-yy",
+        onClose: function( selectedDate ) {
+            $( ".enddate" ).datepicker( "option", "minDate", selectedDate );
+        }
+    });
     });
     
 })();

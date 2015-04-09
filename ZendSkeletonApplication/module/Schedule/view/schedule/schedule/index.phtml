@@ -5,13 +5,13 @@
 <table class="table table-hover">
     <thead>
     <tr class="success">
+        <td>Date</td>
         <td>Reviewer</td>
-        <td>Reviewer Trainee/Backup</td>
+        <td>Trainee/Backup</td>
         <td>Replacement</td>
         <td>Original</td>
         <td>Design reviewer</td>
         <td>Design reviewer trainee</td>
-        <td>Date</td>
         <td>Time period</td>
         <td>Moderation</td>
     </tr>
@@ -31,13 +31,13 @@ foreach($schedule as $item) {
     } else {
         echo "<tr>";
     }
-        echo "<td>".$item["reviewer_ldap"]."</td>
+        echo "<td>".$item["dateofschedule"]."</td>
+        <td>".$item["reviewer_ldap"]."</td>
         <td>".$item["traineebackupid_ldap"]."</td>
         <td>".$item["replacementreviewerid_ldap"]."</td>
         <td>".$item["originalreviewerid_ldap"]."</td>
         <td>".$item["designreviewerid_ldap"]."</td>
         <td>".$item["designtraineereviewerid_ldap"]."</td>
-        <td>".$item["dateofschedule"]."</td>
         <td>".$item["timeref"]."</td>";
         $counter ++;
 ?>

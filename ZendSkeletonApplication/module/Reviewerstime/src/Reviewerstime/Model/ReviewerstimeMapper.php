@@ -51,7 +51,7 @@ class ReviewerstimeMapper
     $select->from('reviewerstime')
                ->columns(array('id', 'ldap', 'groupid', 'email'))
                ->join('usergroups',
-                       'reviewerstime.groupid = usergroups.id', array('idd' => 'id', 'name'));
+                       'reviewerstime.groupid = usergroups.id', array('idd' => 'id', 'name'), 'left');
        $statement = $this->sql->prepareStatementForSqlObject($select);
        $results = $statement->execute();
        return $results;

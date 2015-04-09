@@ -55,7 +55,7 @@ class UsersMapper
         $select = new Select();
         $select->from('users')
                 ->columns(array('id', 'ldap', 'groupid', 'email', 'password'))
-                ->join('usergroups', 'users.groupid = usergroups.id', array('groupname' => 'name'))
+                ->join('usergroups', 'users.groupid = usergroups.id', array('groupname' => 'name'), 'left')
                 ->where(array('ldap' => $userLdap));
         $statement = $this->sql->prepareStatementForSqlObject($select);
         $result = $statement->execute()->current();
@@ -76,7 +76,7 @@ class UsersMapper
                             ->columns(array('uid' => 'id', 'ldap', 'groupid'))
                             ->where(array('uid' => $uid))
                             ->join('usergroups',
-                                    'users.groupid = usergroups.id', array('name'))
+                                    'users.groupid = usergroups.id', array('name'), 'left')
                             ->where(array('usergroups.name' => 'admins'));
         $statement = $this->sql->prepareStatementForSqlObject($select);
         $result = $statement->execute()->current();
@@ -96,7 +96,7 @@ class UsersMapper
                             ->columns(array('uid' => 'id', 'ldap', 'groupid'))
                             ->where(array('uid' => $uid))
                             ->join('usergroups',
-                                    'users.groupid = usergroups.id', array('name'))
+                                    'users.groupid = usergroups.id', array('name'), 'left')
                             ->where(array('usergroups.name' => 'reviewers'));
         $statement = $this->sql->prepareStatementForSqlObject($select);
         $result = $statement->execute()->current();
@@ -115,7 +115,7 @@ class UsersMapper
         $select->from('users')
                             ->columns(array('uid' => 'id', 'ldap', 'groupid'))
                             ->join('codereview',
-                                    'users.id = codereview.authorid', array('codereviewId' => 'id', 'codeAuthorId' => 'authorid', 'jiraticket'))
+                                    'users.id = codereview.authorid', array('codereviewId' => 'id', 'codeAuthorId' => 'authorid', 'jiraticket'), 'left')
                             ->where(array('codereviewId' => $codereviewId, 'codeAuthorId' => $userId));
         $statement = $this->sql->prepareStatementForSqlObject($select);
         $result = $statement->execute()->current();
@@ -146,7 +146,7 @@ class UsersMapper
         $select->from('users')
                    ->columns(array('id', 'ldap', 'groupid', 'email'))
                    ->join('usergroups',
-                           'users.groupid = usergroups.id', array('idd' => 'id', 'name'));
+                           'users.groupid = usergroups.id', array('idd' => 'id', 'name'), 'left');
         $statement = $this->sql->prepareStatementForSqlObject($select);
         $results = $statement->execute();
         return $results;

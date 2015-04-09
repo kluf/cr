@@ -90,9 +90,9 @@ use Zend\Db\ResultSet\HydratingResultSet;
     $select = new Select();
     $select->from(array('C' => 'codereview'))
                ->columns(array('id', 'creationdate', 'changeset', 'jiraticket', 'authorcomments', 'reviewercomments', 'stateid', 'authorid', 'reviewerid' ))
-               ->join(array('U' => 'users'), 'C.authorid = U.id', array('uid' =>'id', 'author' => 'ldap'))
-                ->join(array('U0' => 'users'), 'C.reviewerid = U0.id', array('rid' =>'id', 'reviewer' => 'ldap'))
-                ->join(array('S' => 'state'), 'C.stateid = S.id', array('state' => 'name'));
+               ->join(array('U' => 'users'), 'C.authorid = U.id', array('uid' =>'id', 'author' => 'ldap'), 'left')
+                ->join(array('U0' => 'users'), 'C.reviewerid = U0.id', array('rid' =>'id', 'reviewer' => 'ldap'), 'left')
+                ->join(array('S' => 'state'), 'C.stateid = S.id', array('state' => 'name'), 'left');
        $statement = $this->sql->prepareStatementForSqlObject($select);
        $results = $statement->execute();
        return $results;
@@ -103,9 +103,9 @@ use Zend\Db\ResultSet\HydratingResultSet;
     $select = new Select();
     $select->from(array('C' => 'codereview'))
                ->columns(array('id', 'creationdate', 'changeset', 'jiraticket', 'authorcomments', 'reviewercomments', 'stateid', 'authorid', 'reviewerid' ))
-               ->join(array('U' => 'users'), 'C.authorid = U.id', array('uid' =>'id', 'author' => 'ldap'))
-                ->join(array('U0' => 'users'), 'C.reviewerid = U0.id', array('rid' =>'id', 'reviewer' => 'ldap'))
-                ->join(array('S' => 'state'), 'C.stateid = S.id', array('state' => 'name'))
+               ->join(array('U' => 'users'), 'C.authorid = U.id', array('uid' =>'id', 'author' => 'ldap'), 'left')
+                ->join(array('U0' => 'users'), 'C.reviewerid = U0.id', array('rid' =>'id', 'reviewer' => 'ldap'), 'left')
+                ->join(array('S' => 'state'), 'C.stateid = S.id', array('state' => 'name'), 'left')
                 ->order('creationdate ASC');
        $statement = $this->sql->prepareStatementForSqlObject($select);
        $results = $statement->execute();
@@ -164,9 +164,9 @@ use Zend\Db\ResultSet\HydratingResultSet;
     $predicate = new Where();
     $select->from(array('C' => 'codereview'))
                ->columns(array('id', 'creationdate', 'changeset', 'jiraticket', 'authorcomments', 'reviewercomments', 'stateid', 'authorid', 'reviewerid' ))
-               ->join(array('U' => 'users'), 'C.authorid = U.id', array('uid' =>'id', 'author' => 'ldap'))
-                ->join(array('U0' => 'users'), 'C.reviewerid = U0.id', array('rid' =>'id', 'reviewer' => 'ldap'))
-                ->join(array('S' => 'state'), 'C.stateid = S.id', array('state' => 'name'))
+               ->join(array('U' => 'users'), 'C.authorid = U.id', array('uid' =>'id', 'author' => 'ldap'), 'left')
+                ->join(array('U0' => 'users'), 'C.reviewerid = U0.id', array('rid' =>'id', 'reviewer' => 'ldap'), 'left')
+                ->join(array('S' => 'state'), 'C.stateid = S.id', array('state' => 'name'), 'left')
                 ->where($predicate->equalTo('U.id', $userid));
     $select = $this->chooseStartEndDate($select, $startdate, $enddate, $userid);
 //                ->where($predicate->between('creationdate', $startdate, $enddate))
@@ -184,9 +184,9 @@ use Zend\Db\ResultSet\HydratingResultSet;
     $select = new Select();
     $select->from(array('C' => 'codereview'))
                ->columns(array('id', 'creationdate', 'changeset', 'jiraticket', 'authorcomments', 'reviewercomments', 'stateid', 'authorid', 'reviewerid' ))
-               ->join(array('U' => 'users'), 'C.authorid = U.id', array('uid' =>'id', 'author' => 'ldap'))
-                ->join(array('U0' => 'users'), 'C.reviewerid = U0.id', array('rid' =>'id', 'reviewer' => 'ldap'))
-                ->join(array('S' => 'state'), 'C.stateid = S.id', array('state' => 'name'))
+               ->join(array('U' => 'users'), 'C.authorid = U.id', array('uid' =>'id', 'author' => 'ldap'), 'left')
+                ->join(array('U0' => 'users'), 'C.reviewerid = U0.id', array('rid' =>'id', 'reviewer' => 'ldap'), 'left')
+                ->join(array('S' => 'state'), 'C.stateid = S.id', array('state' => 'name'), 'left')
                 ->where('C.jiraticket LIKE "%'.$ticketNumber.'%"')
                 ->limit(250);
     $statement = $this->sql->prepareStatementForSqlObject($select);

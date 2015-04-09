@@ -35,7 +35,7 @@ class ScheduleMapper {
     public function fetchAll()
     {
         $select = $this->sql->select();
-        $schedule = $this->sql->prepareSchedulementForSqlObject($select);
+        $schedule = $this->sql->prepareStatementForSqlObject($select);
         $results = $schedule->execute();
         $entityPrototype = new ScheduleEntity();
         $hydrator = new ClassMethods();
@@ -44,6 +44,22 @@ class ScheduleMapper {
         return $resultset;
     }
 
+    public function fetchScheduleWithUsers()
+    {
+    $select = new Select();
+    $select->from(array('S' => 'schedule'))
+               ->columns(array('id', 'reviewer', 'traineebackupid', 'replacementreviewerid', 'originalreviewerid', 'designreviewerid', 'designtraineereviewerid', 'timereference', 'dateofschedule'))
+               ->join(array('U' => 'users'), 'S.reviewer = U.id', array('uid' =>'id', 'reviewer_ldap' => 'ldap'), 'left')
+                ->join(array('U0' => 'users'), 'S.traineebackupid = U0.id', array('traineebackupid_ldap' => 'ldap'), 'left')
+                ->join(array('U1' => 'users'), 'S.replacementreviewerid = U1.id', array('replacementreviewerid_ldap' => 'ldap'), 'left')
+                ->join(array('U2' => 'users'), 'S.originalreviewerid = U2.id', array('originalreviewerid_ldap' => 'ldap'), 'left')
+                ->join(array('U3' => 'users'), 'S.designreviewerid = U3.id', array('designreviewerid_ldap' => 'ldap'), 'left')
+                ->join(array('U4' => 'users'), 'S.designtraineereviewerid = U4.id', array('designtraineereviewerid_ldap' => 'ldap'), 'left')
+                ->join(array('RT' => 'reviewerstime'), 'S.timereference = RT.id', array('timeref' => 'timeperioud'), 'left');
+       $statement = $this->sql->prepareStatementForSqlObject($select);
+       $results = $statement->execute();
+       return $results;
+    }
    public function saveSchedule(ScheduleEntity $schedule)
    {
        $hydrator = new ClassMethods();
@@ -58,6 +74,7 @@ class ScheduleMapper {
            $action = $this->sql->insert();
            unset($data['id']);
            $action->values($data);
+           echo $action;exit;
        }
        $statement = $this->sql->prepareStatementForSqlObject($action);
        $result = $statement->execute();
@@ -70,46 +87,22 @@ class ScheduleMapper {
    
        public function saveScheduleAPI($data)
     {
-       $data = json_decode($data, true);
-//       echo $data['creationdate'];exit;
-//       var_dump($data);exit;
-       if (isset($data['id']) && $data['id'] != '') {
-           // update action
-           $action = $this->sql->update();
-           $action->set($data);
-           $action->where(array('id' => $data['id']));
-       } else {
-           // insert action
-           $action = $this->sql->insert();
-           unset($data['id']);
-           $action->values($data);
-       }
-       $statement = $this->sql->prepareStatementForSqlObject($action);
-       $result = $statement->execute();
-
-//       if (!$codereview->getId()) {
-//           $codereview->setId($result->getGeneratedValue());
-//       }
-//        var_dump($result);exit;
+        $data = json_decode($data, true);
+        if (isset($data['id']) && $data['id'] != '') {
+            // update action
+            $action = $this->sql->update();
+            $action->set($data);
+            $action->where(array('id' => $data['id']));
+        } else {
+            // insert action
+            $action = $this->sql->insert();
+            unset($data['id']);
+            $action->values($data);
+        }
+        $statement = $this->sql->prepareStatementForSqlObject($action);
+        $result = $statement->execute();
         return $result->getGeneratedValue();
    }
-   
-    public function fetchScheduleWithUsers()
-    {
-    $select = new Select();
-    $select->from(array('S' => 'schedule'))
-               ->columns(array('id', 'reviewer', 'traineebackupid', 'replacementreviewerid', 'originalreviewerid', 'designreviewerid', 'designtraineereviewerid', 'timereference', 'dateofschedule'))
-               ->join(array('U' => 'users'), 'S.reviewer = U.id', array('uid' =>'id', 'reviewer_ldap' => 'ldap'))
-                ->join(array('U0' => 'users'), 'S.traineebackupid = U0.id', array('traineebackupid_ldap' => 'ldap'))
-                ->join(array('U1' => 'users'), 'S.replacementreviewerid = U1.id', array('replacementreviewerid_ldap' => 'ldap'))
-                ->join(array('U2' => 'users'), 'S.originalreviewerid = U2.id', array('originalreviewerid_ldap' => 'ldap'))
-                ->join(array('U3' => 'users'), 'S.designreviewerid = U3.id', array('designreviewerid_ldap' => 'ldap'))
-                ->join(array('RT' => 'reviewerstime'), 'S.timereference = RT.id', array('timeref' => 'timeperioud'))
-                ->join(array('U4' => 'users'), 'S.designtraineereviewerid = U4.id', array('designtraineereviewerid_ldap' => 'ldap'));
-       $statement = $this->sql->prepareStatementForSqlObject($select);
-       $results = $statement->execute();
-       return $results;
-    }
    
     public function fetchScheduleForCurrentDay()
     {
@@ -117,13 +110,13 @@ class ScheduleMapper {
     $select = new Select();
     $select->from(array('S' => 'schedule'))
                ->columns(array('id', 'reviewer', 'traineebackupid', 'replacementreviewerid', 'originalreviewerid', 'designreviewerid', 'designtraineereviewerid', 'timereference', 'dateofschedule'))
-               ->join(array('U' => 'users'), 'S.reviewer = U.id', array('uid' =>'id', 'reviewer_ldap' => 'ldap'))
-                ->join(array('U0' => 'users'), 'S.traineebackupid = U0.id', array('traineebackupid_ldap' => 'ldap'))
-                ->join(array('U1' => 'users'), 'S.replacementreviewerid = U1.id', array('replacementreviewerid_ldap' => 'ldap'))
-                ->join(array('U2' => 'users'), 'S.originalreviewerid = U2.id', array('originalreviewerid_ldap' => 'ldap'))
-                ->join(array('U3' => 'users'), 'S.designreviewerid = U3.id', array('designreviewerid_ldap' => 'ldap'))
-                ->join(array('RT' => 'reviewerstime'), 'S.timereference = RT.id', array('timeref' => 'timeperioud'))
-                ->join(array('U4' => 'users'), 'S.designtraineereviewerid = U4.id', array('designtraineereviewerid_ldap' => 'ldap'))
+               ->join(array('U' => 'users'), 'S.reviewer = U.id', array('uid' =>'id', 'reviewer_ldap' => 'ldap'), 'left')
+                ->join(array('U0' => 'users'), 'S.traineebackupid = U0.id', array('traineebackupid_ldap' => 'ldap'), 'left')
+                ->join(array('U1' => 'users'), 'S.replacementreviewerid = U1.id', array('replacementreviewerid_ldap' => 'ldap'), 'left')
+                ->join(array('U2' => 'users'), 'S.originalreviewerid = U2.id', array('originalreviewerid_ldap' => 'ldap'), 'left')
+                ->join(array('U3' => 'users'), 'S.designreviewerid = U3.id', array('designreviewerid_ldap' => 'ldap'), 'left')
+                ->join(array('U4' => 'users'), 'S.designtraineereviewerid = U4.id', array('designtraineereviewerid_ldap' => 'ldap'), 'left')
+                ->join(array('RT' => 'reviewerstime'), 'S.timereference = RT.id', array('timeref' => 'timeperioud'), 'left')
                 ->where("dateofschedule LIKE '%{$currentDate}%'");
        $statement = $this->sql->prepareStatementForSqlObject($select);
        $results = $statement->execute();

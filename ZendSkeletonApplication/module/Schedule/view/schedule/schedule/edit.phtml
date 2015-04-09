@@ -19,7 +19,7 @@ function printFormGroup($row = 'null'){
  echo $this->form()->openTag($form);
  echo $this->formHidden($form->get('id'));
 // echo $this->formRow($form->get('users'));
-printFormGroup($this->formRow($form->get('Reviewer')));
+printFormGroup($this->formRow($form->get('reviewer')));
 printFormGroup($this->formRow($form->get('traineebackupid')));
 printFormGroup($this->formRow($form->get('replacementreviewerid')));
 printFormGroup($this->formRow($form->get('originalreviewerid')));
