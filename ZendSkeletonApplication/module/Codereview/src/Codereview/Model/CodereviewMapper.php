@@ -62,8 +62,6 @@ use Zend\Db\ResultSet\HydratingResultSet;
     public function saveCodereviewAPI($data)
     {
        $data = json_decode($data, true);
-//       echo $data['creationdate'];exit;
-//       var_dump($data);exit;
        if (isset($data['id']) && $data['id'] != '') {
            // update action
            $action = $this->sql->update();
@@ -81,134 +79,127 @@ use Zend\Db\ResultSet\HydratingResultSet;
 //       if (!$codereview->getId()) {
 //           $codereview->setId($result->getGeneratedValue());
 //       }
-//        var_dump($result);exit;
         return $result->getGeneratedValue();
    }
    
     public function fetchCodereviewWithUsersAndStates()
     {
     $select = new Select();
-    $select->from(array('C' => 'codereview'))
-               ->columns(array('id', 'creationdate', 'changeset', 'jiraticket', 'authorcomments', 'reviewercomments', 'stateid', 'authorid', 'reviewerid' ))
-               ->join(array('U' => 'users'), 'C.authorid = U.id', array('uid' =>'id', 'author' => 'ldap'), 'left')
-                ->join(array('U0' => 'users'), 'C.reviewerid = U0.id', array('rid' =>'id', 'reviewer' => 'ldap'), 'left')
-                ->join(array('S' => 'state'), 'C.stateid = S.id', array('state' => 'name'), 'left');
-       $statement = $this->sql->prepareStatementForSqlObject($select);
-       $results = $statement->execute();
-       return $results;
-    }
-   
-    public function fetchCodereviewWithUsersAndStatesForPaginator()
-    {
-    $select = new Select();
-    $select->from(array('C' => 'codereview'))
-               ->columns(array('id', 'creationdate', 'changeset', 'jiraticket', 'authorcomments', 'reviewercomments', 'stateid', 'authorid', 'reviewerid' ))
-               ->join(array('U' => 'users'), 'C.authorid = U.id', array('uid' =>'id', 'author' => 'ldap'), 'left')
-                ->join(array('U0' => 'users'), 'C.reviewerid = U0.id', array('rid' =>'id', 'reviewer' => 'ldap'), 'left')
-                ->join(array('S' => 'state'), 'C.stateid = S.id', array('state' => 'name'), 'left')
-                ->order('creationdate ASC');
+    $select
+            ->from(array('C' => 'codereview'))
+            ->columns(array('id', 'creationdate', 'changeset', 'jiraticket', 'authorcomments', 'reviewercomments', 'stateid', 'authorid', 'reviewerid' ))
+            ->join(array('U' => 'users'), 'C.authorid = U.id', array('uid' =>'id', 'author' => 'ldap'), 'left')
+            ->join(array('U0' => 'users'), 'C.reviewerid = U0.id', array('rid' =>'id', 'reviewer' => 'ldap'), 'left')
+            ->join(array('S' => 'state'), 'C.stateid = S.id', array('state' => 'name'), 'left');
        $statement = $this->sql->prepareStatementForSqlObject($select);
        $results = $statement->execute();
        return $results;
     }
     
     public function getCodereview($id)
-   {
-       $select = $this->sql->select();
-       $select->where(array('id' => $id));
+    {
+        $select = $this->sql->select();
+        $select->where(array('id' => $id));
 
-       $codereview = $this->sql->prepareStatementForSqlObject($select);
-       $result = $codereview->execute()->current();
-       if (!$result) {
-           return null;
-       }
-       $hydrator = new ClassMethods();
-       $codereview = new CodereviewEntity();
-       $hydrator->hydrate($result, $codereview);
+        $codereview = $this->sql->prepareStatementForSqlObject($select);
+        $result = $codereview->execute()->current();
+        if (!$result) {
+            return null;
+        }
+        $hydrator = new ClassMethods();
+        $codereview = new CodereviewEntity();
+        $hydrator->hydrate($result, $codereview);
 
-       return $codereview;
-   }
+        return $codereview;
+    }
 
     public function getCodereviewApi($id)
-   {
-       $select = $this->sql->select();
-       $select->where(array('id' => $id));
+    {
+        $select = $this->sql->select();
+        $select->where(array('id' => $id));
 
-       $codereview = $this->sql->prepareStatementForSqlObject($select);
-       $result = $codereview->execute()->current();
-       if (!$result) {
-           return null;
-       }
-       $hydrator = new ClassMethods();
-       $codereview = new CodereviewEntity();
-       $hydrator->hydrate($result, $codereview);
+        $codereview = $this->sql->prepareStatementForSqlObject($select);
+        $result = $codereview->execute()->current();
+        if (!$result) {
+            return null;
+        }
+        $hydrator = new ClassMethods();
+        $codereview = new CodereviewEntity();
+        $hydrator->hydrate($result, $codereview);
 
-       return $codereview;
-   }
-   
-   public function chooseStartEndDate($select, $startdate, $enddate, $userid) {
-    $predicate = new Where();
-    if (isset($startdate) && isset($enddate)) {
-        $select->where($predicate->between('creationdate', $startdate, $enddate));
-    } else if (isset($startdate)) {
-        $select->where($predicate->greaterThanOrEqualTo('creationdate', $startdate));
-    } else if (isset($enddate)) {
-        $select->where($predicate->lessThanOrEqualTo('creationdate', $enddate));
+        return $codereview;
     }
-    return $select;
-   }
+   
+    public function chooseStartEndDate($select, $startdate, $enddate) 
+    {
+        $predicate = new Where();
+        if (isset($startdate) && isset($enddate) && $startdate != '' && $enddate != '') {
+            $select->where($predicate->between('creationdate', $startdate, $enddate));
+            echo "both";exit;
+        } else if (isset($startdate) && $startdate != '') {
+            $select->where($predicate->greaterThanOrEqualTo('creationdate', $startdate));
+            echo "start";exit;
+        } else if (isset($enddate) && $enddate != '') {
+            $select->where($predicate->lessThanOrEqualTo('creationdate', $enddate));
+            echo "end";exit;
+        }
+        return $select;
+    }
    
     public function getCodereviewByUser($userid, $startdate, $enddate)
     {
-    $select = new Select();
-    $predicate = new Where();
-    $select->from(array('C' => 'codereview'))
-               ->columns(array('id', 'creationdate', 'changeset', 'jiraticket', 'authorcomments', 'reviewercomments', 'stateid', 'authorid', 'reviewerid' ))
-               ->join(array('U' => 'users'), 'C.authorid = U.id', array('uid' =>'id', 'author' => 'ldap'), 'left')
-                ->join(array('U0' => 'users'), 'C.reviewerid = U0.id', array('rid' =>'id', 'reviewer' => 'ldap'), 'left')
-                ->join(array('S' => 'state'), 'C.stateid = S.id', array('state' => 'name'), 'left')
-                ->where($predicate->equalTo('U.id', $userid));
-    $select = $this->chooseStartEndDate($select, $startdate, $enddate, $userid);
-//                ->where($predicate->between('creationdate', $startdate, $enddate))
-//                ->where($predicate->greaterThanOrEqualTo('creationdate', $startdate))
-//                ->where($predicate->lessThanOrEqualTo('creationdate', $enddate))
-                $select->order('creationdate ASC')
-                ->limit(250);
-    $statement = $this->sql->prepareStatementForSqlObject($select);
-    $results = $statement->execute();
-    return $results;
+        $select = new Select();
+        $predicate = new Where();
+        $select
+            ->from(array('C' => 'codereview'))
+            ->columns(array('id', 'creationdate', 'changeset', 'jiraticket', 'authorcomments', 'reviewercomments', 'stateid', 'authorid', 'reviewerid' ))
+            ->join(array('U' => 'users'), 'C.authorid = U.id', array('uid' =>'id', 'author' => 'ldap'), 'left')
+            ->join(array('U0' => 'users'), 'C.reviewerid = U0.id', array('rid' =>'id', 'reviewer' => 'ldap'), 'left')
+            ->join(array('S' => 'state'), 'C.stateid = S.id', array('state' => 'name'), 'left')
+            ->where($predicate->equalTo('U.id', $userid));
+        $selectUpdated = $this->chooseStartEndDate($select, $startdate, $enddate);
+        $selectUpdated->order('creationdate ASC')
+            ->limit(250);
+        $statement = $this->sql->prepareStatementForSqlObject($selectUpdated);
+        $results = $statement->execute();
+        return $results;
     }
     
-    public function getCodereviewByTicket($ticketNumber)
+    public function getCodereviewByTicket($ticketNumber,$startdate, $enddate)
     {
-    $select = new Select();
-    $select->from(array('C' => 'codereview'))
-               ->columns(array('id', 'creationdate', 'changeset', 'jiraticket', 'authorcomments', 'reviewercomments', 'stateid', 'authorid', 'reviewerid' ))
-               ->join(array('U' => 'users'), 'C.authorid = U.id', array('uid' =>'id', 'author' => 'ldap'), 'left')
-                ->join(array('U0' => 'users'), 'C.reviewerid = U0.id', array('rid' =>'id', 'reviewer' => 'ldap'), 'left')
-                ->join(array('S' => 'state'), 'C.stateid = S.id', array('state' => 'name'), 'left')
-                ->where('C.jiraticket LIKE "%'.$ticketNumber.'%"')
-                ->limit(250);
-    $statement = $this->sql->prepareStatementForSqlObject($select);
-    $results = $statement->execute();
-    return $results;
+        $select = new Select();
+        $select
+            ->from(array('C' => 'codereview'))
+            ->columns(array('id', 'creationdate', 'changeset', 'jiraticket', 'authorcomments', 'reviewercomments', 'stateid', 'authorid', 'reviewerid' ))
+            ->join(array('U' => 'users'), 'C.authorid = U.id', array('uid' =>'id', 'author' => 'ldap'), 'left')
+            ->join(array('U0' => 'users'), 'C.reviewerid = U0.id', array('rid' =>'id', 'reviewer' => 'ldap'), 'left')
+            ->join(array('S' => 'state'), 'C.stateid = S.id', array('state' => 'name'), 'left')
+            ->where('C.jiraticket LIKE "%'.$ticketNumber.'%"');
+        $selectUpdated = $this->chooseStartEndDate($select, $startdate, $enddate);
+        $selectUpdated->order('creationdate ASC')
+            ->limit(250);
+        $statement = $this->sql->prepareStatementForSqlObject($selectUpdated);
+        $results = $statement->execute();
+        return $results;
     }
    
    public function deleteCodereview($id)
-   {
-       $delete = $this->sql->delete();
-       $delete->where(array('id' => $id));
-       $codereview = $this->sql->prepareStatementForSqlObject($delete);
-       return $codereview->execute();
-   }
+    {
+        $delete = $this->sql->delete();
+        $delete->where(array('id' => $id));
+        $codereview = $this->sql->prepareStatementForSqlObject($delete);
+        return $codereview->execute();
+    }
    
-    public function isDayInWeekend($currentDate) {
+    public function isDayInWeekend($currentDate) 
+    {
         $saturday = 0;
         $sunday = 6;
         return (boolean)$currentDate == $saturday && $currentDate == $sunday;
     }
 
-    public function dateCounter() {
+    public function dateCounter() 
+    {
        $daysInWeek = 5;
        date_default_timezone_set('Europe/Helsinki');
        $currentDate = date("w");

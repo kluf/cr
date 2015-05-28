@@ -36,7 +36,7 @@ class CodereviewController extends AbstractActionController
    public function indexAction()
     {
         $mapper = $this->getCodereviewMapper();
-        $temp = $mapper->fetchCodereviewWithUsersAndStatesForPaginator();
+        $temp = $mapper->fetchCodereviewWithUsersAndStates();
         $tem = [];
         foreach ($temp as $key => $val) {
             $tem[$key] = $val;
@@ -133,16 +133,13 @@ class CodereviewController extends AbstractActionController
         $request = $this->getRequest();
         $users = $this->getUsersMapper()->fetchUsersForSelect();
         $form = new CodereviewFindByUserForm(null, $users);
-        if ($request->isPost() && $request->getPost('authorid')) {
+        $form->setData($request->getPost());
+        if ($request->isPost() && $form->isValid()) {
             $authorid = $request->getPost('authorid');
             $startdate = $request->getPost('startdate');
             $enddate = $request->getPost('enddate');
-            $form->setData($request->getPost());
-            if ($form->isValid()) {
-                $codereview = $this->getCodereviewMapper()->getCodereviewByUser((int)$authorid, $startdate, $enddate);
-                return new ViewModel(array('codereviews' => $codereview, 'form' => $form, 'post' => $request->isPost()));
-            }
-            
+            $codereview = $this->getCodereviewMapper()->getCodereviewByUser((int)$authorid, $startdate, $enddate);
+            return new ViewModel(array('codereviews' => $codereview, 'form' => $form, 'post' => $request->isPost()));
         }
         return array(
            'form' => $form,
@@ -154,13 +151,13 @@ class CodereviewController extends AbstractActionController
     {   
         $request = $this->getRequest();
         $jiraticket = $request->getPost('jiraticket');
+        $startdate = $request->getPost('startdate');
+        $enddate = $request->getPost('enddate');
         $form = new CodereviewFindByTicketForm(null);
-        if ($request->isPost() && $request->getPost('jiraticket')) {
-            $form->setData($request->getPost());
-            if ($form->isValid()) {
-                $codereview = $this->getCodereviewMapper()->getCodereviewByTicket($jiraticket, $startdate, $enddate);
-                return new ViewModel(array('codereviews' => $codereview, 'form' => $form, 'post' => $request->isPost()));
-            }
+        $form->setData($request->getPost());
+        if ($request->isPost() && $form->isValid()) {
+            $codereview = $this->getCodereviewMapper()->getCodereviewByTicket($jiraticket, $startdate, $enddate);
+            return new ViewModel(array('codereviews' => $codereview, 'form' => $form, 'post' => $request->isPost()));
         }
         return array(
             'jiraticket' => $jiraticket,
