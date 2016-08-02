@@ -21,17 +21,9 @@
     <button class="form-control col-sm-1 btn btn-success" type="button" id="postSchedule">Add Schedule</button>
 </script>
 <?php
-$classWarn = 'warning';
-$counter = 0;
+
 foreach($schedule as $item) {
-    if ($counter >= 6)
-        $counter = 0;
-    if ($counter > 2) {
-        echo "<tr class='".$classWarn."'>";
-    } else {
-        echo "<tr>";
-    }
-        echo "<td>".$item["dateofschedule"]."</td>
+        echo "<tr><td>".$item["dateofschedule"]."</td>
         <td>".$item["reviewer_ldap"]."</td>
         <td>".$item["traineebackupid_ldap"]."</td>
         <td>".$item["replacementreviewerid_ldap"]."</td>
@@ -39,7 +31,6 @@ foreach($schedule as $item) {
         <td>".$item["designreviewerid_ldap"]."</td>
         <td>".$item["designtraineereviewerid_ldap"]."</td>
         <td>".$item["timeref"]."</td>";
-        $counter ++;
 ?>
         <td>
             <a class='glyphicon glyphicon-pencil' href="<?php echo $this->url('schedule', array('action'=>'edit', 'id' => $item['id']));?>"></a>

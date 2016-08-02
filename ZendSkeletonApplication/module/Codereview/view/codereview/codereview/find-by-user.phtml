@@ -14,7 +14,7 @@
         <div class="panel-body"> 
             <?php
             $form->setAttribute('action', $this->url('codereview', array('action' => 'findByUser')))
-                    ->setAttribute('class', 'form-horizontal');
+                    ->setAttribute('class', 'form-inline');
             $form->prepare();
             echo $this->form()->openTag($form);
             printFormGroup($this->formRow($form->get('authorid')));

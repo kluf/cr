@@ -42,7 +42,6 @@ class CodereviewController extends AbstractActionController
             $tem[$key] = $val;
         }
         $paginator = new \Zend\Paginator\Paginator(new \Zend\Paginator\Adapter\ArrayAdapter($tem));
-
         $sch = $this->getScheduleMapper();
         $vm =  new ViewModel(array('message' => $mapper->dateCounter(),
                 'schedule' => $sch->fetchScheduleForCurrentDay()));
@@ -189,7 +188,17 @@ class CodereviewController extends AbstractActionController
         );
     }
     
-    public function getStatistic() {
-        
+    public function uniteTwoArraysForStatistic($arr1, $arr2) {
+        foreach(array_combine($arr1, $arr2) as $arr1 => $arr2) {
+            echo $arr1.' '.$arr2;
+        }
+        exit;
+    }
+
+
+    public function getStatisticAction()
+    {
+        $users = $this->getCodereviewMapper()->fetchStatisticForUsers();
+        return new ViewModel(array('users' => $users['resultsAll'], 'usersbad' => $users['resultsBad']));
     }
 }

@@ -9,6 +9,7 @@ use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
 use Zend\Db\ResultSet\HydratingResultSet;
+use Zend\Db\Sql\ExpressionInterface;
 
  class CodereviewMapper
  {
@@ -96,6 +97,34 @@ use Zend\Db\ResultSet\HydratingResultSet;
        return $results;
     }
     
+    public function fetchStatisticForUsers()
+    {
+    $predicate = new Where();
+    $select1 = new Select();
+    $select2 = new Select();
+    $select1
+            ->from(array('C' => 'codereview'))
+            ->columns(array('id', 'creationdate', 'changeset', 'stateid', 'authorid', 'changesetsprovided' => new \Zend\Db\Sql\Expression('COUNT(changeset)')))
+            ->join(array('U' => 'users'), 'C.authorid = U.id', array('uid' =>'id', 'author' => 'ldap'), 'left')
+            ->join(array('U0' => 'users'), 'C.reviewerid = U0.id', array('rid' =>'id', 'reviewer' => 'ldap'), 'left')
+            ->join(array('S' => 'state'), 'C.stateid = S.id', array('state' => 'name'), 'left')
+            ->group('C.authorid');
+    $select2
+            ->from(array('C' => 'codereview'))
+            ->columns(array('id', 'creationdate', 'changeset', 'stateid', 'authorid', 'badchangesetsprovided' => new \Zend\Db\Sql\Expression('COUNT(changeset)')))
+            ->join(array('U' => 'users'), 'C.authorid = U.id', array('uid' =>'id', 'author' => 'ldap'), 'left')
+            ->join(array('U0' => 'users'), 'C.reviewerid = U0.id', array('rid' =>'id', 'reviewer' => 'ldap'), 'left')
+            ->join(array('S' => 'state'), 'C.stateid = S.id', array('state' => 'name'), 'left')
+            ->where($predicate->equalTo('stateid', '1'))
+            ->group('C.authorid');
+
+        $statement1 = $this->sql->prepareStatementForSqlObject($select1);
+        $statement2 = $this->sql->prepareStatementForSqlObject($select2);
+        $resultsAll = $statement1->execute();
+        $resultsBad = $statement2->execute();
+        return (array('resultsAll' =>$resultsAll, 'resultsBad' => $resultsBad));
+    }
+    
     public function getCodereview($id)
     {
         $select = $this->sql->select();
@@ -130,22 +159,6 @@ use Zend\Db\ResultSet\HydratingResultSet;
         return $codereview;
     }
    
-    public function chooseStartEndDate($select, $startdate, $enddate) 
-    {
-        $predicate = new Where();
-        if (isset($startdate) && isset($enddate) && $startdate != '' && $enddate != '') {
-            $select->where($predicate->between('creationdate', $startdate, $enddate));
-            echo "both";exit;
-        } else if (isset($startdate) && $startdate != '') {
-            $select->where($predicate->greaterThanOrEqualTo('creationdate', $startdate));
-            echo "start";exit;
-        } else if (isset($enddate) && $enddate != '') {
-            $select->where($predicate->lessThanOrEqualTo('creationdate', $enddate));
-            echo "end";exit;
-        }
-        return $select;
-    }
-   
     public function getCodereviewByUser($userid, $startdate, $enddate)
     {
         $select = new Select();
@@ -155,30 +168,59 @@ use Zend\Db\ResultSet\HydratingResultSet;
             ->columns(array('id', 'creationdate', 'changeset', 'jiraticket', 'authorcomments', 'reviewercomments', 'stateid', 'authorid', 'reviewerid' ))
             ->join(array('U' => 'users'), 'C.authorid = U.id', array('uid' =>'id', 'author' => 'ldap'), 'left')
             ->join(array('U0' => 'users'), 'C.reviewerid = U0.id', array('rid' =>'id', 'reviewer' => 'ldap'), 'left')
-            ->join(array('S' => 'state'), 'C.stateid = S.id', array('state' => 'name'), 'left')
-            ->where($predicate->equalTo('U.id', $userid));
-        $selectUpdated = $this->chooseStartEndDate($select, $startdate, $enddate);
-        $selectUpdated->order('creationdate ASC')
-            ->limit(250);
-        $statement = $this->sql->prepareStatementForSqlObject($selectUpdated);
+            ->join(array('S' => 'state'), 'C.stateid = S.id', array('state' => 'name'), 'left');
+            if (isset($startdate) && isset($enddate) && $startdate != '' && $enddate != '') {
+                $select->where($predicate->equalTo('U.id', $userid))
+                    ->where($predicate->between('creationdate', $startdate, $enddate))
+                    ->order('creationdate ASC');
+            } else if (isset($startdate) && $startdate != '') {
+                $select->where($predicate->equalTo('U.id', $userid))
+                    ->where($predicate->greaterThanOrEqualTo('creationdate', $startdate))
+                    ->order('creationdate ASC');
+            } else if (isset($enddate) && $enddate != '') {
+                $select->where($predicate->equalTo('U.id', $userid))
+                    ->where($predicate->lessThanOrEqualTo('creationdate', $enddate))
+                    ->order('creationdate ASC');
+            } else {
+                 $select->where($predicate->equalTo('U.id', $userid))
+                    ->order('creationdate ASC');
+            }
+        $statement = $this->sql->prepareStatementForSqlObject($select);
         $results = $statement->execute();
         return $results;
     }
     
     public function getCodereviewByTicket($ticketNumber,$startdate, $enddate)
     {
+        $predicate = new Where();
         $select = new Select();
         $select
             ->from(array('C' => 'codereview'))
             ->columns(array('id', 'creationdate', 'changeset', 'jiraticket', 'authorcomments', 'reviewercomments', 'stateid', 'authorid', 'reviewerid' ))
             ->join(array('U' => 'users'), 'C.authorid = U.id', array('uid' =>'id', 'author' => 'ldap'), 'left')
             ->join(array('U0' => 'users'), 'C.reviewerid = U0.id', array('rid' =>'id', 'reviewer' => 'ldap'), 'left')
-            ->join(array('S' => 'state'), 'C.stateid = S.id', array('state' => 'name'), 'left')
-            ->where('C.jiraticket LIKE "%'.$ticketNumber.'%"');
-        $selectUpdated = $this->chooseStartEndDate($select, $startdate, $enddate);
-        $selectUpdated->order('creationdate ASC')
-            ->limit(250);
-        $statement = $this->sql->prepareStatementForSqlObject($selectUpdated);
+            ->join(array('S' => 'state'), 'C.stateid = S.id', array('state' => 'name'), 'left');
+            if (isset($startdate) && isset($enddate) && $startdate != '' && $enddate != '') {
+            $select->where('C.jiraticket LIKE "%'.$ticketNumber.'%"')
+                    ->where($predicate->between('creationdate', $startdate, $enddate))
+                    ->order('creationdate ASC')
+                    ->limit(250);
+            } else if (isset($startdate) && $startdate != '') {
+                $select->where('C.jiraticket LIKE "%'.$ticketNumber.'%"')
+                    ->where($predicate->greaterThanOrEqualTo('creationdate', $startdate))
+                    ->order('creationdate ASC')
+                    ->limit(250);
+            } else if (isset($enddate) && $enddate != '') {
+                $select->where('C.jiraticket LIKE "%'.$ticketNumber.'%"')
+                    ->where($predicate->lessThanOrEqualTo('creationdate', $enddate))
+                    ->order('creationdate ASC')
+                    ->limit(250);
+            } else {
+                 $select->where('C.jiraticket LIKE "%'.$ticketNumber.'%"')
+                    ->order('creationdate ASC')
+                    ->limit(250);
+            }
+        $statement = $this->sql->prepareStatementForSqlObject($select);
         $results = $statement->execute();
         return $results;
     }

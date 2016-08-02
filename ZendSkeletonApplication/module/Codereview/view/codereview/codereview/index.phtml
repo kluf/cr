@@ -71,9 +71,15 @@ foreach ($this->paginator as $codereview) {
 <tbody></table>
 <nav>
 <?php 
-endif;
 echo $this->paginationControl($this->paginator,
                                     'Sliding',
-                                    'paginator-slide', array('route' => 'application/paginator'));
+                                    'paginator-slide-cr', array('route' => $this->route));
+endif;
+?>
+<?php
+    echo '$_SERVER["REQUEST_URI"] - '.$_SERVER['REQUEST_URI'].'<br>';
+    echo '$_SERVER["QUERY_STRING"] - '.$_SERVER['QUERY_STRING'];
+    echo 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+
 ?>
 </nav>

@@ -152,6 +152,17 @@ class UsersMapper
         return $results;
     }
     
+    public function fetchUsersWithGroupsPaginator($page=1)
+    {
+        $select = new Select();
+        $select->from('users')
+                   ->columns(array('id', 'ldap', 'groupid', 'email'))
+                   ->join('usergroups',
+                           'users.groupid = usergroups.id', array('idd' => 'id', 'name'), 'left');
+        $statement = $this->sql->prepareStatementForSqlObject($select);
+        $results = $statement->execute();
+        return $results;
+    }
     public function saveUsers(UsersEntity $users)
     {
         $bcrypt = new Bcrypt();

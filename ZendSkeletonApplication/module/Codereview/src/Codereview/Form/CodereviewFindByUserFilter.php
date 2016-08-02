@@ -22,20 +22,20 @@ class CodereviewFindByUserFilter extends InputFilter{
          $this->add(array(
              'name'     => 'authorid',
              'required' => true,
-             'filters'  => array(
-                 array('name' => 'Int'),
-             ),
-             'validators' => array(
-                array(
-                    'name' => 'InArray',
-                    'options' => array(
-                    'haystack' => array(1,9999),
-                    'messages' => array(
-                        \Zend\Validator\InArray::NOT_IN_ARRAY => 'Please select author !'
-                            ),
-                        ),
-                    ),
-            ), 
+//             'filters'  => array(
+//                 array('name' => 'Int'),
+//             ),
+//             'validators' => array(
+//                array(
+//                    'name' => 'InArray',
+//                    'options' => array(
+//                    'haystack' => array(1,9999),
+//                    'messages' => array(
+//                        \Zend\Validator\InArray::NOT_IN_ARRAY => 'Please select author !'
+//                            ),
+//                        ),
+//                    ),
+//            ), 
          ));
         
         $this->add(array(

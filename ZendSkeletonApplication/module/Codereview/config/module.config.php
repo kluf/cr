@@ -34,7 +34,7 @@
              'codereview' => __DIR__ . '/../view',
          ),
          'template_map' => array( 
-            'paginator-slide' => __DIR__ . '/../view/codereview/codereview/slidePaginator.phtml',
+            'paginator-slide-cr' => __DIR__ . '/../view/codereview/codereview/slidePaginator.phtml',
         ),
      ),
  );

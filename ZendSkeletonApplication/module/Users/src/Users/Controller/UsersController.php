@@ -23,7 +23,16 @@ class UsersController extends AbstractActionController
     public function indexAction()
     {
         $mapper = $this->getUsersMapper();
-        return new ViewModel(array('users' => $mapper->fetchUsersWithGroups()));
+        $temp = $mapper->fetchUsersWithGroupsPaginator();
+        $tem = [];
+        foreach ($temp as $key => $val) {
+            $tem[$key] = $val;
+        }
+        $paginatorUsers = new \Zend\Paginator\Paginator(new \Zend\Paginator\Adapter\ArrayAdapter($tem));
+        $vm1 =  new ViewModel();
+        $paginatorUsers->setCurrentPageNumber($this->params()->fromRoute('page'));
+        $vm1->setVariable('paginatorUsers', $paginatorUsers);
+        return $vm1;
     }
      
     public function getUsersMapper()

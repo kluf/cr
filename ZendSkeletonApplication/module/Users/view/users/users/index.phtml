@@ -9,8 +9,8 @@
         <td>Moderation</td>
     </tr>
 <?php
-    
-    foreach($users as $item) {
+if (count($this->paginatorUsers)):
+    foreach($this->paginatorUsers as $item) {
         echo "
         <tr>
             <td>".$item['ldap']."</td>
@@ -26,3 +26,10 @@
     }
 ?>
 </table>
+
+<?php
+echo $this->paginationControl($this->paginatorUsers,
+                                    'Sliding',
+                                    'paginator-slide-users', array('route' => $this->route));
+endif;
+?>

@@ -60,30 +60,42 @@ class ScheduleMapper {
        $results = $statement->execute();
        return $results;
     }
-   public function saveSchedule(ScheduleEntity $schedule)
-   {
-       $hydrator = new ClassMethods();
-       $data = $hydrator->extract($schedule);
-       if ($schedule->getId()) {
-           // update action
-           $action = $this->sql->update();
-           $action->set($data);
-           $action->where(array('id' => $schedule->getId()));
-       } else {
-           // insert action
-           $action = $this->sql->insert();
-           unset($data['id']);
-           $action->values($data);
-           echo $action;exit;
-       }
-       $statement = $this->sql->prepareStatementForSqlObject($action);
-       $result = $statement->execute();
+    
+    public function fetchScheduleDates()
+    {
+    $select = new Select();
+    $select->distinct()
+            ->from(array('S' => 'schedule'))
+        ->columns(array('dateofschedule'));
+       $statement = $this->sql->prepareStatementForSqlObject($select);
+       $results = $statement->execute();
+       return $results;
+    }
+    
+    public function saveSchedule(ScheduleEntity $schedule)
+    {
+        $hydrator = new ClassMethods();
+        $data = $hydrator->extract($schedule);
+        if ($schedule->getId()) {
+            // update action
+            $action = $this->sql->update();
+            $action->set($data);
+            $action->where(array('id' => $schedule->getId()));
+        } else {
+            // insert action
+            $action = $this->sql->insert();
+            unset($data['id']);
+            $action->values($data);
+            echo $action;exit;
+        }
+        $statement = $this->sql->prepareStatementForSqlObject($action);
+        $result = $statement->execute();
 
-       if (!$schedule->getId()) {
-           $schedule->setId($result->getGeneratedValue());
-       }
-       return $result;
-   }
+        if (!$schedule->getId()) {
+            $schedule->setId($result->getGeneratedValue());
+        }
+        return $result;
+    }
    
        public function saveScheduleAPI($data)
     {

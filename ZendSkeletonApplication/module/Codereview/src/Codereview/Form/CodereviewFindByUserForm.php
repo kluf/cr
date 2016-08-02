@@ -22,7 +22,7 @@ class CodereviewFindByUserForm extends Form
             'options' => array(
                     'label' => 'User',
                     'value_options' => $users,
-                    'empty_option' => 'Please select user'
+                    'empty_option' => 'Please select author'
             ),
             'attributes' => array(
                 'class' => 'authorid form-control'

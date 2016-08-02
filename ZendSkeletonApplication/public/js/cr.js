@@ -415,6 +415,14 @@ CR = (function() {
         }
     }
     
+    function paintGrid() {
+        var tableRows = $('table tr').length;
+        while (tableRows) {
+            
+            tableRows -= 1;
+        }
+    }    
+    
     $(document).on('click', '.add-changeset-button', addFieldsToPopUp);
     $('.pop-up-adding').bind('click', addPopUp);
     $(document).on('click', '.panel-heading .close', reloadDocumentOnClosePopUp);
@@ -447,12 +455,13 @@ CR = (function() {
             $( ".startdate" ).datepicker( "option", "maxDate", selectedDate );
         }
     });
-    $('body').on('focus',".startdate", function(){
+    $('body').on('focus',".startdate", function(e){
+        e.stopImmediatePropagation();
         $(this).datepicker({
-        defaultDate: "-1w",
         changeMonth: true,
         numberOfMonths: 3,
         dateFormat: "mm-dd-yy",
+        showButtonPanel: true,
         onClose: function( selectedDate ) {
             $( ".enddate" ).datepicker( "option", "minDate", selectedDate );
         }

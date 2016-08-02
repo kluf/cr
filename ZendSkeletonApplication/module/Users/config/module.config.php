@@ -13,14 +13,16 @@
              'users' => array(
                  'type'    => 'segment',
                  'options' => array(
-                     'route'    => '/users[/][:action][/:id]',
+                     'route'    => '/users[/:action[/:id]][/:page]',
                      'constraints' => array(
                          'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                         'page' => '[0-9]+',
                          'id'     => '[0-9]+',
                      ),
                      'defaults' => array(
                          'controller' => 'Users\Controller\Users',
                          'action'     => 'index',
+                         'page' => 1,
                      ),
                  ),
              ),
@@ -28,9 +30,12 @@
      ),
 
      'view_manager' => array(
-         'template_path_stack' => array(
-             'users' => __DIR__ . '/../view',
-         ),
+        'template_path_stack' => array(
+            'users' => __DIR__ . '/../view',
+        ),
+         'template_map' => array( 
+            'paginator-slide-users' => __DIR__ . '/../view/users/users/slidePaginator.phtml',
+        ),
      ),
  );
 
